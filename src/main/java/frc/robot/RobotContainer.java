@@ -4,9 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import frc.lib.DTXboxController;
+import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveModule;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -16,12 +24,49 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    private final DTXboxController controller0;
+    private final DTXboxController controller1;
+    private final SwerveDrive      swerve;
+    private volatile int                    angle;
+    private boolean                pressed;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     public RobotContainer() {
+        controller0 = new DTXboxController(0);
+        controller1 = new DTXboxController(1);
+        swerve = new SwerveDrive(controller0);
+
         configureBindings();
+        swerve.setDefaultCommand(new RunCommand(() -> {
+            int dpad = controller0.getDpad();
+            if (pressed) {
+                if (dpad == -1) {
+                    pressed = false;
+                }
+            } else {
+                switch (dpad) {
+                    case 0:
+                        angle ++;
+                        pressed = true;
+                        break;
+                    case 180:
+                        angle --;
+                        pressed = true;
+                        break;
+
+                }
+            }
+            for (SwerveModule m : swerve.getModules()) {
+                m.setVelocity(0.5);
+                m.setSteerAngle(Rotation2d.fromDegrees(angle)
+                                          .rotateBy(Rotation2d.fromDegrees(0)));
+            }
+            SmartDashboard.putNumber("Angle", angle);
+            SmartDashboard.putBoolean("Pressed", pressed);
+        }, swerve));
     }
 
     /**
