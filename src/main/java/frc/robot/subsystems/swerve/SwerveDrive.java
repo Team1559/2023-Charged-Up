@@ -1,5 +1,10 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
+import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
+import static frc.robot.Constants.Swerve.MODULE_X;
+import static frc.robot.Constants.Swerve.MODULE_Y;
+
 import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -16,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.lib.DTXboxController;
 import frc.robot.Constants;
-import static frc.robot.Constants.Swerve.*;
 
 public class SwerveDrive extends SubsystemBase {
     private final DTXboxController         controller;
@@ -48,18 +52,11 @@ public class SwerveDrive extends SubsystemBase {
     public void driveTeleop(double vx, double vy, double vr) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
                 Rotation2d.fromDegrees(0));
-        // double linearVelocity = Math.hypot(speeds.vxMetersPerSecond,
-        // speeds.vyMetersPerSecond);
-        // if (linearVelocity < MINIMUM_LINEAR_VELOCITY
-        // && speeds.omegaRadiansPerSecond < MINIMUM_ANGULAR_VELOCITY) {
-        // // stop drive motor, no change to angle
-        // // return
-        // }
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         for (int i = 0; i < modules.length; i++) {
-            // SwerveModuleState.optimize(newStates[i],
-            // modules[i].getSteerAngle());
+            // newStates[i] = SwerveModuleState.optimize(newStates[i],
+            //         modules[i].getSteerAngleMod());
             modules[i].setState(newStates[i]);
             SmartDashboard.putNumber("Velocity " + i,
                     newStates[i].speedMetersPerSecond);
@@ -95,10 +92,11 @@ public class SwerveDrive extends SubsystemBase {
                     * MAXIMUM_LINEAR_VELOCITY;
             double vr = controller.getRightStickXSquared()
                     * MAXIMUM_ANGULAR_VELOCITY;
-            vx = Math.round(vx);
-            vy = Math.round(vy);
-            vr = Math.round(vr);
-            // driveTeleop(vx, vy, vr);
+            if (Math.abs(vx) > 1e-6 || Math.abs(vy) > 1e-6
+                    || Math.abs(vr) > 1e-6) {
+                // driveTeleop(vx, vy, vr);
+                modules[0].setSteerAngle(Rotation2d.fromDegrees((System.currentTimeMillis() % 5000 > 2500 ? 0 : 180)));
+            }
         }
 
         // updatePositions();

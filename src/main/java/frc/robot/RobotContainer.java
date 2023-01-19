@@ -27,7 +27,7 @@ public class RobotContainer {
     private final DTXboxController controller0;
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
-    private volatile int                    angle;
+    private volatile int           angle;
     private boolean                pressed;
 
     /**
@@ -40,33 +40,6 @@ public class RobotContainer {
         swerve = new SwerveDrive(controller0);
 
         configureBindings();
-        swerve.setDefaultCommand(new RunCommand(() -> {
-            int dpad = controller0.getDpad();
-            if (pressed) {
-                if (dpad == -1) {
-                    pressed = false;
-                }
-            } else {
-                switch (dpad) {
-                    case 0:
-                        angle ++;
-                        pressed = true;
-                        break;
-                    case 180:
-                        angle --;
-                        pressed = true;
-                        break;
-
-                }
-            }
-            for (SwerveModule m : swerve.getModules()) {
-                m.setVelocity(0.5);
-                m.setSteerAngle(Rotation2d.fromDegrees(angle)
-                                          .rotateBy(Rotation2d.fromDegrees(0)));
-            }
-            SmartDashboard.putNumber("Angle", angle);
-            SmartDashboard.putBoolean("Pressed", pressed);
-        }, swerve));
     }
 
     /**

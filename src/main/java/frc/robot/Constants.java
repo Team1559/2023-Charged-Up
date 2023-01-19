@@ -61,11 +61,8 @@ public final class Constants {
                 * STEER_GEAR_RATIO_INV / 360;
         public static final double TICKS_TO_DEGREES = 1 / DEGREES_TO_TICKS;
 
-        // public static final double[] CANCODER_OFFSETS = { 0, 0, 0,
-        //         0 };
         public static final double[] CANCODER_OFFSETS = { 70.2, 42.1, 94.3,
                 180.9 };
-        // public static final double[] CANCODER_OFFSETS = { 142.47, 87.27, 188.43, 3.42 };
 
         public static final double MODULE_DRIVE_KP = 0.005;
         public static final double MODULE_DRIVE_KF = 0.05;
