@@ -45,12 +45,16 @@ public class SwerveModule {
 
         steerMotor.setNeutralMode(NeutralMode.Coast);
         steerMotor.setInverted(false);
-        SmartDashboard.putNumber("kP", 0.3);
-        SmartDashboard.putNumber("kD", 0.1);
-        steerMotor.config_kP(0, 0.3);
-        steerMotor.config_kD(0, 0.1);
+        SmartDashboard.putNumber("kP", 0.5);
+        SmartDashboard.putNumber("kI", 0D);
+        SmartDashboard.putNumber("kD", 15D);
+        steerMotor.config_kP(0, 0.5);
+        steerMotor.config_kI(0, 0);
+        steerMotor.config_kD(0, 15D);
         steerMotor.setSelectedSensorPosition(
                 degreesToTicks(cancoder.getPosition() % 360));
+        steerMotor.configClosedLoopPeriod(0, 1);
+        steerMotor.config_kF(0, 0D);
     }
 
     private void configCancoder() {
@@ -95,8 +99,12 @@ public class SwerveModule {
             SmartDashboard.putNumber("Current position",
                     steerMotor.getSelectedSensorPosition());
 
-            steerMotor.config_kP(0, SmartDashboard.getNumber("kP", 0.3));
-            steerMotor.config_kD(id, SmartDashboard.getNumber("kD", 0.1));
+            SmartDashboard.putNumber("Current position degrees",
+                    ticksToDegrees(steerMotor.getSelectedSensorPosition()));
+
+            steerMotor.config_kP(0, SmartDashboard.getNumber("kP", 0D));
+            steerMotor.config_kD(0, SmartDashboard.getNumber("kD", 0D));
+            steerMotor.config_kI(0, SmartDashboard.getNumber("kI", 0D));
         }
     }
 

@@ -56,7 +56,7 @@ public class SwerveDrive extends SubsystemBase {
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         for (int i = 0; i < modules.length; i++) {
             // newStates[i] = SwerveModuleState.optimize(newStates[i],
-            //         modules[i].getSteerAngleMod());
+            // modules[i].getSteerAngleMod());
             modules[i].setState(newStates[i]);
             SmartDashboard.putNumber("Velocity " + i,
                     newStates[i].speedMetersPerSecond);
@@ -94,8 +94,9 @@ public class SwerveDrive extends SubsystemBase {
                     * MAXIMUM_ANGULAR_VELOCITY;
             if (Math.abs(vx) > 1e-6 || Math.abs(vy) > 1e-6
                     || Math.abs(vr) > 1e-6) {
-                // driveTeleop(vx, vy, vr);
-                modules[0].setSteerAngle(Rotation2d.fromDegrees((System.currentTimeMillis() % 5000 > 2500 ? 0 : 180)));
+                driveTeleop(vx, vy, vr);
+                // modules[0].setSteerAngle(Rotation2d.fromDegrees(
+                //         (System.currentTimeMillis() % 5000 > 2500 ? 0 : 90)));
             }
         }
 
