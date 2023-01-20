@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -26,7 +27,7 @@ public class Vision extends SubsystemBase {
     private PhotonPoseEstimator photonPoseEstimator;
     /*Constructor method for Vision class */
     public Vision() {
-        camera = new PhotonCamera("limelight1");
+        camera = new PhotonCamera("OV5647");
         try {
             aprilTagFieldLayout = new AprilTagFieldLayout(AprilTagFields.k2023ChargedUp.m_resourceFile);
         } catch (IOException e) {
@@ -53,6 +54,7 @@ public class Vision extends SubsystemBase {
             SmartDashboard.putNumber("pose Timestamp", pose.timestampSeconds);
              //new Pair<Pose2d, Double>(result.get().getFirst().toPose2d(), currentTime - result.get().getSecond());
         }
+        SmartDashboard.putString("Result str", Objects.toString(result));
         // Query the latest result from PhotonVision
         // PhotonPipelineResult result = camera.getLatestResult();
         // SmartDashboard.putBoolean("Has Target", result.hasTargets());
