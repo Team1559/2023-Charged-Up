@@ -51,11 +51,11 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double MINIMUM_LINEAR_VELOCITY  = MAXIMUM_LINEAR_VELOCITY;
+        public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
 
-        public static final double METERS_TO_TICKS  = DRIVE_GEAR_RATIO
-                * FALCON_TICKS_PER_REV / WHEEL_CIRCUMFERENCE / 2;
+        public static final double METERS_TO_TICKS  = DRIVE_GEAR_RATIO_INV
+                * FALCON_TICKS_PER_REV / WHEEL_CIRCUMFERENCE;
         public static final double TICKS_TO_METERS  = 1 / METERS_TO_TICKS;
         public static final double DEGREES_TO_TICKS = FALCON_TICKS_PER_REV
                 * STEER_GEAR_RATIO_INV / 360;

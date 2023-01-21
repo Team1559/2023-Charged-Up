@@ -38,23 +38,18 @@ public class SwerveModule {
 
         configCancoder();
 
+        driveMotor.configFactoryDefault();
         driveMotor.setNeutralMode(NeutralMode.Brake);
-        driveMotor.setInverted(false);
+        driveMotor.setInverted(true);
         driveMotor.setSelectedSensorPosition(0D);
-        driveMotor.config_kP(0, 0.005);
+        driveMotor.config_kP(0, 0.05);
 
-        steerMotor.setNeutralMode(NeutralMode.Coast);
-        steerMotor.setInverted(false);
-        SmartDashboard.putNumber("kP", 0.5);
-        SmartDashboard.putNumber("kI", 0D);
-        SmartDashboard.putNumber("kD", 15D);
-        steerMotor.config_kP(0, 0.5);
-        steerMotor.config_kI(0, 0);
-        steerMotor.config_kD(0, 15D);
+        steerMotor.configFactoryDefault();
+        steerMotor.setNeutralMode(NeutralMode.Brake);
+        steerMotor.config_kP(0, 0.22);
+        steerMotor.config_kD(0, 0.1);
         steerMotor.setSelectedSensorPosition(
                 degreesToTicks(cancoder.getPosition() % 360));
-        steerMotor.configClosedLoopPeriod(0, 1);
-        steerMotor.config_kF(0, 0D);
     }
 
     private void configCancoder() {
@@ -70,6 +65,7 @@ public class SwerveModule {
 
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
+        SmartDashboard.putNumber("Velocity ticks", ticksPer100ms);
         driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms);
     }
 
@@ -87,24 +83,30 @@ public class SwerveModule {
 
     public void setState(SwerveModuleState state) {
         setSteerAngle(state.angle);
-        setVelocity(state.speedMetersPerSecond * 0.1);
+        setVelocity(state.speedMetersPerSecond);
     }
 
     public void setSteerAngle(Rotation2d angle) {
-        double ticks = degreesToTicks(angle.getDegrees());
+        Rotation2d currentAngle = getSteerAngle();
+        double diff = angle.minus(currentAngle)
+                           .getDegrees();
+        if (diff > 180) {
+            diff -= 360;
+        } else if (diff < -180) {
+            diff += 360;
+        }
+        double newAngle = currentAngle.getDegrees() + diff;
+        double ticks = degreesToTicks(newAngle);
         steerMotor.set(TalonFXControlMode.Position, ticks);
         if (id == 0) {
             SmartDashboard.putNumber("Input Angle", angle.getDegrees());
+            SmartDashboard.putNumber("Adjusted angle", newAngle);
             SmartDashboard.putNumber("Calculated value", ticks);
             SmartDashboard.putNumber("Current position",
                     steerMotor.getSelectedSensorPosition());
 
             SmartDashboard.putNumber("Current position degrees",
                     ticksToDegrees(steerMotor.getSelectedSensorPosition()));
-
-            steerMotor.config_kP(0, SmartDashboard.getNumber("kP", 0D));
-            steerMotor.config_kD(0, SmartDashboard.getNumber("kD", 0D));
-            steerMotor.config_kI(0, SmartDashboard.getNumber("kI", 0D));
         }
     }
 
@@ -124,11 +126,11 @@ public class SwerveModule {
     }
 
     private static double mpsToTicks100(double metersPerSecond) {
-        return metersToTicks(metersPerSecond) * 10;
+        return metersToTicks(metersPerSecond) * 0.1;
     }
 
     private static double ticks100ToMps(double ticksPer100ms) {
-        return ticksToMeters(ticksPer100ms) * 0.1;
+        return ticksToMeters(ticksPer100ms) * 10;
     }
 
     private static double ticksToDegrees(double ticks) {

@@ -28,6 +28,7 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveDriveKinematics    kinematics;
     private final Pigeon2                  gyro;
     private final SwerveDrivePoseEstimator poseEstimator;
+    private final SwerveModulePosition[]   modulePositions;
 
     public SwerveDrive(DTXboxController c) {
         setSubsystem("Swerve Drive");
@@ -35,8 +36,10 @@ public class SwerveDrive extends SubsystemBase {
 
         controller = c;
         modules = new SwerveModule[4];
+        modulePositions = new SwerveModulePosition[4];
         for (int i = 0; i < modules.length; i++) {
             modules[i] = new SwerveModule(i);
+            modulePositions[i] = modules[i].getCurrentPosition();
         }
         gyro = new Pigeon2(Constants.Wiring.PIGEON_IMU);
         kinematics = new SwerveDriveKinematics(
@@ -44,19 +47,18 @@ public class SwerveDrive extends SubsystemBase {
                 new Translation2d(MODULE_X, -MODULE_Y),
                 new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
-        // poseEstimator = new SwerveDrivePoseEstimator(kinematics, null, null,
-        // getEstimatedPosition());
-        poseEstimator = null;
+        poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(),
+                modulePositions, new Pose2d());
     }
 
-    public void driveTeleop(double vx, double vy, double vr) {
+    public void driveVelocity(double vx, double vy, double vr) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
                 Rotation2d.fromDegrees(0));
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         for (int i = 0; i < modules.length; i++) {
-            // newStates[i] = SwerveModuleState.optimize(newStates[i],
-            // modules[i].getSteerAngleMod());
+            newStates[i] = SwerveModuleState.optimize(newStates[i],
+                    modules[i].getSteerAngle());
             modules[i].setState(newStates[i]);
             SmartDashboard.putNumber("Velocity " + i,
                     newStates[i].speedMetersPerSecond);
@@ -68,11 +70,11 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public Pose2d getEstimatedPosition() {
-        return null;
+        return poseEstimator.getEstimatedPosition();
     }
 
     public void addVisionPosition(Pose2d position, long time) {
-
+        // TODO: implement odometry
     }
 
     private void updatePositions() {
@@ -90,17 +92,19 @@ public class SwerveDrive extends SubsystemBase {
                     * MAXIMUM_LINEAR_VELOCITY;
             double vy = -controller.getLeftStickXSquared()
                     * MAXIMUM_LINEAR_VELOCITY;
-            double vr = controller.getRightStickXSquared()
+            double vr = -controller.getRightStickXSquared()
                     * MAXIMUM_ANGULAR_VELOCITY;
-            if (Math.abs(vx) > 1e-6 || Math.abs(vy) > 1e-6
-                    || Math.abs(vr) > 1e-6) {
-                driveTeleop(vx, vy, vr);
-                // modules[0].setSteerAngle(Rotation2d.fromDegrees(
-                //         (System.currentTimeMillis() % 5000 > 2500 ? 0 : 90)));
+            if (Math.abs(vx) > 1e-4 || Math.abs(vy) > 1e-4
+                    || Math.abs(vr) > 1e-4) {
+                driveVelocity(vx, vy, vr);
+            } else {
+                for (int i = 0; i < modules.length; i++) {
+                    modules[i].stopDriving();
+                }
             }
         }
 
-        // updatePositions();
+        updatePositions();
     }
 
     public SwerveModule[] getModules() {
