@@ -25,10 +25,10 @@ import frc.robot.Constants;
 public class SwerveDrive extends SubsystemBase {
     private final DTXboxController         controller;
     private final SwerveModule[]           modules;
-    private final SwerveDriveKinematics    kinematics;
-    private final Pigeon2                  gyro;
-    private final SwerveDrivePoseEstimator poseEstimator;
     private final SwerveModulePosition[]   modulePositions;
+    private final SwerveDriveKinematics    kinematics;
+    private final SwerveDrivePoseEstimator poseEstimator;
+    private final Pigeon2                  gyro;
 
     public SwerveDrive(DTXboxController c) {
         setSubsystem("Swerve Drive");
@@ -53,7 +53,7 @@ public class SwerveDrive extends SubsystemBase {
 
     public void driveVelocity(double vx, double vy, double vr) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
-                Rotation2d.fromDegrees(0));
+                getGyroAngle());
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         for (int i = 0; i < modules.length; i++) {
@@ -69,12 +69,8 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
-    public Pose2d getEstimatedPosition() {
-        return poseEstimator.getEstimatedPosition();
-    }
-
-    public void addVisionPosition(Pose2d position, long time) {
-        // TODO: implement odometry
+    public SwerveDrivePoseEstimator getPoseEstimator() {
+        return poseEstimator;
     }
 
     private void updatePositions() {
