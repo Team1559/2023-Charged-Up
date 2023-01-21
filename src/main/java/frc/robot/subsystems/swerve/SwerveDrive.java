@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
+import static frc.robot.Constants.Swerve.MINIMUM_ANGULAR_VELOCITY;
+import static frc.robot.Constants.Swerve.MINIMUM_LINEAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
 
@@ -48,7 +50,7 @@ public class SwerveDrive extends SubsystemBase {
                 new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(),
-                modulePositions, new Pose2d());
+                modulePositions, new Pose2d(0, 0, getGyroAngle()));
     }
 
     public void driveVelocity(double vx, double vy, double vr) {
@@ -60,8 +62,6 @@ public class SwerveDrive extends SubsystemBase {
             newStates[i] = SwerveModuleState.optimize(newStates[i],
                     modules[i].getSteerAngle());
             modules[i].setState(newStates[i]);
-            SmartDashboard.putNumber("Velocity " + i,
-                    newStates[i].speedMetersPerSecond);
         }
     }
 
@@ -90,8 +90,9 @@ public class SwerveDrive extends SubsystemBase {
                     * MAXIMUM_LINEAR_VELOCITY;
             double vr = -controller.getRightStickXSquared()
                     * MAXIMUM_ANGULAR_VELOCITY;
-            if (Math.abs(vx) > 1e-4 || Math.abs(vy) > 1e-4
-                    || Math.abs(vr) > 1e-4) {
+            if (Math.abs(vx) > MINIMUM_LINEAR_VELOCITY
+                    || Math.abs(vy) > MINIMUM_LINEAR_VELOCITY
+                    || Math.abs(vr) > MINIMUM_ANGULAR_VELOCITY) {
                 driveVelocity(vx, vy, vr);
             } else {
                 for (int i = 0; i < modules.length; i++) {
@@ -101,6 +102,12 @@ public class SwerveDrive extends SubsystemBase {
         }
 
         updatePositions();
+        Pose2d currentPose = poseEstimator.getEstimatedPosition();
+
+        SmartDashboard.putNumber("Pos X", currentPose.getX());
+        SmartDashboard.putNumber("Pos Y", currentPose.getY());
+        SmartDashboard.putNumber("Pos Rot", currentPose.getRotation()
+                                                       .getDegrees());
     }
 
     public SwerveModule[] getModules() {

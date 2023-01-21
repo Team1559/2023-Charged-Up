@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,23 +21,23 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class RobotContainer {
     private final DTXboxController controller0;
     private final DTXboxController controller1;
-    private final SwerveDrive swerve;
-    private volatile int    angle;
-    private boolean         pressed;
+    private final SwerveDrive      swerve;
+    private volatile int           angle;
+    private boolean                pressed;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     private Vision visionSubsystem;
+
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         swerve = new SwerveDrive(controller0);
 
         configureBindings();
-        visionSubsystem   = new Vision();
-        
+        visionSubsystem = new Vision(swerve.getPoseEstimator());
 
     }
 

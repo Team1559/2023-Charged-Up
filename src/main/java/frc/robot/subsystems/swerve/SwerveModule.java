@@ -9,8 +9,6 @@ import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
 import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
 import static frc.robot.Constants.Wiring.MODULE_STEER_MOTOR_IDS;
 
-import java.util.function.DoubleConsumer;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -22,7 +20,6 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveModule {
     private final int      id;
@@ -65,7 +62,6 @@ public class SwerveModule {
 
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
-        SmartDashboard.putNumber("Velocity ticks", ticksPer100ms);
         driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms);
     }
 
@@ -98,16 +94,6 @@ public class SwerveModule {
         double newAngle = currentAngle.getDegrees() + diff;
         double ticks = degreesToTicks(newAngle);
         steerMotor.set(TalonFXControlMode.Position, ticks);
-        if (id == 0) {
-            SmartDashboard.putNumber("Input Angle", angle.getDegrees());
-            SmartDashboard.putNumber("Adjusted angle", newAngle);
-            SmartDashboard.putNumber("Calculated value", ticks);
-            SmartDashboard.putNumber("Current position",
-                    steerMotor.getSelectedSensorPosition());
-
-            SmartDashboard.putNumber("Current position degrees",
-                    ticksToDegrees(steerMotor.getSelectedSensorPosition()));
-        }
     }
 
     public SwerveModulePosition getCurrentPosition() {
