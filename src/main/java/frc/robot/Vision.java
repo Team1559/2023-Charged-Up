@@ -2,6 +2,7 @@ package frc.robot;
 
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
@@ -38,8 +39,7 @@ public class Vision extends SubsystemBase {
         double cameraXOffset = Units.inchesToMeters(16);
         double cameraZOffset = Units.inchesToMeters(5.5);
         Transform3d robotToCam = new Transform3d(
-                new Translation3d(0,
-                        cameraXOffset, cameraZOffset),
+                new Translation3d(0, cameraXOffset, cameraZOffset),
                 new Rotation3d(0, 0, Math.toRadians(90)));
         photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
                 PoseStrategy.LOWEST_AMBIGUITY, camera, robotToCam);
@@ -54,12 +54,13 @@ public class Vision extends SubsystemBase {
             try {
                 swervePoseEstimator.addVisionMeasurement(
                         pose.estimatedPose.toPose2d(), pose.timestampSeconds);
+                double time = (System.nanoTime() - start) * 1e-9;
+                SmartDashboard.putNumber("Backcalculate time", time);
+                SmartDashboard.putBoolean("Backcalculate", time < 0.005);
             } catch (ConcurrentModificationException e) {
-                SmartDashboard.putString("Exception", e.getMessage());
+                SmartDashboard.putBoolean("Backcalculate", false);
+                SmartDashboard.putString("Exception", Objects.toString(e));
             }
-            double time = (System.nanoTime() - start) * 1e-9;
-            SmartDashboard.putNumber("Backcalculate time", time);
-            SmartDashboard.putBoolean("Backcalculate", time < 0.005);
             SmartDashboard.putBoolean("Apriltag", true);
         } else {
             SmartDashboard.putBoolean("Apriltag", false);

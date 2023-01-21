@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.lib.DTXboxController;
 import frc.robot.Constants;
@@ -53,16 +54,20 @@ public class SwerveDrive extends SubsystemBase {
                 modulePositions, new Pose2d(0, 0, getGyroAngle()));
     }
 
+    public void setStates(SwerveModuleState... states) {
+        for (int i = 0; i < modules.length; i++) {
+            states[i] = SwerveModuleState.optimize(states[i],
+                    modules[i].getSteerAngle());
+            modules[i].setState(states[i]);
+        }
+    }
+
     public void driveVelocity(double vx, double vy, double vr) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
                 getGyroAngle());
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
-        for (int i = 0; i < modules.length; i++) {
-            newStates[i] = SwerveModuleState.optimize(newStates[i],
-                    modules[i].getSteerAngle());
-            modules[i].setState(newStates[i]);
-        }
+        setStates(newStates);
     }
 
     public Rotation2d getGyroAngle() {
@@ -71,6 +76,14 @@ public class SwerveDrive extends SubsystemBase {
 
     public SwerveDrivePoseEstimator getPoseEstimator() {
         return poseEstimator;
+    }
+
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
+    }
+
+    public Pose2d getEstimatedPose() {
+        return poseEstimator.getEstimatedPosition();
     }
 
     private void updatePositions() {
