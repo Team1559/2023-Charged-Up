@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import frc.lib.DTXboxController;
+import frc.robot.subsystems.swerve.SwerveDrive;
+
 /**
  * This class is where the bulk of the robot should be declared. Since
  * Command-based is a "declarative" paradigm, very little robot logic should
@@ -18,12 +21,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    private final DTXboxController controller0;
+    private final DTXboxController controller1;
+    private final SwerveDrive swerve;
+    private volatile int    angle;
+    private boolean         pressed;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
      */
     private Vision visionSubsystem;
     public RobotContainer() {
+        controller0 = new DTXboxController(0);
+        controller1 = new DTXboxController(1);
+        swerve = new SwerveDrive(controller0);
+
         configureBindings();
         visionSubsystem   = new Vision();
         

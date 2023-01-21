@@ -4,8 +4,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class DTXboxController {
     public enum RumbleSide {
@@ -39,17 +39,18 @@ public class DTXboxController {
 
     private static final Timer RUMBLE_TIMER = new Timer("Xbox_Rumble");
 
-    public final Button aButton          = new Button(this::getAButton);
-    public final Button bButton          = new Button(this::getBButton);
-    public final Button xButton          = new Button(this::getXButton);
-    public final Button yButton          = new Button(this::getYButton);
-    public final Button startButton      = new Button(this::getStartButton);
-    public final Button backButton       = new Button(this::getBackButton);
-    public final Button leftStickButton  = new Button(this::getLeftStickButton);
-    public final Button rightStickButton = new Button(
+    public final Trigger aButton          = new Trigger(this::getAButton);
+    public final Trigger bButton          = new Trigger(this::getBButton);
+    public final Trigger xButton          = new Trigger(this::getXButton);
+    public final Trigger yButton          = new Trigger(this::getYButton);
+    public final Trigger startButton      = new Trigger(this::getStartButton);
+    public final Trigger backButton       = new Trigger(this::getBackButton);
+    public final Trigger leftStickButton  = new Trigger(
+            this::getLeftStickButton);
+    public final Trigger rightStickButton = new Trigger(
             this::getRightStickButton);
-    public final Button leftBumper       = new Button(this::getLeftBumper);
-    public final Button rightBumper      = new Button(this::getRightBumper);
+    public final Trigger leftBumper       = new Trigger(this::getLeftBumper);
+    public final Trigger rightBumper      = new Trigger(this::getRightBumper);
 
     private final XboxController controller;
 
