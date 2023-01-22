@@ -24,12 +24,20 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import frc.robot.Constants;
+
 public class SwerveModule {
     private final int      id;
     private final TalonFX  driveMotor;
     private final TalonFX  steerMotor;
     private final CANCoder cancoder;
 
+    /**
+     * Constructs and configures a {@code SwerveModule} with the given ID.
+     * Hardware CAN IDs and settings are read from {@link Constants}.
+     *
+     * @param moduleID
+     */
     public SwerveModule(int moduleID) {
         id = moduleID;
         driveMotor = new TalonFX(MODULE_DRIVE_MOTOR_IDS[id]);
@@ -63,29 +71,60 @@ public class SwerveModule {
                 cancoder.getAbsolutePosition() - CANCODER_OFFSETS[id]);
     }
 
+    /**
+     * Sets the velocity of this modules's drive wheel
+     *
+     * @param metersPerSecond
+     *        The desired velocity in meters per second
+     */
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
         SmartDashboard.putNumber("Velocity ticks", ticksPer100ms);
         driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms);
     }
 
+    /**
+     * @return the current velocity of this module's drive wheel in meters per
+     *         second
+     */
     public double getVelocity() {
         return ticks100ToMps(driveMotor.getSelectedSensorVelocity());
     }
 
+    /**
+     * @return the current encoder position of this module's drive wheel motor
+     *         (used for odometry)
+     */
     public double getDriveMotorPosition() {
         return driveMotor.getSelectedSensorPosition();
     }
 
+    /**
+     * Stops the current drive wheel from spinning. Effectively the same as
+     * calling {@link #setVelocity(double) setVelocity(0)}
+     */
     public void stopDriving() {
         setVelocity(0);
     }
 
+    /**
+     * Applies the given state to this module. This is the primary method of
+     * commanding modules.
+     *
+     * @param state
+     *        The desired state of the module
+     */
     public void setState(SwerveModuleState state) {
         setSteerAngle(state.angle);
         setVelocity(state.speedMetersPerSecond);
     }
 
+    /**
+     * Sets the steer angle of the module, while clamping the movement to 180º.
+     *
+     * @param angle
+     *        The angle to set
+     */
     public void setSteerAngle(Rotation2d angle) {
         Rotation2d currentAngle = getSteerAngle();
         double diff = angle.minus(currentAngle)
@@ -110,41 +149,108 @@ public class SwerveModule {
         }
     }
 
+    /**
+     * @return An object containing the current angle and the net distance
+     *         traveled by the module (used for odometry)
+     */
     public SwerveModulePosition getCurrentPosition() {
         return new SwerveModulePosition(
                 ticksToMeters(driveMotor.getSelectedSensorPosition()),
                 getSteerAngle());
     }
 
+    /**
+     * @return The net rotation this module has turned, unclamped.
+     *
+     * @see #getSteerAngleMod()
+     */
     public Rotation2d getSteerAngle() {
         return Rotation2d.fromDegrees(
                 ticksToDegrees(steerMotor.getSelectedSensorPosition()));
     }
 
+    /**
+     * @return The current direction this module's wheel is facing, clamped to
+     *         the range (-π, π)
+     */
     public Rotation2d getSteerAngleMod() {
         return getSteerAngle().plus(Rotation2d.fromDegrees(0));
     }
 
+    /**
+     * Converts from a module wheel's linear velocity to its drive motor's
+     * angular velocity
+     *
+     * @param metersPerSecond
+     *        the linear velocity of the wheel in meters per second
+     *
+     * @return the angular velocity of the motor in encoder ticks per 100
+     *         milliseconds
+     */
     private static double mpsToTicks100(double metersPerSecond) {
         return metersToTicks(metersPerSecond) * 0.1;
     }
 
+    /**
+     * Converts from a module's drive motor's angular velocity to its wheel's
+     * linear velocity
+     *
+     * @param ticksPer100ms
+     *        the angular velocuty of the module's drive motor in encoder ticks
+     *        per 100ms
+     *
+     * @return the linear velocity of the wheel in meters per second
+     */
     private static double ticks100ToMps(double ticksPer100ms) {
         return ticksToMeters(ticksPer100ms) * 10;
     }
 
+    /**
+     * Converts from a steer motor's encoder position to the wheel's heading
+     *
+     * @param ticks
+     *        the motor's position in encoder ticks
+     *
+     * @return the heading of the wheel in degrees
+     */
     private static double ticksToDegrees(double ticks) {
         return ticks * TICKS_TO_DEGREES;
     }
 
+    /**
+     * Converts from a wheel heading to its steer motor's encoder position
+     *
+     * @param degrees
+     *        the heading of the wheel in degrees
+     *
+     * @return the motor's position in encoder ticks
+     */
     private static double degreesToTicks(double degrees) {
         return degrees * DEGREES_TO_TICKS;
     }
 
+    /**
+     * Converts from a drive motor's encoder ticks to the net rotation of its
+     * wheel
+     *
+     * @param ticks
+     *        the motor encoder position in ticks
+     *
+     * @return the net linear distance traveled by the wheel in meters
+     */
     private static double ticksToMeters(double ticks) {
         return ticks * TICKS_TO_METERS;
     }
 
+    /**
+     * Converts from a net wheel rotation to the net change in the drive motor's
+     * encoder position
+     *
+     * @param meters
+     *        the net linear distance traveled by the wheel in meters
+     *
+     * @return the motor encoder difference in ticks
+     */
     private static double metersToTicks(double meters) {
         return meters * METERS_TO_TICKS;
     }

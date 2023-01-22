@@ -30,6 +30,10 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pigeon2                  gyro;
 
+    /**
+     * @param c
+     *        The {@link DTXboxController} to read input from during teleop
+     */
     public SwerveDrive(DTXboxController c) {
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
@@ -51,6 +55,20 @@ public class SwerveDrive extends SubsystemBase {
                 modulePositions, new Pose2d());
     }
 
+    /**
+     * Calculates and commands {@link SwerveModuleState SwerveModuleStates} from
+     * a set of field-relative speeds
+     *
+     * @param vx
+     *        The desired linear velocity in the x-axis in meters per second
+     *        (forwards is positive)
+     * @param vy
+     *        The desired linear velocity in the y-axis in meters per second
+     *        (left is positive)
+     * @param vr
+     *        The desired rotational velocity in radians per second (CCW
+     *        positive)
+     */
     public void driveVelocity(double vx, double vy, double vr) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
                 getGyroAngle());
@@ -65,14 +83,25 @@ public class SwerveDrive extends SubsystemBase {
         }
     }
 
+    /**
+     * @return the current yaw reading of the {@link Pigeon2} IMU in the range
+     *         (-π, π)
+     */
     public Rotation2d getGyroAngle() {
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
+    /**
+     * @return the {@link SwerveDrivePoseEstimator} used to calculate odometry
+     */
     public SwerveDrivePoseEstimator getPoseEstimator() {
         return poseEstimator;
     }
 
+    /**
+     * Updates the internal {@link SwerveDrivePoseEstimator PoseEstimator} with
+     * encoder readings from each module
+     */
     private void updatePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < positions.length; i++) {
@@ -103,6 +132,9 @@ public class SwerveDrive extends SubsystemBase {
         updatePositions();
     }
 
+    /**
+     * @return a reference to the internal array of {@link SwerveModule SwerveModules}
+     */
     public SwerveModule[] getModules() {
         return modules;
     }

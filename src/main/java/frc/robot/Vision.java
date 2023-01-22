@@ -27,7 +27,6 @@ public class Vision extends SubsystemBase {
     private PhotonPoseEstimator photonPoseEstimator;
     private Pose3d lastPose;
 
-    /* Constructor method for Vision class */
     public Vision() {
         camera = new PhotonCamera("OV5647");
         try {
