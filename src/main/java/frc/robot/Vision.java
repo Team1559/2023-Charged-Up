@@ -1,69 +1,57 @@
 package frc.robot;
 
+import static frc.robot.Constants.Vision.CAMERA_NAME;
+import static frc.robot.Constants.Vision.POSE_STRATEGY;
+import static frc.robot.Constants.Vision.ROBOT_TO_CAMERA;
+
 import java.io.IOException;
 import java.util.ConcurrentModificationException;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
-    private PhotonCamera             camera;
-    private AprilTagFieldLayout      aprilTagFieldLayout;
-    private PhotonPoseEstimator      photonPoseEstimator;
-    private SwerveDrivePoseEstimator swervePoseEstimator;
+    private final PhotonCamera             camera;
+    private final AprilTagFieldLayout      aprilTagFieldLayout;
+    private final PhotonPoseEstimator      photonPoseEstimator;
+    private final SwerveDrivePoseEstimator swervePoseEstimator;
 
-    /* Constructor method for Vision class */
-    public Vision(SwerveDrivePoseEstimator swervePoseEstimator) {
-        this.swervePoseEstimator = swervePoseEstimator;
-        camera = new PhotonCamera("OV5647");
+    public Vision(SwerveDrivePoseEstimator poseEstimator) {
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(
                     AprilTagFields.k2023ChargedUp.m_resourceFile);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-        double cameraXOffset = Units.inchesToMeters(16);
-        double cameraZOffset = Units.inchesToMeters(5.5);
-        Transform3d robotToCam = new Transform3d(
-                new Translation3d(0, cameraXOffset, cameraZOffset),
-                new Rotation3d(0, 0, Math.toRadians(90)));
+        swervePoseEstimator = poseEstimator;
+        camera = new PhotonCamera(CAMERA_NAME);
+
         photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                PoseStrategy.LOWEST_AMBIGUITY, camera, robotToCam);
+                POSE_STRATEGY, camera, ROBOT_TO_CAMERA);
     }
 
     @Override
     public void periodic() {
         Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
-        if (result.isPresent()) {
+        boolean resultPresent = result.isPresent();
+        SmartDashboard.putBoolean("Apriltag", resultPresent);
+
+        if (resultPresent) {
             EstimatedRobotPose pose = result.get();
-            long start = System.nanoTime();
             try {
                 swervePoseEstimator.addVisionMeasurement(
                         pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-                double time = (System.nanoTime() - start) * 1e-9;
-                SmartDashboard.putNumber("Backcalculate time", time);
-                SmartDashboard.putBoolean("Backcalculate", time < 0.005);
             } catch (ConcurrentModificationException e) {
-                SmartDashboard.putBoolean("Backcalculate", false);
-                SmartDashboard.putString("Exception", Objects.toString(e));
+                // ignore
             }
-            SmartDashboard.putBoolean("Apriltag", true);
-        } else {
-            SmartDashboard.putBoolean("Apriltag", false);
         }
     }
 }
