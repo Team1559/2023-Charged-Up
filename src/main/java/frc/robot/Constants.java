@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -66,5 +71,18 @@ public final class Constants {
 
         public static final double MODULE_DRIVE_KP = 0.005;
         public static final double MODULE_DRIVE_KF = 0.05;
+    }
+
+    public static class Vision {
+        public static final String CAMERA_NAME = "OV5647";
+        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.AVERAGE_BEST_TARGETS;
+
+        public static final double CAMERA_X = 0;
+        public static final double CAMERA_Y = Units.inchesToMeters(16);
+        public static final double CAMERA_Z = Units.inchesToMeters(5.5);
+        public static final double CAMERA_ANGLE = Math.toRadians(90);
+        public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
+                new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
+                new Rotation3d(0, 0, CAMERA_ANGLE));
     }
 }
