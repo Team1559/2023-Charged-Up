@@ -4,24 +4,19 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.Trajectory.State;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.DTXboxController;
+import frc.robot.commands.AutoTrajectoryCommand;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -73,21 +68,24 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        swerve.zeroYaw();
+        Pose2d startState = swerve.getEstimatedPose();
+        Pose2d state1 = startState.plus(
+                new Transform2d(new Translation2d(-1.5, 0), new Rotation2d()));
+        Pose2d state2 = state1.plus(
+                new Transform2d(new Translation2d(0, -1.5), new Rotation2d()));
+        Pose2d state3 = state2.plus(
+                new Transform2d(new Translation2d(1.5, 0), new Rotation2d()));
+        Pose2d state4 = state3.plus(
+                new Transform2d(new Translation2d(0, 1.5), new Rotation2d()));
         PIDController xController = new PIDController(1, 0, 0);
         PIDController yController = new PIDController(1, 0, 0);
-        ProfiledPIDController rController = new ProfiledPIDController(1, 0, 0,
-                new TrapezoidProfile.Constraints(
-                        Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY, Math.PI));
-        HolonomicDriveController controller = new HolonomicDriveController(
-                xController, yController, rController);
-        List<Trajectory.State> states = new ArrayList<>();
-        states.add(new State(0, 0, 0, swerve.getPoseEstimator()
-                                            .getEstimatedPosition(),
-                0));
-        states.add(new State(2, 0, 0, new Pose2d(
-                new Translation2d(13.513558, 4.424426), new Rotation2d()), 0));
-        return new SwerveControllerCommand(new Trajectory(states),
-                swerve::getEstimatedPose, swerve.getKinematics(), controller,
-                swerve::setStates, swerve, vision);
+        PIDController rController = new PIDController(0.1, 0, 0);
+        return new AutoTrajectoryCommand(swerve.getKinematics(),
+                swerve::setStates, swerve::setAngle, swerve::getEstimatedPose,
+                xController, yController, rController, state1, state2, state3,
+                state4).andThen(swerve::stopDriving, swerve)
+                       .andThen(() -> SmartDashboard.putBoolean("Auto status",
+                               true));
     }
 }

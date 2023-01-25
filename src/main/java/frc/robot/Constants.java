@@ -75,12 +75,12 @@ public final class Constants {
 
     public static class Vision {
         public static final String CAMERA_NAME = "OV5647";
-        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.AVERAGE_BEST_TARGETS;
+        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.LOWEST_AMBIGUITY;
 
-        public static final double CAMERA_X = 0;
-        public static final double CAMERA_Y = Units.inchesToMeters(16);
+        public static final double CAMERA_X = Units.inchesToMeters(4);
+        public static final double CAMERA_Y = Units.inchesToMeters(0);
         public static final double CAMERA_Z = Units.inchesToMeters(5.5);
-        public static final double CAMERA_ANGLE = Math.toRadians(90);
+        public static final double CAMERA_ANGLE = Math.toRadians(0);
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
