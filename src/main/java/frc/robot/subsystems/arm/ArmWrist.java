@@ -6,20 +6,19 @@ import frc.robot.Constants;
     public class ArmWrist extends SubsystemBase{ //Note that this class assumes a 0 - 180
                 
         private Servo wristServo;
-        private int lastSet;
+        
 
     public ArmWrist(){
         wristServo = new Servo(Constants.Wiring.ARM_SERVO_PORTNUM);
-        lastSet = 0;
     }
     public void ZeroWrist(){
-        wristServo.setAngle(0); //
+        wristServo.setAngle(Constants.Arm.ZERO_ANGLE); 
     }
-    public int getLastSet(){
-        return lastSet;
+   
+    public void setWristAt(double angle){
+        wristServo.setAngle(calculateServoAngle(angle));
     }
-    public void setWristAt(int angle){
-        wristServo.setAngle(angle);
-        lastSet = angle;
+    private double calculateServoAngle(double targetAngle){
+        return targetAngle * (1 / Constants.Arm.ARM_WRIST_GEAR_RATIO) - Constants.Arm.ZERO_ANGLE;
     }
 }
