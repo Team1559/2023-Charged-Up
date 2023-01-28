@@ -91,7 +91,9 @@ public final class Constants {
                 new Rotation3d(0, 0, CAMERA_ANGLE));
     }
     public static class Grabber{
-        public static final double GRABBER_WRIST_GEAR_RATIO=1D;
-        public static final double ZERO_ANGLE=0D;
-    }
+        //public static final double GRABBER_WRIST_GEAR_RATIO=1D;
+        public static final double ZERO_ANGLE=90D;
+        public static final int SERVO_RANGE=180;
+        
+}
 }
