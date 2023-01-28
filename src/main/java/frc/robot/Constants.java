@@ -31,6 +31,8 @@ public final class Constants {
         public static final int[] MODULE_STEER_MOTOR_IDS = { 12, 3, 9, 6 };
         public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
         public static final int   PIGEON_IMU             = 0;
+        public static final int ARM_MOTOR_ID_BASE = 9997;
+        public static final int ARM_MOTOR_ID_ELBOW = 9998;
     }
 
     public static class Swerve {
@@ -84,5 +86,19 @@ public final class Constants {
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
+    }
+    public static class Arm{
+        public static final double GEAR_RATIO_BASE = 1 / 64.0;
+        public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
+        
+        public static final double kP_BASE = 0;
+        public static final double kD_BASE = 0;
+        public static final double kI_BASE = 0; 
+        public static final double kF_BASE = 0;
+
+        public static final double kP_ELBOW = 0;
+        public static final double kD_ELBOW = 0;
+        public static final double kI_ELBOW = 0; 
+        public static final double kF_ELBOW = 0;
     }
 }
