@@ -11,7 +11,6 @@ public class ArmElbow {
     public ArmElbow (){
         baseMotor = new TalonFX(Constants.Wiring.ARM_MOTOR_ID_ELBOW);
         baseMotor.configFactoryDefault();
-        double ticks = baseMotor.getSelectedSensorPosition();  
     }
     public double GetAngle(){
         return 0;

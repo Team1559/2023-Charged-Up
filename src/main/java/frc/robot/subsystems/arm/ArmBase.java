@@ -11,8 +11,6 @@ public class ArmBase {
     public ArmBase (){
         baseMotor = new TalonFX(Constants.Wiring.ARM_MOTOR_ID_BASE);
         baseMotor.configFactoryDefault();
-        
-        double ticks = baseMotor.getSelectedSensorPosition();  
     }
     public double GetAngle(){
         return 0;
