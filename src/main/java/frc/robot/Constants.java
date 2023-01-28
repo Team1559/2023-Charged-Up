@@ -88,7 +88,7 @@ public final class Constants {
                 new Rotation3d(0, 0, CAMERA_ANGLE));
     }
     public static class Arm{
-        public static final double GEAR_RATIO_BASE = (1 / 64.0) * (48/70.0); //My best guess of Gear Ratio @ base
+        public static final double GEAR_RATIO_BASE = (1 / 64.0) * (50/72.0); 
         public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
         
         public static final double kP_BASE = 0; //All PDI constants will be changed in the future.
