@@ -33,6 +33,7 @@ public final class Constants {
         public static final int   PIGEON_IMU             = 0;
         public static final int ARM_MOTOR_ID_BASE = 9997;
         public static final int ARM_MOTOR_ID_ELBOW = 9998;
+        public static final int ARM_SERVO_PORTNUM = 1;
     }
 
     public static class Swerve {
@@ -90,7 +91,8 @@ public final class Constants {
     public static class Arm{
         public static final double GEAR_RATIO_BASE = (1 / 64.0) * (50/72.0); 
         public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
-        
+        public static final double ARM_WRIST_GEAR_RATIO = 1; //Will be changed
+        public static final double ZERO_ANGLE = 0;
         public static final double kP_BASE = 0; //All PDI constants will be changed in the future.
         public static final double kD_BASE = 0;
         public static final double kI_BASE = 0; 
