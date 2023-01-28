@@ -1,7 +1,11 @@
 package frc.robot.subsystems.arm;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import static frc.robot.Constants.Wiring.ARM_SERVO_PORTNUM;
+import static frc.robot.Constants.Arm.ZERO_ANGLE;
+import static frc.robot.Constants.Arm.ARM_WRIST_GEAR_RATIO;
+
 
     public class ArmWrist extends SubsystemBase{ //Note that this class assumes a 0 - 180
                 
@@ -9,16 +13,16 @@ import frc.robot.Constants;
         
 
     public ArmWrist(){
-        wristServo = new Servo(Constants.Wiring.ARM_SERVO_PORTNUM);
+        wristServo = new Servo(ARM_SERVO_PORTNUM);
     }
     public void ZeroWrist(){
-        wristServo.setAngle(Constants.Arm.ZERO_ANGLE); 
+        wristServo.setAngle(ZERO_ANGLE); 
     }
-   
     public void setWristAt(double angle){
-        wristServo.setAngle(calculateServoAngle(angle));
+        wristServo.setAngle((angle) + ZERO_ANGLE);
     }
-    private double calculateServoAngle(double targetAngle){
-        return targetAngle * (1 / Constants.Arm.ARM_WRIST_GEAR_RATIO) - Constants.Arm.ZERO_ANGLE;
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Wrist Angle", wristServo.get() * 180 - ZERO_ANGLE);
     }
 }
