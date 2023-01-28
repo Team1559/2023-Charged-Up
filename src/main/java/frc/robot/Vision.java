@@ -25,7 +25,7 @@ public class Vision extends SubsystemBase {
     private final SwerveDrivePoseEstimator swervePoseEstimator;
 
     public Vision(SwerveDrivePoseEstimator poseEstimator) {
-        camera = new PhotonCamera("OV5647");
+        
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(
                     AprilTagFields.k2023ChargedUp.m_resourceFile);

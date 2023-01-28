@@ -31,6 +31,11 @@ public final class Constants {
         public static final int[] MODULE_STEER_MOTOR_IDS = { 12, 3, 9, 6 };
         public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
         public static final int   PIGEON_IMU             = 0;
+
+        public static final int PDH_ID = 420000;
+        public static final int CLAW_SOLENOID_ID = 1234;
+        public static final int WRIST_SERVO_PORT= 0;
+        
     }
 
     public static class Swerve {
@@ -84,5 +89,9 @@ public final class Constants {
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
+    }
+    public static class Grabber{
+        public static final double GRABBER_WRIST_GEAR_RATIO=1D;
+        public static final double ZERO_ANGLE=0D;
     }
 }
