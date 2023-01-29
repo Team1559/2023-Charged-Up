@@ -107,12 +107,18 @@ public class SwerveTrajectoryCommand extends CommandBase {
 
         // Scale linear velocity to meet velocity constraints
         double velocity = Math.hypot(vx, vy);
-        double ratio = trajectory.points[closestPointIndex].commandedVelocity
-                / velocity;
+        double commandedVelocity = Math.max(
+                trajectory.points[closestPointIndex].commandedVelocity, 0.05);
+        double ratio = commandedVelocity / velocity;
         vx *= ratio;
         vy *= ratio;
 
         swerveDrive.driveVelocity(vx, vy, vr);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        swerveDrive.stopDriving();
     }
 
     @Override

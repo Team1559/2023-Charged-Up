@@ -22,14 +22,19 @@ public class SwerveTrajectory {
         public final double commandedVelocity;
         public final double predictedVelocity;
         public final double distance;
+        public final double time;
+        public final double acceleration;
 
         public Point(Pose2d pose, double curvature, double commandedVelocity,
-                double predictedVelocity, double distance) {
+                double predictedVelocity, double distance, double time,
+                double acceleration) {
             this.pose = pose;
             this.curvature = curvature;
             this.commandedVelocity = commandedVelocity;
             this.predictedVelocity = predictedVelocity;
             this.distance = distance;
+            this.time = time;
+            this.acceleration = acceleration;
         }
 
         @Override
@@ -49,24 +54,14 @@ public class SwerveTrajectory {
     public SwerveTrajectory(Point... points) {
         this.points = points;
         length = points.length;
-        time = calculateTime();
-    }
-
-    private double calculateTime() {
-        double time = 0;
-        for (int i = 1; i < points.length; i++) {
-            double avgVelocity = 0.5 * (points[i].predictedVelocity
-                    + points[i - 1].predictedVelocity);
-            double distance = points[i].distance - points[i - 1].distance;
-            time += distance / avgVelocity;
-        }
-        return time;
+        time = points[length - 1].time;
     }
 
     public Trajectory toTrajectory() {
         return new Trajectory(Arrays.stream(points)
-                                    .map(p -> new Trajectory.State(0, 0, 0,
-                                            p.pose, 0))
+                                    .map(p -> new Trajectory.State(p.time,
+                                            p.predictedVelocity, p.acceleration,
+                                            p.pose, p.curvature))
                                     .collect(Collectors.toList()));
     }
 

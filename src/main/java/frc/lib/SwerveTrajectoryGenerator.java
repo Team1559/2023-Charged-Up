@@ -9,18 +9,66 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.SwerveTrajectory.Point;
 
 public class SwerveTrajectoryGenerator {
-    private static final double DISTANCE_BETWEEN_POINTS = 0.05;
+    private static final double DISTANCE_BETWEEN_POINTS = 0.02;
     private static final double SMOOTH_TOLERANCE        = 0.001;
-    private static final double SMOOTH_WEIGHT           = 0.9;
+    private static final double SMOOTH_WEIGHT           = 0.99;
     private static final double VELOCITY_PROPORTION     = 5;
     private static final double VELOCITY_POWER          = 0.25;
 
     public static SwerveTrajectory calculateTrajectory(Pose2d... waypoints) {
         // Generate the coordinates of the path
         Pose2d[] path = injectAndSmooth(waypoints);
+
         double[] curvatures = new double[path.length];
         double[] velocities = new double[path.length];
         double[] distances = new double[path.length];
+        double[] predictedVelocities = new double[path.length];
+        calculateVelocities(path, curvatures, velocities, predictedVelocities,
+                distances);
+
+        double[] times = new double[path.length];
+        double[] accelerations = new double[path.length];
+        calculateAccelerations(predictedVelocities, distances, times,
+                accelerations);
+
+        Point[] points = constructPoints(path, curvatures, velocities,
+                distances, predictedVelocities, times, accelerations);
+        return new SwerveTrajectory(points);
+    }
+
+    private static Point[] constructPoints(Pose2d[] path, double[] curvatures,
+            double[] velocities, double[] distances,
+            double[] predictedVelocities, double[] times,
+            double[] accelerations) {
+        Point[] points = new Point[path.length];
+        for (int i = 0; i < path.length; i++) {
+            points[i] = new Point(path[i], curvatures[i], velocities[i],
+                    predictedVelocities[i], distances[i], times[i],
+                    accelerations[i]);
+        }
+        return points;
+    }
+
+    private static void calculateAccelerations(double[] predictedVelocities,
+            double[] distances, double[] times, double[] accelerations) {
+        double time = 0;
+        for (int i = 1; i < times.length; i++) {
+            double avgVelocity = 0.5
+                    * (predictedVelocities[i] + predictedVelocities[i - 1]);
+            double distance = distances[i] - distances[i - 1];
+            time += distance / avgVelocity;
+            times[i] = time;
+
+            double velocityChange = predictedVelocities[i]
+                    - predictedVelocities[i - 1];
+            double timeChange = times[i] - times[i - 1];
+            accelerations[i - 1] = velocityChange / timeChange;
+        }
+    }
+
+    private static void calculateVelocities(Pose2d[] path, double[] curvatures,
+            double[] velocities, double[] predictedVelocities,
+            double[] distances) {
         // Compute the commanded velocities and cumulative distances
         for (int i = 1; i < path.length - 1; i++) {
             distances[i] = distances[i - 1] + path[i].minus(path[i - 1])
@@ -56,7 +104,7 @@ public class SwerveTrajectoryGenerator {
          * To project the actual performance of the robot, the commanded
          * velocities are turned into predicted velocities
          */
-        double[] predictedVelocities = velocities.clone();
+        System.arraycopy(velocities, 0, predictedVelocities, 0, path.length);
         predictedVelocities[0] = 0;
         for (int i = 1; i < path.length - 1; i++) {
             double newVelocity = Math.sqrt(
@@ -67,12 +115,6 @@ public class SwerveTrajectoryGenerator {
                 predictedVelocities[i] = newVelocity;
             }
         }
-        Point[] points = new Point[path.length];
-        for (int i = 0; i < path.length; i++) {
-            points[i] = new Point(path[i], curvatures[i], velocities[i],
-                    predictedVelocities[i], distances[i]);
-        }
-        return new SwerveTrajectory(points);
     }
 
     private static Pose2d[] injectAndSmooth(Pose2d[] waypoints) {
@@ -210,12 +252,28 @@ public class SwerveTrajectoryGenerator {
     }
 
     public static void main(String... args) {
-        Pose2d[] wayPoints = { new Pose2d(),
-                new Pose2d(1, 0, Rotation2d.fromDegrees(90)),
-                new Pose2d(1, 1, Rotation2d.fromDegrees(180)),
-                new Pose2d(0, 1, Rotation2d.fromDegrees(270)),
-                new Pose2d(0, 0, Rotation2d.fromDegrees(360)) };
-        SwerveTrajectory trajectory = calculateTrajectory(wayPoints);
+        Rotation2d DEGREES_0 = new Rotation2d();
+        Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
+
+        Pose2d startPose1 = new Pose2d(2.2, 4.6, DEGREES_180);
+        Pose2d startPose2 = new Pose2d(2.2, 2.7, DEGREES_180);
+        Pose2d startPose3 = new Pose2d(2.2, 0.75, DEGREES_180);
+
+        Pose2d chargingDock = new Pose2d(3.87, 2.7, DEGREES_180);
+
+        // Piece Position 1X = (6.70, 4.60, 0)
+        Pose2d fieldPiece1 = new Pose2d(6.7, 4.6, DEGREES_0);
+        // Piece Position 2A = (6.70, 3.40, 0)
+        Pose2d fieldPiece2a = new Pose2d(6.7, 3.4, DEGREES_0);
+        // Piece Position 2B = (6,70, 2.10, 0)
+        Pose2d fieldPiece2b = new Pose2d(6.7, 2.1, DEGREES_0);
+        // Piece Position 3X = (6.70, 0.90, 0)
+        Pose2d fieldPiece3 = new Pose2d(6.7, 0.9, DEGREES_0);
+
+        Pose2d[] waypoints = { startPose1, fieldPiece1 };
+        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(
+                waypoints);
+
         System.out.println(trajectory.toString("\n"));
     }
 }
