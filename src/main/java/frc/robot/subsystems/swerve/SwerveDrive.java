@@ -17,10 +17,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 import frc.lib.DTXboxController;
 import frc.robot.Constants;
@@ -56,13 +56,43 @@ public class SwerveDrive extends SubsystemBase {
                 new Translation2d(-MODULE_X, -MODULE_Y));
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(),
                 modulePositions, new Pose2d(0, 0, getGyroAngle()));
+
+        zeroYaw();
     }
 
     public void setStates(SwerveModuleState... states) {
+        double minCosine = 1;
         for (int i = 0; i < modules.length; i++) {
             states[i] = SwerveModuleState.optimize(states[i],
                     modules[i].getSteerAngle());
+            double cosine = Math.cos(Units.degreesToRadians(
+                    modules[i].getSteerAngle()
+                              .getDegrees()
+                            - states[i].angle.getDegrees()));
+            if (cosine < minCosine) {
+                minCosine = cosine;
+            }
+        }
+        SmartDashboard.putNumber("Cosine", minCosine);
+        for (int i = 0; i < modules.length; i++) {
+            states[i].speedMetersPerSecond *= minCosine;
             modules[i].setState(states[i]);
+        }
+    }
+
+    public void stopDriving() {
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].stopDriving();
+        }
+    }
+
+    public void zeroYaw() {
+        gyro.setYaw(0);
+    }
+
+    public void setAngle(Rotation2d angle) {
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setSteerAngle(angle);
         }
     }
 
@@ -93,6 +123,7 @@ public class SwerveDrive extends SubsystemBase {
      *         (-π, π)
      */
     public Rotation2d getGyroAngle() {
+        // WPILib uses CW+, CTRE uses CCW+; need to negate
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
@@ -137,9 +168,7 @@ public class SwerveDrive extends SubsystemBase {
                     || Math.abs(vr) > MINIMUM_ANGULAR_VELOCITY) {
                 driveVelocity(vx, vy, vr);
             } else {
-                for (int i = 0; i < modules.length; i++) {
-                    modules[i].stopDriving();
-                }
+                stopDriving();
             }
         }
 
@@ -153,7 +182,8 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     /**
-     * @return a reference to the internal array of {@link SwerveModule SwerveModules}
+     * @return a reference to the internal array of {@link SwerveModule
+     *         SwerveModules}
      */
     public SwerveModule[] getModules() {
         return modules;
