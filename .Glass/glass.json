@@ -27,8 +27,8 @@
           "weight": 1.0,
           "width": 1.0
         },
-        "height": 8.020000457763672,
-        "image": "/Users/xbhalla/Downloads/Screenshot 2023-01-28 at 1.54.45 PM.png",
+        "height": 8.02,
+        "image": "Field Image.png",
         "traj": {
           "arrowSize": 0,
           "style": "Line"
@@ -39,7 +39,7 @@
           "weight": 1.0,
           "width": 1.0
         },
-        "width": 16.540000915527344,
+        "width": 16.54,
         "window": {
           "visible": true
         }
