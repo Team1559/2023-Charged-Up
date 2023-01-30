@@ -69,20 +69,48 @@ public final class Constants {
         public static final double[] CANCODER_OFFSETS = { 70.2, 42.1, 94.3,
                 180.9 };
 
-        public static final double MODULE_DRIVE_KP = 0.005;
-        public static final double MODULE_DRIVE_KF = 0.05;
+        public static final double MODULE_DRIVE_KP = 0.05;
+        public static final double MODULE_STEER_KP = 0.22;
+        public static final double MODULE_STEER_KD = 0.1;
     }
 
     public static class Vision {
-        public static final String CAMERA_NAME = "OV5647";
+        public static final String       CAMERA_NAME   = "OV5647";
         public static final PoseStrategy POSE_STRATEGY = PoseStrategy.LOWEST_AMBIGUITY;
 
-        public static final double CAMERA_X = Units.inchesToMeters(4);
-        public static final double CAMERA_Y = Units.inchesToMeters(0);
-        public static final double CAMERA_Z = Units.inchesToMeters(5.5);
+        public static final double CAMERA_X     = Units.inchesToMeters(4);
+        public static final double CAMERA_Y     = Units.inchesToMeters(0);
+        public static final double CAMERA_Z     = Units.inchesToMeters(5.5);
         public static final double CAMERA_ANGLE = Math.toRadians(0);
+
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
+    }
+
+    public static class Auto {
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.7
+                * Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 0.5
+                * Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
+
+        public static final double ACCELERATION_TIME            = 1;
+        public static final double MAXIMUM_LINEAR_ACCELERATION  = MAXIMUM_LINEAR_VELOCITY
+                / ACCELERATION_TIME;
+        public static final double MAXIMUM_ANGULAR_ACCELERATION = MAXIMUM_ANGULAR_VELOCITY
+                / ACCELERATION_TIME;
+
+        public static final double LINEAR_TOLERANCE   = 0.05;
+        public static final double ANGULAR_TOLERANCE  = 2;
+        public static final double LOOKAHEAD_DISTANCE = 0.5;
+
+        public static final double LINEAR_KP  = 1.5;
+        public static final double ANGULAR_KP = 3;
+
+        public static final double DISTANCE_BETWEEN_POINTS = 0.02;
+        public static final double SMOOTH_TOLERANCE        = 0.001;
+        public static final double SMOOTH_WEIGHT           = 0.99;
+        public static final double VELOCITY_PROPORTION     = 5;
+        public static final double VELOCITY_POWER          = 0.25;
     }
 }

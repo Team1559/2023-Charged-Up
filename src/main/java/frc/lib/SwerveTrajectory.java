@@ -1,21 +1,12 @@
 package frc.lib;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 
-import frc.robot.Constants;
-
 public class SwerveTrajectory {
-    public static final double MAXIMUM_LINEAR_VELOCITY      = 0.7
-            * Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
-    public static final double MAXIMUM_LINEAR_ACCELERATION  = MAXIMUM_LINEAR_VELOCITY;
-    public static final double MAXIMUM_ANGULAR_VELOCITY     = 0.5
-            * Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
-    public static final double MAXIMUM_ANGULAR_ACCELERATION = MAXIMUM_ANGULAR_VELOCITY;
-
     public static class Point {
         public final Pose2d pose;
         public final double curvature;
@@ -58,11 +49,13 @@ public class SwerveTrajectory {
     }
 
     public Trajectory toTrajectory() {
-        return new Trajectory(Arrays.stream(points)
-                                    .map(p -> new Trajectory.State(p.time,
-                                            p.predictedVelocity, p.acceleration,
-                                            p.pose, p.curvature))
-                                    .collect(Collectors.toList()));
+        List<Trajectory.State> states = new ArrayList<>();
+        for (int i = 0; i < points.length; i++) {
+            Point p = points[i];
+            states.add( new Trajectory.State(p.time, p.predictedVelocity,
+                    p.acceleration, p.pose, p.curvature));
+        }
+        return new Trajectory(states);
     }
 
     @Override

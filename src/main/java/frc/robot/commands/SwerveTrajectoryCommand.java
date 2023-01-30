@@ -1,5 +1,11 @@
 package frc.robot.commands;
 
+import static frc.robot.Constants.Auto.ANGULAR_KP;
+import static frc.robot.Constants.Auto.ANGULAR_TOLERANCE;
+import static frc.robot.Constants.Auto.LINEAR_KP;
+import static frc.robot.Constants.Auto.LINEAR_TOLERANCE;
+import static frc.robot.Constants.Auto.LOOKAHEAD_DISTANCE;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -9,8 +15,6 @@ import frc.lib.SwerveTrajectory;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class SwerveTrajectoryCommand extends CommandBase {
-    private static final double LOOKAHEAD_DISTANCE = 0.5;
-
     private final SwerveDrive      swerveDrive;
     private final SwerveTrajectory trajectory;
     private final PIDController    xController;
@@ -26,9 +30,9 @@ public class SwerveTrajectoryCommand extends CommandBase {
         this.swerveDrive = swerveDrive;
         this.trajectory = trajectory;
 
-        xController = new PIDController(1.5, 0, 0);
-        yController = new PIDController(1.5, 0, 0);
-        rController = new PIDController(3, 0, 0);
+        xController = new PIDController(LINEAR_KP, 0, 0);
+        yController = new PIDController(LINEAR_KP, 0, 0);
+        rController = new PIDController(ANGULAR_KP, 0, 0);
         rController.enableContinuousInput(-180, 180);
 
         targetPose = trajectory.points[trajectory.length - 1].pose;
@@ -125,8 +129,8 @@ public class SwerveTrajectoryCommand extends CommandBase {
     public boolean isFinished() {
         Transform2d delta = targetPose.minus(swerveDrive.getEstimatedPose());
         return delta.getTranslation()
-                    .getNorm() < 0.05
+                    .getNorm() < LINEAR_TOLERANCE
                 && Math.abs(delta.getRotation()
-                                 .getDegrees()) < 2;
+                                 .getDegrees()) < ANGULAR_TOLERANCE;
     }
 }

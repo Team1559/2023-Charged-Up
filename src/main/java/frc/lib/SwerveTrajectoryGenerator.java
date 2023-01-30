@@ -1,7 +1,12 @@
 package frc.lib;
 
-import static frc.lib.SwerveTrajectory.MAXIMUM_LINEAR_ACCELERATION;
-import static frc.lib.SwerveTrajectory.MAXIMUM_LINEAR_VELOCITY;
+import static frc.robot.Constants.Auto.DISTANCE_BETWEEN_POINTS;
+import static frc.robot.Constants.Auto.MAXIMUM_LINEAR_ACCELERATION;
+import static frc.robot.Constants.Auto.MAXIMUM_LINEAR_VELOCITY;
+import static frc.robot.Constants.Auto.SMOOTH_TOLERANCE;
+import static frc.robot.Constants.Auto.SMOOTH_WEIGHT;
+import static frc.robot.Constants.Auto.VELOCITY_POWER;
+import static frc.robot.Constants.Auto.VELOCITY_PROPORTION;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,12 +14,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.SwerveTrajectory.Point;
 
 public class SwerveTrajectoryGenerator {
-    private static final double DISTANCE_BETWEEN_POINTS = 0.02;
-    private static final double SMOOTH_TOLERANCE        = 0.001;
-    private static final double SMOOTH_WEIGHT           = 0.99;
-    private static final double VELOCITY_PROPORTION     = 5;
-    private static final double VELOCITY_POWER          = 0.25;
-
     public static SwerveTrajectory calculateTrajectory(Pose2d... waypoints) {
         // Generate the coordinates of the path
         Pose2d[] path = injectAndSmooth(waypoints);
@@ -59,10 +58,9 @@ public class SwerveTrajectoryGenerator {
             time += distance / avgVelocity;
             times[i] = time;
 
-            double velocityChange = predictedVelocities[i]
-                    - predictedVelocities[i - 1];
-            double timeChange = times[i] - times[i - 1];
-            accelerations[i - 1] = velocityChange / timeChange;
+            double dv = predictedVelocities[i] - predictedVelocities[i - 1];
+            double dt = times[i] - times[i - 1];
+            accelerations[i - 1] = dv / dt;
         }
     }
 
@@ -137,25 +135,28 @@ public class SwerveTrajectoryGenerator {
         double[][] deltas = new double[waypoints.length - 1][3];
         int totalPointCount = 1;
         for (int i = 0; i < deltas.length; i++) {
-            deltas[i][0] = waypoints[i + 1].getX() - waypoints[i].getX();
-            deltas[i][1] = waypoints[i + 1].getY() - waypoints[i].getY();
-            deltas[i][2] = waypoints[i + 1].getRotation()
-                                           .getDegrees()
-                    - waypoints[i].getRotation()
+            Pose2d currentPoint = waypoints[i];
+            Pose2d nextPoint = waypoints[i + 1];
+            deltas[i][0] = nextPoint.getX() - currentPoint.getX();
+            deltas[i][1] = nextPoint.getY() - currentPoint.getY();
+            deltas[i][2] = nextPoint.getRotation()
+                                    .getDegrees()
+                    - currentPoint.getRotation()
                                   .getDegrees();
             double deltaD = Math.hypot(deltas[i][0], deltas[i][1]);
-            int points = (int) (deltaD / DISTANCE_BETWEEN_POINTS);
-            deltas[i][0] /= points;
-            deltas[i][1] /= points;
-            deltas[i][2] /= points;
-            intermediatePointCounts[i] = points - 1;
-            totalPointCount += points;
+            int pointCount = (int) (deltaD / DISTANCE_BETWEEN_POINTS);
+            deltas[i][0] /= pointCount;
+            deltas[i][1] /= pointCount;
+            deltas[i][2] /= pointCount;
+            intermediatePointCounts[i] = pointCount - 1;
+            totalPointCount += pointCount;
         }
         // Insert points by adding the deltas
         // Use 2D double array for less object creation and destruction during
         // editing
         double[][] points = new double[totalPointCount][3];
         int pointIndex = 0;
+        double[] currentPoint = points[pointIndex];
         double x, y, r, dx, dy, dr;
         for (int i = 0; i < deltas.length; i++) {
             // Copy original point
@@ -163,25 +164,28 @@ public class SwerveTrajectoryGenerator {
             y = waypoints[i].getY();
             r = waypoints[i].getRotation()
                             .getDegrees();
-            points[pointIndex][0] = x;
-            points[pointIndex][1] = y;
-            points[pointIndex][2] = r;
+            currentPoint[0] = x;
+            currentPoint[1] = y;
+            currentPoint[2] = r;
             pointIndex++;
+            currentPoint = points[pointIndex];
             // Create intermediate points
             dx = deltas[i][0];
             dy = deltas[i][1];
             dr = deltas[i][2];
             for (int j = 1; j <= intermediatePointCounts[i]; j++) {
-                points[pointIndex][0] = x + dx * j;
-                points[pointIndex][1] = y + dy * j;
-                points[pointIndex][2] = r + dr * j;
+                currentPoint[0] = x + dx * j;
+                currentPoint[1] = y + dy * j;
+                currentPoint[2] = r + dr * j;
                 pointIndex++;
+                currentPoint = points[pointIndex];
             }
         }
-        points[pointIndex][0] = waypoints[waypoints.length - 1].getX();
-        points[pointIndex][1] = waypoints[waypoints.length - 1].getY();
-        points[pointIndex][2] = waypoints[waypoints.length - 1].getRotation()
-                                                               .getDegrees();
+        double[] lastPoint = points[points.length - 1];
+        lastPoint[0] = waypoints[waypoints.length - 1].getX();
+        lastPoint[1] = waypoints[waypoints.length - 1].getY();
+        lastPoint[2] = waypoints[waypoints.length - 1].getRotation()
+                                                      .getDegrees();
         return points;
     }
 
