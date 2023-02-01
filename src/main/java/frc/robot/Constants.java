@@ -34,6 +34,7 @@ public final class Constants {
 
         public static final int PDH_ID = 420000;
         public static final int CLAW_SOLENOID_ID = 1234;
+        public static final int CLAW_PRESSURE_SOLENOID_ID = 5678;
         public static final int WRIST_SERVO_PORT= 0;
         
     }

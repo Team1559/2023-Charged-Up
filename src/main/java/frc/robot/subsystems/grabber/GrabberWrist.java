@@ -24,6 +24,7 @@ public class GrabberWrist extends SubsystemBase{
     @Override
     public void periodic(){
         SmartDashboard.putNumber("Grabber Angle", wristServo.get()*SERVO_RANGE-ZERO_ANGLE);
+        SmartDashboard.putNumber("Grabber Servo Angle", wristServo.get());
     }
     // private double calculateServoAngle(double targetAngle){
     //     return targetAngle+ZERO_ANGLE;
