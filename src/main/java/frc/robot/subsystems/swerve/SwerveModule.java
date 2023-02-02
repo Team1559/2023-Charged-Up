@@ -3,6 +3,9 @@ package frc.robot.subsystems.swerve;
 import static frc.robot.Constants.Swerve.CANCODER_OFFSETS;
 import static frc.robot.Constants.Swerve.DEGREES_TO_TICKS;
 import static frc.robot.Constants.Swerve.METERS_TO_TICKS;
+import static frc.robot.Constants.Swerve.MODULE_DRIVE_KP;
+import static frc.robot.Constants.Swerve.MODULE_STEER_KD;
+import static frc.robot.Constants.Swerve.MODULE_STEER_KP;
 import static frc.robot.Constants.Swerve.TICKS_TO_DEGREES;
 import static frc.robot.Constants.Swerve.TICKS_TO_METERS;
 import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
@@ -47,12 +50,12 @@ public class SwerveModule {
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.setInverted(true);
         driveMotor.setSelectedSensorPosition(0D);
-        driveMotor.config_kP(0, 0.05);
+        driveMotor.config_kP(0, MODULE_DRIVE_KP);
 
         steerMotor.configFactoryDefault();
         steerMotor.setNeutralMode(NeutralMode.Brake);
-        steerMotor.config_kP(0, 0.22);
-        steerMotor.config_kD(0, 0.1);
+        steerMotor.config_kP(0, MODULE_STEER_KP);
+        steerMotor.config_kD(0, MODULE_STEER_KD);
         steerMotor.setSelectedSensorPosition(
                 degreesToTicks(cancoder.getPosition() % 360));
     }
