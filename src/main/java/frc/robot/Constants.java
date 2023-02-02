@@ -32,11 +32,11 @@ public final class Constants {
         public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
         public static final int   PIGEON_IMU             = 0;
 
-        public static final int PDH_ID = 420000;
-        public static final int CLAW_SOLENOID_ID = 1234;
+        public static final int PDH_ID                    = 420000;
+        public static final int CLAW_SOLENOID_ID          = 1234;
         public static final int CLAW_PRESSURE_SOLENOID_ID = 5678;
-        public static final int WRIST_SERVO_PORT= 0;
-        
+        public static final int WRIST_SERVO_PORT          = 0;
+
     }
 
     public static class Swerve {

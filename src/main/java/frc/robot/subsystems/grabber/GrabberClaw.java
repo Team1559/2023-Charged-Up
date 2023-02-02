@@ -9,40 +9,45 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class GrabberClaw extends SubsystemBase{
-    //pneumatic solenoid
+public class GrabberClaw extends SubsystemBase {
+    // pneumatic solenoid
     private Solenoid clawSolenoid;
     private Solenoid clawPressure;
-    public GrabberClaw(){
-        clawSolenoid= new Solenoid(PDH_ID, PneumaticsModuleType.REVPH,CLAW_SOLENOID_ID);
-        clawPressure=new Solenoid(PDH_ID,PneumaticsModuleType.REVPH,CLAW_PRESSURE_SOLENOID_ID );
+
+    public GrabberClaw() {
+        clawSolenoid = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH,
+                CLAW_SOLENOID_ID);
+        clawPressure = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH,
+                CLAW_PRESSURE_SOLENOID_ID);
     }
-    public void openClaw(){
+
+    public void openClaw() {
         clawSolenoid.set(true);
         clawPressure.set(false);
     }
-    public void closeClaw(boolean pressure){
+
+    public void closeClaw(boolean pressure) {
         clawPressure.set(pressure);
-        
+
         clawSolenoid.set(false);
     }
-    public String clawState(){
-        if(clawPressure.get()&&clawSolenoid.get()==false){
+
+    public String clawState() {
+        if (clawPressure.get() && clawSolenoid.get() == false) {
             return "Cone";
-        }
-        else if(clawSolenoid.get()&& clawPressure.get()==false){
+        } else if (clawSolenoid.get() && clawPressure.get() == false) {
             return "Claw Open";
-        }
-        else{
+        } else {
             return "Cube";
         }
     }
-    public boolean pressureState(){
+
+    public boolean pressureState() {
         return clawPressure.get();
     }
-    
+
     @Override
-    public void periodic(){
+    public void periodic() {
         SmartDashboard.putString("Claw Status", clawState());
     }
 }
