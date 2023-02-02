@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.DTXboxController;
+import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.grabber.GrabberClaw;
+import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -35,6 +38,8 @@ public class RobotContainer {
     private final DTXboxController controller0;
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
+    private final GrabberWrist     wrist;
+    private final GrabberClaw      claw;
     private final Vision           vision;
 
     /**
@@ -45,10 +50,11 @@ public class RobotContainer {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         swerve = new SwerveDrive(controller0);
+        wrist = new GrabberWrist();
+        claw = new GrabberClaw();
 
         configureBindings();
         vision = new Vision(swerve.getPoseEstimator());
-
     }
 
     /**
@@ -64,7 +70,9 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // TODO: implement
+        Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
+                controller1);
+        wrist.setDefaultCommand(teleopWristCommand);
     }
 
     /**

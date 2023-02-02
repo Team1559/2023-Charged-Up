@@ -80,21 +80,27 @@ public final class Constants {
     }
 
     public static class Vision {
-        public static final String CAMERA_NAME = "OV5647";
+        public static final String       CAMERA_NAME   = "OV5647";
         public static final PoseStrategy POSE_STRATEGY = PoseStrategy.AVERAGE_BEST_TARGETS;
 
-        public static final double CAMERA_X = 0;
-        public static final double CAMERA_Y = Units.inchesToMeters(16);
-        public static final double CAMERA_Z = Units.inchesToMeters(5.5);
-        public static final double CAMERA_ANGLE = Math.toRadians(90);
+        public static final double      CAMERA_X        = 0;
+        public static final double      CAMERA_Y        = Units.inchesToMeters(
+                16);
+        public static final double      CAMERA_Z        = Units.inchesToMeters(
+                5.5);
+        public static final double      CAMERA_ANGLE    = Math.toRadians(90);
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
     }
-    public static class Grabber{
-        //public static final double GRABBER_WRIST_GEAR_RATIO=1D;
-        public static final double ZERO_ANGLE=90D;
-        public static final int SERVO_RANGE=180;
-        
-}
+
+    public static class Grabber {
+        // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
+        public static final double ZERO_ANGLE                        = 90D;
+        public static final int    SERVO_RANGE                       = 180;
+        public static final double TELEOP_ANGULAR_VELOCITY           = 90D;
+        public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY
+                / 50;
+        public static final double MAX_ANGULAR_VELOCITY              = 360D;
+    }
 }
