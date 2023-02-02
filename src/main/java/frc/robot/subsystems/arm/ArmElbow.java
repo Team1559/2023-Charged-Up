@@ -9,11 +9,11 @@ import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Wiring.ELBOW_POTENTIOMETER_PORTNUM;
 
-public class ArmElbow {
+public class ArmElbow{
     private final TalonFX       baseMotor;
     private AnalogPotentiometer elbowPotentiometer;
 
-    public ArmElbow() {
+    public ArmElbow(){
         baseMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
         baseMotor.configFactoryDefault();
         elbowPotentiometer = new AnalogPotentiometer(

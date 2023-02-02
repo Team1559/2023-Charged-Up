@@ -22,6 +22,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.DTXboxController;
+import frc.robot.subsystems.arm.ArmBase;
+import frc.robot.subsystems.arm.ArmElbow;
+import frc.robot.subsystems.arm.ArmWrist;
+import frc.robot.subsystems.arm.ArmWristCommandsTeleop;
+import frc.robot.subsystems.arm.ArmWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -36,7 +41,10 @@ public class RobotContainer {
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
     private final Vision           vision;
-
+    private final ArmWrist armWrist;
+    private final ArmBase base;
+    private final ArmElbow elbow;
+    
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
@@ -45,7 +53,11 @@ public class RobotContainer {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         swerve = new SwerveDrive(controller0);
-
+        
+        armWrist = new ArmWrist();
+        base = new ArmBase();
+        elbow = new ArmElbow();
+        
         configureBindings();
         vision = new Vision(swerve.getPoseEstimator());
 
@@ -64,7 +76,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        // TODO: implement
+        Command teleOpWristCommand = new ArmWristCommandsTeleop(armWrist,  controller1);
+        armWrist.setDefaultCommand(teleOpWristCommand);
     }
 
     /**

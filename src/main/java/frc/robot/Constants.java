@@ -33,9 +33,11 @@ public final class Constants {
         public static final int   PIGEON_IMU             = 0;
         public static final int ARM_MOTOR_ID_BASE = 9997;
         public static final int ARM_MOTOR_ID_ELBOW = 9998;
-        public static final int ARM_SERVO_PORTNUM = 1;
+        public static final int ARM_FALCON_ID_WRIST = 9999;
+        public static final int ARM_SERVO_PORTNUM = 1; //Might be removed in the event of Falcon being used.
         public static final int BASE_POTENTIOMETER_PORTNUM = 2;
         public static final int ELBOW_POTENTIOMETER_PORTNUM = 3;
+        public static final int WRIST_POTENTIOMETER_PORTNUM = 4; //Again, might be removed depending on actuator that Arm Team picks
     }
 
     public static class Swerve {
@@ -93,9 +95,11 @@ public final class Constants {
     public static class Arm{
         public static final double GEAR_RATIO_BASE = (1 / 64.0) * (50/72.0); 
         public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
-        public static final double ARM_WRIST_GEAR_RATIO = 1; //Will be changed when we know which servo/stepper will be used
-        
-        public static final double ZERO_ANGLE = 0; //Again, temporary value based on hypothetical zero position on Falcon
+        public static final double ARM_WRIST_GEAR_RATIO = 1; //Will be changed when we know which servo/Falcon will be used
+        public static final double TELEOP_ANGLE_VELOCITY = 360D;
+        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE  = TELEOP_ANGLE_VELOCITY / 50.0;
+
+        public static final double ZERO_ANGLE = 0; //Again, temporary value based on hypothetical zero position on Falcon/Servo
 
         public static final double kP_BASE = 0; //# All PID constants will be changed in the future, when the arm can be tuned.
         public static final double kD_BASE = 0;

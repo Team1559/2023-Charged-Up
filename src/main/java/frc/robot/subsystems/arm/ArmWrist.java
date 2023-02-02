@@ -1,24 +1,57 @@
 package frc.robot.subsystems.arm;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import static frc.robot.Constants.FALCON_TICKS_PER_REV;
+import static frc.robot.Constants.Arm.ARM_WRIST_GEAR_RATIO;
+import static frc.robot.Constants.Wiring.ARM_FALCON_ID_WRIST;
+import static frc.robot.Constants.Wiring.WRIST_POTENTIOMETER_PORTNUM;
+
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.Wiring.ARM_SERVO_PORTNUM;
-import static frc.robot.Constants.Arm.ZERO_ANGLE;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants;
 
 
-    public class ArmWrist extends SubsystemBase{ //Note that this class assumes a 0 - 180 servo motor
-    private Servo wristServo;
+public class ArmWrist extends SubsystemBase {
+    private static final double TELEOP_ANGLE_VELOCITY = 0;
+    private final TalonFX baseMotor;
+    private AnalogPotentiometer wristPotentiometer;
+
     public ArmWrist(){
-        wristServo = new Servo(ARM_SERVO_PORTNUM);
+        baseMotor = new TalonFX(ARM_FALCON_ID_WRIST);
+        baseMotor.configFactoryDefault();
+        wristPotentiometer = new AnalogPotentiometer(WRIST_POTENTIOMETER_PORTNUM, 90, 0);
+        // offset 0 is a placeholder, due to the fact we have no means of
+        // determining actual degree offset right now
     }
-    public void ZeroWrist(){
-        wristServo.setAngle(ZERO_ANGLE); 
+
+    public double getWrist() {
+        return wristPotentiometer.get();
     }
-    public void setWristAt(double angle){ //IF SERVO IS NOT 0 - 180, change to values on a 0.0 to 1.0 basis
-        wristServo.setAngle((angle) + ZERO_ANGLE);
+
+    public static double angleToTick(double angle) {
+        double revolutionsOfArm = angle / 360.0;
+        double motorRevolutions = revolutionsOfArm * ARM_WRIST_GEAR_RATIO; //Inverted, we don't know actual ratio yet, so
+        double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;       //ARM_WRIST_GEAR_RATIO is set to 1.
+        return angleTicks;
     }
-    @Override
-    public void periodic(){
-        SmartDashboard.putNumber("Wrist Angle", wristServo.get() * 180 -  ZERO_ANGLE);
+    public void setAngle(double angle) {
+        if (angle / 180.0 > wristPotentiometer.get()) {
+
+        } else {
+            baseMotor.set(TalonFXControlMode.Position, angleToTick(angle));
+        }
     }
+    public Command setWristAngleCommand(double angle){
+        return Commands.sequence(
+            new InstantCommand(() -> setAngle(angle), this),
+            new WaitCommand(Math.abs(angle - getWrist()) /  Constants.Arm.TELEOP_ANGLE_VELOCITY)); 
+    }
+
+    public void setDefaultCommand(Command teleOpWristCommand) {}
 }
