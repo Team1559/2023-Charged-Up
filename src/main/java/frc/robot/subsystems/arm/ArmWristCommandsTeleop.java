@@ -1,8 +1,6 @@
 package frc.robot.subsystems.arm;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.lib.DTXboxController;
 
 public class ArmWristCommandsTeleop extends CommandBase {
@@ -21,10 +19,10 @@ public class ArmWristCommandsTeleop extends CommandBase {
 
     @Override
     public void execute() {
-        double x = controller.getLeftStickX();
+        double rightStickY = controller.getRightStickY();
         double angle = wrist.getWrist();
-        if (Math.abs(x) > deadband) {
-            if (x < 0) {
+        if (Math.abs(rightStickY) > deadband) {
+            if (rightStickY < 0) {
                 angle -= angleVelPerCycle;
             } else {
                 angle += angleVelPerCycle;

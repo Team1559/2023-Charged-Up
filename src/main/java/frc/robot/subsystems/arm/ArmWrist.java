@@ -4,34 +4,47 @@ import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.ARM_WRIST_GEAR_RATIO;
 import static frc.robot.Constants.Wiring.ARM_FALCON_ID_WRIST;
 import static frc.robot.Constants.Wiring.WRIST_POTENTIOMETER_PORTNUM;
+import static frc.robot.Constants.Arm.TELEOP_ANGLE_VELOCITY;
+import static frc.robot.Constants.Arm.ARM_WRIST_POTENTIOMETER_MULT;
+import static frc.robot.Constants.Arm.ARM_WRIST_POTENTIOMETER_ADD;
+import static frc.robot.Constants.Arm.kP_WRIST;
+import static frc.robot.Constants.Arm.kI_WRIST;
+import static frc.robot.Constants.Arm.kD_WRIST;
+import static frc.robot.Constants.Arm.kF_WRIST;
 
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
+
 
 
 public class ArmWrist extends SubsystemBase {
-    private static final double TELEOP_ANGLE_VELOCITY = 0;
-    private final TalonFX baseMotor;
+    private final TalonFX wristMotor;
     private AnalogPotentiometer wristPotentiometer;
 
     public ArmWrist(){
-        baseMotor = new TalonFX(ARM_FALCON_ID_WRIST);
-        baseMotor.configFactoryDefault();
+        wristMotor = new TalonFX(ARM_FALCON_ID_WRIST);
+        
+        wristMotor.configFactoryDefault();
+        wristMotor.config_kP(0, kP_WRIST);
+        wristMotor.config_kI(0, kI_WRIST);
+        wristMotor.config_kD(0, kD_WRIST);
+        wristMotor.config_kF(0, kF_WRIST);
+
         wristPotentiometer = new AnalogPotentiometer(WRIST_POTENTIOMETER_PORTNUM, 90, 0);
         // offset 0 is a placeholder, due to the fact we have no means of
         // determining actual degree offset right now
     }
 
     public double getWrist() {
-        return wristPotentiometer.get();
+        return ARM_WRIST_POTENTIOMETER_ADD + wristPotentiometer.get() * ARM_WRIST_POTENTIOMETER_MULT;
     }
 
     public static double angleToTick(double angle) {
@@ -41,17 +54,21 @@ public class ArmWrist extends SubsystemBase {
         return angleTicks;
     }
     public void setAngle(double angle) {
-        if (angle / 180.0 > wristPotentiometer.get()) {
+        if (angle / 180.0 > 2) {
 
         } else {
-            baseMotor.set(TalonFXControlMode.Position, angleToTick(angle));
+            wristMotor.set(TalonFXControlMode.Position, angleToTick(angle));
         }
     }
+    
     public Command setWristAngleCommand(double angle){
         return Commands.sequence(
             new InstantCommand(() -> setAngle(angle), this),
-            new WaitCommand(Math.abs(angle - getWrist()) /  Constants.Arm.TELEOP_ANGLE_VELOCITY)); 
+            new WaitCommand(Math.abs(angle - getWrist()) /  TELEOP_ANGLE_VELOCITY)); 
     }
 
-    public void setDefaultCommand(Command teleOpWristCommand) {}
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("U/D wrist potentiometer reading ", getWrist());
+    }
 }

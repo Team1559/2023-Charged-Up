@@ -42,8 +42,8 @@ public class RobotContainer {
     private final SwerveDrive      swerve;
     private final Vision           vision;
     private final ArmWrist armWrist;
-    private final ArmBase base;
-    private final ArmElbow elbow;
+    private final ArmBase armBase;
+    private final ArmElbow armElbow;
     
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -55,8 +55,8 @@ public class RobotContainer {
         swerve = new SwerveDrive(controller0);
         
         armWrist = new ArmWrist();
-        base = new ArmBase();
-        elbow = new ArmElbow();
+        armBase = new ArmBase();
+        armElbow = new ArmElbow();
         
         configureBindings();
         vision = new Vision(swerve.getPoseEstimator());
