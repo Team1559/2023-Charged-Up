@@ -4,6 +4,7 @@ package frc.robot.commands;
 // import static frc.robot.Constants.Grabber.MINIMUM_WRIST_ANGLE;
 // import static frc.robot.Constants.Grabber.TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
 import static frc.robot.Constants.Grabber.ZERO_ANGLE;
+import static frc.robot.Constants.Grabber.SERVO_RANGE;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.DTXboxController;
@@ -28,13 +29,13 @@ public class TeleopWristAngleCommand extends CommandBase {
         double x = controller.getRightStickX();
         //double angle = wrist.getAngle();
 
-        if(Math.abs(x)>deadband){
+        if(Math.abs(x)<deadband){
             if(x<(ZERO_ANGLE-deadband)||x>(ZERO_ANGLE+deadband)){
                 wrist.resetWrist();
             }
         }
         else{
-            wrist.setAngle(x);
+            wrist.setAngle(x*(SERVO_RANGE/2));
         }
 
         // if (Math.abs(x) > deadband) {
