@@ -1,5 +1,6 @@
 package frc.robot.subsystems.arm;
 
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -31,8 +32,8 @@ public class ArmElbow extends SubsystemBase {
     private final TalonFX       elbowMotor;
     private AnalogPotentiometer elbowPotentiometer;
     private ArmFeedforward      feedforward;
-
-    private final double[] elbowPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private double              lastSetAngle;
+    private final double[]      elbowPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     public ArmElbow() {
         elbowMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
@@ -66,7 +67,10 @@ public class ArmElbow extends SubsystemBase {
         if (angle / 180.0 > elbowPotentiometer.get()) {
 
         } else {
-            elbowMotor.set(TalonFXControlMode.Position, angleToTick(angle));
+            lastSetAngle = angle;
+            double FF = feedforward.calculate(lastSetAngle, 0, 0);
+            elbowMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                    DemandType.ArbitraryFeedForward, FF);
         }
     }
 
@@ -82,5 +86,6 @@ public class ArmElbow extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Elbow potentiometer reading (in deg) ",
                 getAngle());
+        SmartDashboard.putNumber("last commanded angle: ", lastSetAngle);
     }
 }

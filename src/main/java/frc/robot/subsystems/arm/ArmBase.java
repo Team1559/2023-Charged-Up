@@ -33,7 +33,8 @@ public class ArmBase extends SubsystemBase {
     private final TalonFX             baseMotor;
     private final AnalogPotentiometer basePotentiometer;
     private final ArmFeedforward      feedforward;
-    private final double[]            basePos = {90, 75, 60, 0, 0, 0, 0, 0, 0, 0};
+    private final double[]            basePos = { 90, 75, 60, 0, 0, 0, 0, 0, 0,
+            0 };
 
     private double lastSetAngle;
 
@@ -65,9 +66,10 @@ public class ArmBase extends SubsystemBase {
         return angleTicks;
     }
 
-    public void setAngle(double angle) { 
-        if (angle > 180 - (basePotentiometer.get() * 180)) { 
+    public void setAngle(double angle) {
+        if (angle > 180 - (basePotentiometer.get() * 180)) {
         } else {
+            lastSetAngle = angle;
             double FF = feedforward.calculate(lastSetAngle, 0, 0) / 12.0;
             baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
                     DemandType.ArbitraryFeedForward, FF);

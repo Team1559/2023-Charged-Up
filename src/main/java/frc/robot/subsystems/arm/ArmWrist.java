@@ -14,6 +14,7 @@ import static frc.robot.Constants.Arm.kS_WRIST;
 import static frc.robot.Constants.Arm.kG_WRIST;
 import static frc.robot.Constants.Arm.kV_WRIST;
 
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -30,8 +31,8 @@ public class ArmWrist extends SubsystemBase {
     private ArmFeedforward      feedforward;
     private final TalonFX       wristMotor;
     private AnalogPotentiometer wristPotentiometer;
-
-    private final double[] wristPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private double              lastSetAngle;
+    private final double[]      wristPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     public ArmWrist() {
         wristMotor = new TalonFX(ARM_FALCON_ID_WRIST);
@@ -64,7 +65,10 @@ public class ArmWrist extends SubsystemBase {
         if (angle / 180.0 > 2) {
 
         } else {
-            wristMotor.set(TalonFXControlMode.Position, angleToTick(angle));
+            lastSetAngle = angle;
+            double FF = feedforward.calculate(lastSetAngle, 0, 0);
+            wristMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                    DemandType.ArbitraryFeedForward, FF);
         }
     }
 
@@ -80,5 +84,6 @@ public class ArmWrist extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("U/D wrist potentiometer reading ",
                 getAngle());
+        SmartDashboard.putNumber("last commanded angle: ", lastSetAngle);
     }
 }
