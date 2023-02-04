@@ -4,26 +4,17 @@
 
 package frc.robot;
 
-import java.util.ArrayList;
-import java.util.List;
+import static frc.robot.Constants.FeatureFlags.*;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.Trajectory.State;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.lib.DTXboxController;
 
 import frc.robot.subsystems.arm.*;
+import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.grabber.GrabberClaw;
+import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -37,11 +28,13 @@ public class RobotContainer {
     private final DTXboxController controller0;
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
+    private final GrabberWrist     wrist;
+    private final GrabberClaw      claw;
     private final Vision           vision;
     private final FullArmCommands arm;
     private final ArmBase base;
     private final ArmElbow elbow;
-    private final ArmWrist wrist; 
+    private final ArmWrist armWrist; 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
@@ -49,14 +42,35 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        swerve = new SwerveDrive(controller0);
         base = new ArmBase();
         elbow = new ArmElbow();
-        wrist = new ArmWrist();
-        arm = new FullArmCommands(base, elbow, wrist);
-        configureBindings();
-        vision = new Vision(swerve.getPoseEstimator());
+        armWrist = new ArmWrist();
+        arm = new FullArmCommands(base, elbow, armWrist);
 
+        if (CHASSIS_ENABLED) {
+            swerve = new SwerveDrive(controller0);
+        } else {
+            swerve = null;
+        }
+
+        if (GRABBER_ENABLED) {
+            wrist = new GrabberWrist();
+            claw = new GrabberClaw();
+        } else {
+            wrist = null;
+            claw = null;
+        }
+
+        if (VISION_ENABLED) {
+            if (CHASSIS_ENABLED) {
+                vision = new Vision(swerve.getPoseEstimator());
+            } else {
+                vision = new Vision(null);
+            }
+        } else {
+            vision = null;
+        }
+        configureBindings();
     }
 
     /**
@@ -75,6 +89,19 @@ public class RobotContainer {
         controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
         controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
         controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
+        if (GRABBER_ENABLED) {
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
+                    controller1);
+            wrist.setDefaultCommand(teleopWristCommand);
+
+            /**
+             * Delete these 3 commands later, these are only for testing
+             * We will create sequence commands later
+             */
+            controller1.aButton.onTrue(claw.closeClawCONECommand());
+            controller1.bButton.onTrue(claw.closeClawCUBECommand());
+            controller1.yButton.onTrue(claw.openClawCommand());
+        }
     }
 
     /**
@@ -83,21 +110,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        PIDController xController = new PIDController(1, 0, 0);
-        PIDController yController = new PIDController(1, 0, 0);
-        ProfiledPIDController rController = new ProfiledPIDController(1, 0, 0,
-                new TrapezoidProfile.Constraints(
-                        Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY, Math.PI));
-        HolonomicDriveController controller = new HolonomicDriveController(
-                xController, yController, rController);
-        List<Trajectory.State> states = new ArrayList<>();
-        states.add(new State(0, 0, 0, swerve.getPoseEstimator()
-                                            .getEstimatedPosition(),
-                0));
-        states.add(new State(2, 0, 0, new Pose2d(
-                new Translation2d(13.513558, 4.424426), new Rotation2d()), 0));
-        return new SwerveControllerCommand(new Trajectory(states),
-                swerve::getEstimatedPose, swerve.getKinematics(), controller,
-                swerve::setStates, swerve, vision);
+        // TODO: implement autonomous command
+        return null;
     }
 }

@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -25,7 +26,6 @@ public class Vision extends SubsystemBase {
     private final SwerveDrivePoseEstimator swervePoseEstimator;
 
     public Vision(SwerveDrivePoseEstimator poseEstimator) {
-        camera = new PhotonCamera("OV5647");
         try {
             aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(
                     AprilTagFields.k2023ChargedUp.m_resourceFile);
@@ -43,15 +43,32 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
         boolean resultPresent = result.isPresent();
+        PhotonTrackedTarget bestTarget = camera.getLatestResult()
+                                               .getBestTarget();
+        boolean lowAmbiguity = bestTarget != null
+                && bestTarget.getPoseAmbiguity() < 0.2;
         SmartDashboard.putBoolean("Apriltag", resultPresent);
 
-        if (resultPresent) {
+        if (resultPresent && lowAmbiguity) {
             EstimatedRobotPose pose = result.get();
-            try {
-                swervePoseEstimator.addVisionMeasurement(
-                        pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-            } catch (ConcurrentModificationException e) {
-                // ignore
+            SmartDashboard.putNumber("Vision Pose X",
+                    pose.estimatedPose.toPose2d()
+                                      .getX());
+            SmartDashboard.putNumber("Vision Pose Y",
+                    pose.estimatedPose.toPose2d()
+                                      .getY());
+            SmartDashboard.putNumber("Vision Pose R",
+                    pose.estimatedPose.toPose2d()
+                                      .getRotation()
+                                      .getDegrees());
+            if (Constants.FeatureFlags.CHASSIS_ENABLED) {
+                try {
+                    swervePoseEstimator.addVisionMeasurement(
+                            pose.estimatedPose.toPose2d(),
+                            pose.timestampSeconds);
+                } catch (ConcurrentModificationException e) {
+                    // ignore
+                }
             }
         }
     }

@@ -1,0 +1,40 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "Robot": {
+          "arrows": false,
+          "length": 1.0,
+          "weight": 1.0,
+          "width": 1.0
+        },
+        "height": 8.02,
+        "image": "Field Image.png",
+        "trajectory": {
+          "arrows": false,
+          "length": 1.0,
+          "weight": 1.0,
+          "width": 1.0
+        },
+        "width": 16.54,
+        "window": {
+          "visible": true
+        }
+      }
+    }
+  },
+  "NetworkTables": {
+    "transitory": {
+      "SmartDashboard": {
+        "Field": {
+          "open": true
+        },
+        "open": true
+      }
+    }
+  }
+}
