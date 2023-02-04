@@ -114,7 +114,7 @@ public final class Constants {
         public static final double GEAR_RATIO_BASE = (1 / 64.0) * (50/72.0); 
         public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
         public static final double ARM_WRIST_GEAR_RATIO = 1; 
-        public static final double TELEOP_ANGLE_VELOCITY = 360D;
+        public static final double TELEOP_ANGLE_VELOCITY = 90D;
         public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE  = TELEOP_ANGLE_VELOCITY / 50.0;
         public static final double ZERO_ANGLE = 0; 
         
@@ -128,7 +128,6 @@ public final class Constants {
         public static final double kP_BASE = 0; 
         public static final double kD_BASE = 0;
         public static final double kI_BASE = 0; 
-        public static double kF_BASE = 0;
         public static final double kG_BASE = 1.2;
         public static final double kV_BASE = 1.55;
         public static final double kS_BASE = 0;
@@ -136,8 +135,7 @@ public final class Constants {
 
         public static final double kP_ELBOW = 0;
         public static final double kD_ELBOW = 0;
-        public static final double kI_ELBOW = 0; 
-        public static double kF_ELBOW = 0;
+        public static final double kI_ELBOW = 0;
         public static final double kG_ELBOW = 0;
         public static final double kV_ELBOW = 0;
         public static final double kS_ELBOW = 0;
@@ -145,7 +143,6 @@ public final class Constants {
         public static final double kP_WRIST = 0;
         public static final double kD_WRIST = 0;
         public static final double kI_WRIST = 0; 
-        public static double kF_WRIST = 0;
         public static final double kG_WRIST = 0;
         public static final double kV_WRIST = 0;
         public static final double kS_WRIST = 0;

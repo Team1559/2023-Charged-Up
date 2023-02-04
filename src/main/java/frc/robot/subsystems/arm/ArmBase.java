@@ -1,6 +1,7 @@
 package frc.robot.subsystems.arm;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -36,27 +37,26 @@ public class ArmBase extends SubsystemBase {
     private final double[]            basePos = { 90, 75, 60, 0, 0, 0, 0, 0, 0,
             0 };
 
-    private double lastSetAngle;
-
     public ArmBase() {
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);
 
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 80, 0.5);
+        baseMotor.configSupplyCurrentLimit(limit);
         baseMotor.config_kP(0, kP_BASE);
         baseMotor.config_kI(0, kI_BASE);
         baseMotor.config_kD(0, kD_BASE);
         feedforward = new ArmFeedforward(kS_BASE, kG_BASE, kV_BASE, kA_BASE);
 
         basePotentiometer = new AnalogPotentiometer(BASE_POTENTIOMETER_PORTNUM,
-                180, 0);
+                ARM_BASE_POTENTIOMETER_MULT, ARM_BASE_POTENTIOMETER_ADD);
         // offset 0 is a placeholder, due to the fact we have no means of
         // determining actual voltage right now
     }
 
     public double getAngle() {
-        return ARM_BASE_POTENTIOMETER_ADD
-                + basePotentiometer.get() * ARM_BASE_POTENTIOMETER_MULT;
+        return basePotentiometer.get();
     }
 
     public static double angleToTick(double angle) {
@@ -67,13 +67,9 @@ public class ArmBase extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        if (angle > 180 - (basePotentiometer.get() * 180)) {
-        } else {
-            lastSetAngle = angle;
-            double FF = feedforward.calculate(lastSetAngle, 0, 0) / 12.0;
+            double FF = feedforward.calculate(angle, 0, 0) / 12.0;
             baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
                     DemandType.ArbitraryFeedForward, FF);
-        }
     }
 
     public Command setBaseAngleCommandPos(int angleIndex) {
@@ -88,6 +84,5 @@ public class ArmBase extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Base potentiometer reading (Analog): ",
                 getAngle());
-        SmartDashboard.putNumber("Last commanded angle: ", lastSetAngle);
     }
 }

@@ -15,6 +15,7 @@ import static frc.robot.Constants.Arm.kG_WRIST;
 import static frc.robot.Constants.Arm.kV_WRIST;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -31,7 +32,6 @@ public class ArmWrist extends SubsystemBase {
     private ArmFeedforward      feedforward;
     private final TalonFX       wristMotor;
     private AnalogPotentiometer wristPotentiometer;
-    private double              lastSetAngle;
     private final double[]      wristPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     public ArmWrist() {
@@ -42,16 +42,17 @@ public class ArmWrist extends SubsystemBase {
         wristMotor.config_kP(0, kP_WRIST);
         wristMotor.config_kI(0, kI_WRIST);
         wristMotor.config_kD(0, kD_WRIST);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 40, 0.5);
+        wristMotor.configSupplyCurrentLimit(limit);
         feedforward = new ArmFeedforward(kS_WRIST, kG_WRIST, kV_WRIST);
         wristPotentiometer = new AnalogPotentiometer(
-                WRIST_POTENTIOMETER_PORTNUM, 90, 0);
+                WRIST_POTENTIOMETER_PORTNUM, ARM_WRIST_POTENTIOMETER_MULT, ARM_WRIST_POTENTIOMETER_ADD);
         // offset 0 is a placeholder, due to the fact we have no means of
         // determining actual degree offset right now
     }
 
     public double getAngle() {
-        return ARM_WRIST_POTENTIOMETER_ADD
-                + wristPotentiometer.get() * ARM_WRIST_POTENTIOMETER_MULT;
+        return wristPotentiometer.get();
     }
 
     public static double angleToTick(double angle) {
@@ -62,14 +63,9 @@ public class ArmWrist extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        if (angle / 180.0 > 2) {
-
-        } else {
-            lastSetAngle = angle;
-            double FF = feedforward.calculate(lastSetAngle, 0, 0);
+            double FF = feedforward.calculate(angle, 0, 0);
             wristMotor.set(TalonFXControlMode.Position, angleToTick(angle),
                     DemandType.ArbitraryFeedForward, FF);
-        }
     }
 
     public Command setWristAngleCommandPos(int angleIndex) {
@@ -84,6 +80,5 @@ public class ArmWrist extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("U/D wrist potentiometer reading ",
                 getAngle());
-        SmartDashboard.putNumber("last commanded angle: ", lastSetAngle);
     }
 }
