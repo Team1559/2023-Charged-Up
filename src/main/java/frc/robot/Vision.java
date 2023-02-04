@@ -44,9 +44,9 @@ public class Vision extends SubsystemBase {
         Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
         boolean resultPresent = result.isPresent();
         PhotonTrackedTarget bestTarget = camera.getLatestResult()
-                                   .getBestTarget();
-        boolean lowAmbiguity = bestTarget != null &&
-                                   bestTarget.getPoseAmbiguity() < 0.2;
+                                               .getBestTarget();
+        boolean lowAmbiguity = bestTarget != null
+                && bestTarget.getPoseAmbiguity() < 0.2;
         SmartDashboard.putBoolean("Apriltag", resultPresent);
 
         if (resultPresent && lowAmbiguity) {

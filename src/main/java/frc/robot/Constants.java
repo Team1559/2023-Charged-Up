@@ -31,6 +31,13 @@ public final class Constants {
         public static final int[] MODULE_STEER_MOTOR_IDS = { 12, 3, 9, 6 };
         public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
         public static final int   PIGEON_IMU             = 0;
+
+        public static final int PDH_ID                    = 420000;
+        public static final int CLAW_SOLENOID_ID          = 1234;
+        public static final int CLAW_PRESSURE_SOLENOID_ID = 5678;
+        public static final int WRIST_CANCODER_ID         = 3333;
+        public static final int WRIST_MOTOR_PORT          = 0;
+
     }
 
     public static class Swerve {
@@ -86,6 +93,22 @@ public final class Constants {
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
+    }
+
+    public static class Grabber {
+        // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
+        public static final double ZERO_ANGLE                        = 90D;
+        public static final int    SERVO_RANGE                       = 180;
+        public static final double TELEOP_ANGULAR_VELOCITY           = 90D;
+        public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY
+                / 50;
+        public static final double MAX_ANGULAR_VELOCITY              = 360D;
+        public static final int FIRST_DOUBLE_SOLENOID_CHANNEL        = 11111;
+        public static final int SECOND_DOUBLE_SOLENOID_CHANNEL       = 22222;
+        public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
+        public static final double MINIMUM_WRIST_ANGLE               = -90D;
+        public static final double MAXIMUN_WRIST_ANGLE               = 90D;
+        
     }
 
     public static class Auto {
