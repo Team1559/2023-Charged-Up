@@ -106,6 +106,8 @@ public final class Constants {
         public static final int FIRST_DOUBLE_SOLENOID_CHANNEL        = 11111;
         public static final int SECOND_DOUBLE_SOLENOID_CHANNEL       = 22222;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
+        public static final double MINIMUM_WRIST_ANGLE               = -90D;
+        public static final double MAXIMUN_WRIST_ANGLE               = 90D;
         
     }
 
