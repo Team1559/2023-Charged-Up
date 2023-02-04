@@ -61,11 +61,14 @@ public class Vision extends SubsystemBase {
                     pose.estimatedPose.toPose2d()
                                       .getRotation()
                                       .getDegrees());
-            try {
-                swervePoseEstimator.addVisionMeasurement(
-                        pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-            } catch (ConcurrentModificationException e) {
-                // ignore
+            if (Constants.FeatureFlags.CHASSIS_ENABLED) {
+                try {
+                    swervePoseEstimator.addVisionMeasurement(
+                            pose.estimatedPose.toPose2d(),
+                            pose.timestampSeconds);
+                } catch (ConcurrentModificationException e) {
+                    // ignore
+                }
             }
         }
     }

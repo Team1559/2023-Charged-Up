@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.FeatureFlags.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,12 +37,31 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        swerve = new SwerveDrive(controller0);
-        wrist = new GrabberWrist();
-        claw = new GrabberClaw();
 
+        if (CHASSIS_ENABLED) {
+            swerve = new SwerveDrive(controller0);
+        } else {
+            swerve = null;
+        }
+
+        if (GRABBER_ENABLED) {
+            wrist = new GrabberWrist();
+            claw = new GrabberClaw();
+        } else {
+            wrist = null;
+            claw = null;
+        }
+
+        if (VISION_ENABLED) {
+            if (CHASSIS_ENABLED) {
+                vision = new Vision(swerve.getPoseEstimator());
+            } else {
+                vision = new Vision(null);
+            }
+        } else {
+            vision = null;
+        }
         configureBindings();
-        vision = new Vision(swerve.getPoseEstimator());
     }
 
     /**
@@ -56,17 +77,19 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                controller1);
-        wrist.setDefaultCommand(teleopWristCommand);
+        if (GRABBER_ENABLED) {
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
+                    controller1);
+            wrist.setDefaultCommand(teleopWristCommand);
 
-        /**
-         * Delete these 3 commands later, these are only for testing
-         * We will create sequence commands later
-         */
-        controller1.aButton.onTrue(claw.closeClawCONECommand());
-        controller1.bButton.onTrue(claw.closeClawCUBECommand());
-        controller1.yButton.onTrue(claw.openClawCommand());
+            /**
+             * Delete these 3 commands later, these are only for testing
+             * We will create sequence commands later
+             */
+            controller1.aButton.onTrue(claw.closeClawCONECommand());
+            controller1.bButton.onTrue(claw.closeClawCUBECommand());
+            controller1.yButton.onTrue(claw.openClawCommand());
+        }
     }
 
     /**
