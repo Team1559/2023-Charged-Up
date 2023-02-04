@@ -41,6 +41,13 @@ public final class Constants {
         public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
         public static final int   PIGEON_IMU             = 0;
 
+        //Arm wiring ports + ids
+        public static final int ARM_MOTOR_ID_BASE = 9997;
+        public static final int ARM_MOTOR_ID_ELBOW = 9998;
+        public static final int ARM_FALCON_ID_WRIST = 9999;
+        public static final int BASE_POTENTIOMETER_PORTNUM = 2;
+        public static final int ELBOW_POTENTIOMETER_PORTNUM = 3;
+        public static final int WRIST_POTENTIOMETER_PORTNUM = 4; 
         public static final int PDH_ID                    = 420000;
         public static final int CLAW_SOLENOID_ID          = 1234;
         public static final int CLAW_PRESSURE_SOLENOID_ID = 5678;
@@ -102,6 +109,44 @@ public final class Constants {
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
+    }
+    public static class Arm{
+        public static final double GEAR_RATIO_BASE = (1 / 64.0) * (50/72.0); 
+        public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
+        public static final double ARM_WRIST_GEAR_RATIO = 1; 
+        public static final double TELEOP_ANGLE_VELOCITY = 90D;
+        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE  = TELEOP_ANGLE_VELOCITY / 50.0;
+        public static final double ZERO_ANGLE = 0; 
+        
+        public static final double ARM_BASE_POTENTIOMETER_MULT = 1; //EVERY CONSTANT BEYOND THIS POINT WILL BE CHANGED WITH ARM TUNING
+        public static final double ARM_BASE_POTENTIOMETER_ADD = 0;
+        public static final double ARM_ELBOW_POTENTIOMETER_MULT = 1;
+        public static final double ARM_ELBOW_POTENTIOMETER_ADD = 0;
+        public static final double ARM_WRIST_POTENTIOMETER_MULT = 1;
+        public static final double ARM_WRIST_POTENTIOMETER_ADD =0;
+        
+        public static final double kP_BASE = 0; 
+        public static final double kD_BASE = 0;
+        public static final double kI_BASE = 0; 
+        public static final double kG_BASE = 1.2;
+        public static final double kV_BASE = 1.55;
+        public static final double kS_BASE = 0;
+        public static final double kA_BASE = 0.19;
+
+        public static final double kP_ELBOW = 0;
+        public static final double kD_ELBOW = 0;
+        public static final double kI_ELBOW = 0;
+        public static final double kG_ELBOW = 0;
+        public static final double kV_ELBOW = 0;
+        public static final double kS_ELBOW = 0;
+
+        public static final double kP_WRIST = 0;
+        public static final double kD_WRIST = 0;
+        public static final double kI_WRIST = 0; 
+        public static final double kG_WRIST = 0;
+        public static final double kV_WRIST = 0;
+        public static final double kS_WRIST = 0;
+
     }
 
     public static class Grabber {

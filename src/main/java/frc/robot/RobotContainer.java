@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
+
+import frc.robot.subsystems.arm.*;
 import frc.robot.commands.TeleopWristAngleCommand;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
@@ -29,7 +31,10 @@ public class RobotContainer {
     private final GrabberWrist     wrist;
     private final GrabberClaw      claw;
     private final Vision           vision;
-
+    private final FullArmCommands arm;
+    private final ArmBase base;
+    private final ArmElbow elbow;
+    private final ArmWrist armWrist; 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
@@ -37,6 +42,10 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
+        base = new ArmBase();
+        elbow = new ArmElbow();
+        armWrist = new ArmWrist();
+        arm = new FullArmCommands(base, elbow, armWrist);
 
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive(controller0);
@@ -77,6 +86,9 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
+        controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
+        controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
                     controller1);
