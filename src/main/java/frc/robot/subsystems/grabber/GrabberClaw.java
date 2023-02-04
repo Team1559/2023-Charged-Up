@@ -22,6 +22,9 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class GrabberClaw extends SubsystemBase {
     // pneumatic solenoid
+    public enum State{
+        CONE, CUBE, OPEN;
+    }
     private Solenoid clawSolenoid;
     private DoubleSolenoid clawPressure = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FIRST_DOUBLE_SOLENOID_CHANNEL, SECOND_DOUBLE_SOLENOID_CHANNEL);
 
@@ -67,13 +70,13 @@ public class GrabberClaw extends SubsystemBase {
                 new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
     }
     
-    public String clawState() {
+    public State clawState() {
         if (clawPressure.get() == kReverse && clawSolenoid.get() == false) {
-            return "Cone";
+            return State.CONE;
         } else if (clawSolenoid.get() && clawPressure.get() == kOff) {
-            return "Claw Open";
+            return State.OPEN;
         } else {
-            return "Cube";
+            return State.CUBE;
         }
     }
 
@@ -83,6 +86,6 @@ public class GrabberClaw extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Claw Status", clawState());
+        SmartDashboard.putString("Claw Status", clawState().toString());
     }
 }

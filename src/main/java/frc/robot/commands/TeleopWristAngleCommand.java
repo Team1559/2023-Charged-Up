@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static frc.robot.Constants.Grabber.MAXIMUN_WRIST_ANGLE;
+import static frc.robot.Constants.Grabber.MINIMUM_WRIST_ANGLE;
 import static frc.robot.Constants.Grabber.TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -31,10 +33,10 @@ public class TeleopWristAngleCommand extends CommandBase {
             } else {
                 angle += TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
             }
-            if (angle > 90) {
+            if (angle > MAXIMUN_WRIST_ANGLE) {
                 angle = 90;
             }
-            if (angle < -90) {
+            if (angle < -MINIMUM_WRIST_ANGLE) {
                 angle = -90;
             }
             wrist.setAngle(angle);
