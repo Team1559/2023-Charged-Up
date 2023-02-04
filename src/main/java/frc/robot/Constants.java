@@ -21,6 +21,15 @@ import edu.wpi.first.math.util.Units;
  * wherever the constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // LEAVE THESE AT TOP OF FILE
+    // NEVER DISABLE THESE IN MASTER BRANCH
+    public static class FeatureFlags {
+        public static final boolean CHASSIS_ENABLED = true;
+        public static final boolean ARM_ENABLED     = true;
+        public static final boolean GRABBER_ENABLED = true;
+        public static final boolean VISION_ENABLED  = true;
+    }
+
     public static final double FALCON_TICKS_PER_REV = 2048;
     public static final double FALCON_MAX_RPM       = 6380;
 
@@ -108,7 +117,7 @@ public final class Constants {
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
         public static final double MINIMUM_WRIST_ANGLE               = -90D;
         public static final double MAXIMUN_WRIST_ANGLE               = 90D;
-        
+
     }
 
     public static class Auto {
