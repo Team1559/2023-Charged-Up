@@ -20,7 +20,7 @@ public class ArmWristCommandsTeleop extends CommandBase {
     @Override
     public void execute() {
         double rightStickY = controller.getRightStickY();
-        double angle = wrist.getWrist();
+        double angle = wrist.getAngle();
         if (Math.abs(rightStickY) > deadband) {
             if (rightStickY < 0) {
                 angle -= angleVelPerCycle;

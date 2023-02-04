@@ -20,7 +20,7 @@ public class ArmElbowPositionCommands extends CommandBase{
     }
     @Override 
     public boolean isFinished(){
-        double actualangle = Math.abs(angle - elbow.getAngle()); //Gets error w/o using PID, at least for the mooment
+        double actualangle = Math.abs(angle - elbow.getAngle()); 
         if (actualangle < 0.05){
             return true;
         } else {

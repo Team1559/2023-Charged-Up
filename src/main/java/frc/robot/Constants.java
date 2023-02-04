@@ -112,17 +112,25 @@ public final class Constants {
         public static final double kD_BASE = 0;
         public static final double kI_BASE = 0; 
         public static final double kF_BASE = 0;
+        public static final double kG_BASE = 0;
+        public static final double kV_BASE = 0;
+        public static final double kS_BASE = 0;
 
         public static final double kP_ELBOW = 0;
         public static final double kD_ELBOW = 0;
         public static final double kI_ELBOW = 0; 
         public static final double kF_ELBOW = 0;
+        public static final double kG_ELBOW = 0;
+        public static final double kV_ELBOW = 0;
+        public static final double kS_ELBOW = 0;
 
         public static final double kP_WRIST = 0;
         public static final double kD_WRIST = 0;
         public static final double kI_WRIST = 0; 
         public static final double kF_WRIST = 0;
-
+        public static final double kG_WRIST = 0;
+        public static final double kV_WRIST = 0;
+        public static final double kS_WRIST = 0;
 
     }
 }
