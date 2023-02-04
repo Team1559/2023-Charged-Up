@@ -59,6 +59,14 @@ public class RobotContainer {
         Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
                 controller1);
         wrist.setDefaultCommand(teleopWristCommand);
+
+        /**
+         * Delete these 3 commands later, these are only for testing
+         * We will create sequence commands later
+         */
+        controller1.aButton.onTrue(claw.closeClawCONECommand());
+        controller1.bButton.onTrue(claw.closeClawCUBECommand());
+        controller1.yButton.onTrue(claw.openClawCommand());
     }
 
     /**
