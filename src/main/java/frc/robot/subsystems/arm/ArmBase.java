@@ -63,64 +63,11 @@ public class ArmBase extends SubsystemBase{
             baseMotor.set(TalonFXControlMode.Position, angleToTick(angle));
         }
     }
-    public Command setBaseAngleCommandPos1(double angle){
-        angle = basePos[0];
+    
+    public Command setBaseAngleCommandPos(int angleIndex){
+        double angle = basePos[angleIndex];
         return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[0]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos2(double angle){
-        angle = basePos[1];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[1]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos3(double angle){
-        angle = basePos[2];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[2]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos4(double angle){
-        angle = basePos[3];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[3]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos5(double angle){
-        angle = basePos[4];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[4]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos6(double angle){
-        angle = basePos[5];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[5]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos7(double angle){
-        angle = basePos[6];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[6]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos8(double angle){
-        angle = basePos[7];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[7]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos9(double angle){
-        angle = basePos[8];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[8]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos10(double angle){
-        angle = basePos[9];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(basePos[9]), this),
+            new InstantCommand(() -> setAngle(angle), this),
             new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
     }
     @Override

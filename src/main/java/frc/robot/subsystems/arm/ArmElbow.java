@@ -70,64 +70,10 @@ public class ArmElbow extends SubsystemBase{
         }
     }
 
-    public Command setElbowAngleCommandPos1(double angle){
-        angle = elbowPos[0];
+    public Command setElbowAngleCommandPosFromIndex(int angleIndex){
+        double angle = elbowPos[angleIndex];
         return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[0]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos2(double angle){
-        angle = elbowPos[1];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[1]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos3(double angle){
-        angle = elbowPos[2];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[2]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos4(double angle){
-        angle = elbowPos[3];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[3]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos5(double angle){
-        angle = elbowPos[4];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[4]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos6(double angle){
-        angle = elbowPos[5];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[5]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos7(double angle){
-        angle = elbowPos[6];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[6]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos8(double angle){
-        angle = elbowPos[7];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[7]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos9(double angle){
-        angle = elbowPos[8];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[8]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setElbowAngleCommandPos10(double angle){
-        angle = elbowPos[9];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(elbowPos[9]), this),
+            new InstantCommand(() -> setAngle(angle), this),
             new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
     }
 

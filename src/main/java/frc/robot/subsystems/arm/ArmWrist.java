@@ -69,64 +69,10 @@ public class ArmWrist extends SubsystemBase {
         }
     }
     
-    public Command setBaseAngleCommandPos1(double angle){
-        angle = wristPos[0];
+    public Command setWristAngleCommandPos(int angleIndex){
+        double angle = wristPos[angleIndex];
         return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[0]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos2(double angle){
-        angle = wristPos[1];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[1]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos3(double angle){
-        angle = wristPos[2];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[2]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos4(double angle){
-        angle = wristPos[3];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[3]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos5(double angle){
-        angle = wristPos[4];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[4]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos6(double angle){
-        angle = wristPos[5];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[5]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos7(double angle){
-        angle = wristPos[6];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[6]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos8(double angle){
-        angle = wristPos[7];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[7]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos9(double angle){
-        angle = wristPos[8];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[8]), this),
-            new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
-    }
-    public Command setBaseAngleCommandPos10(double angle){
-        angle = wristPos[9];
-        return Commands.sequence(
-            new InstantCommand(() -> setAngle(wristPos[9]), this),
+            new InstantCommand(() -> setAngle(angle), this),
             new WaitCommand(Math.abs(angle - getAngle()) /  TELEOP_ANGLE_VELOCITY)); 
     }
 
