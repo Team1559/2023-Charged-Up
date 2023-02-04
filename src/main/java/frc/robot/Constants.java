@@ -106,20 +106,21 @@ public final class Constants {
         public static final double ARM_ELBOW_POTENTIOMETER_MULT = 1;
         public static final double ARM_ELBOW_POTENTIOMETER_ADD = 0;
         public static final double ARM_WRIST_POTENTIOMETER_MULT = 1;
-        public static final double ARM_WRIST_POTENTIOMETER_ADD = 1;
+        public static final double ARM_WRIST_POTENTIOMETER_ADD =0;
         
         public static final double kP_BASE = 0; 
         public static final double kD_BASE = 0;
         public static final double kI_BASE = 0; 
-        public static final double kF_BASE = 0;
-        public static final double kG_BASE = 0;
-        public static final double kV_BASE = 0;
+        public static double kF_BASE = 0;
+        public static final double kG_BASE = 1.2;
+        public static final double kV_BASE = 1.55;
         public static final double kS_BASE = 0;
+        public static final double kA_BASE = 0.19;
 
         public static final double kP_ELBOW = 0;
         public static final double kD_ELBOW = 0;
         public static final double kI_ELBOW = 0; 
-        public static final double kF_ELBOW = 0;
+        public static double kF_ELBOW = 0;
         public static final double kG_ELBOW = 0;
         public static final double kV_ELBOW = 0;
         public static final double kS_ELBOW = 0;
@@ -127,7 +128,7 @@ public final class Constants {
         public static final double kP_WRIST = 0;
         public static final double kD_WRIST = 0;
         public static final double kI_WRIST = 0; 
-        public static final double kF_WRIST = 0;
+        public static double kF_WRIST = 0;
         public static final double kG_WRIST = 0;
         public static final double kV_WRIST = 0;
         public static final double kS_WRIST = 0;
