@@ -31,7 +31,7 @@ public class ArmBase extends SubsystemBase{
     private final TalonFX baseMotor;
     private final AnalogPotentiometer basePotentiometer;
 
-    private final double[] basePos = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private final double[] basePos = {90, 75, 30, 0, 0, 0, 0, 0, 0, 0};
 
     public ArmBase (){
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);

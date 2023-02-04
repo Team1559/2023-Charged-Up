@@ -22,11 +22,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.DTXboxController;
-import frc.robot.subsystems.arm.ArmBase;
-import frc.robot.subsystems.arm.ArmElbow;
-import frc.robot.subsystems.arm.ArmWrist;
-import frc.robot.subsystems.arm.ArmWristCommandsTeleop;
 
+import frc.robot.subsystems.arm.*;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
@@ -41,8 +38,10 @@ public class RobotContainer {
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
     private final Vision           vision;
-    
-    
+    private final FullArmCommands arm;
+    private final ArmBase base;
+    private final ArmElbow elbow;
+    private final ArmWrist wrist; 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
@@ -51,7 +50,10 @@ public class RobotContainer {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         swerve = new SwerveDrive(controller0);
-        
+        base = new ArmBase();
+        elbow = new ArmElbow();
+        wrist = new ArmWrist();
+        arm = new FullArmCommands(base, elbow, wrist);
         configureBindings();
         vision = new Vision(swerve.getPoseEstimator());
 
@@ -70,7 +72,9 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        
+        controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
+        controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
+        controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
     }
 
     /**

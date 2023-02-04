@@ -70,7 +70,7 @@ public class ArmElbow extends SubsystemBase{
         }
     }
 
-    public Command setElbowAngleCommandPosFromIndex(int angleIndex){
+    public Command setElbowAngleCommandPos(int angleIndex){
         double angle = elbowPos[angleIndex];
         return Commands.sequence(
             new InstantCommand(() -> setAngle(angle), this),
