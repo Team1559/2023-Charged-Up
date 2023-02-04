@@ -107,9 +107,9 @@ public final class Constants {
         public static final double LINEAR_KP  = 1.5;
         public static final double ANGULAR_KP = 3;
 
-        public static final double DISTANCE_BETWEEN_POINTS = 0.02;
+        public static final double DISTANCE_BETWEEN_POINTS = 0.05;
         public static final double SMOOTH_TOLERANCE        = 0.001;
-        public static final double SMOOTH_WEIGHT           = 0.99;
+        public static final double SMOOTH_WEIGHT           = 0.75;
         public static final double VELOCITY_PROPORTION     = 5;
         public static final double VELOCITY_POWER          = 0.25;
     }

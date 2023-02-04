@@ -72,8 +72,9 @@ public class AutoRoutes {
         Pose2d[] mirrored = new Pose2d[path.length];
         for (int i = 0; i < path.length; i++) {
             mirrored[i] = new Pose2d(FIELD_LENGTH - path[i].getX(),
-                    path[i].getY(), path[i].getRotation()
-                                           .unaryMinus());
+                    path[i].getY(),
+                    Rotation2d.fromDegrees(180 - path[i].getRotation()
+                                                        .getDegrees()));
         }
         return mirrored;
     }
@@ -82,14 +83,14 @@ public class AutoRoutes {
         Pose2d[][] paths = { START_1_TO_PIECE_1, PIECE_1_TO_START_1,
                 START_3_TO_PIECE_4, PIECE_4_TO_START_3 };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
-                                                .map(SwerveTrajectoryGenerator::calculateTrajectory)
-                                                .toArray(
-                                                        SwerveTrajectory[]::new);
+                                                    .map(SwerveTrajectoryGenerator::calculateTrajectory)
+                                                    .toArray(
+                                                            SwerveTrajectory[]::new);
         SwerveTrajectory[] redTrajectories = Arrays.stream(paths)
-                                                 .map(AutoRoutes::mirror)
-                                                 .map(SwerveTrajectoryGenerator::calculateTrajectory)
-                                                 .toArray(
-                                                         SwerveTrajectory[]::new);
+                                                   .map(AutoRoutes::mirror)
+                                                   .map(SwerveTrajectoryGenerator::calculateTrajectory)
+                                                   .toArray(
+                                                           SwerveTrajectory[]::new);
         Field2d field = new Field2d();
         SmartDashboard.putData(field);
         while (true) {
