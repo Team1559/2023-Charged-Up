@@ -42,11 +42,13 @@ public class ArmWrist extends SubsystemBase {
         wristMotor.config_kP(0, kP_WRIST);
         wristMotor.config_kI(0, kI_WRIST);
         wristMotor.config_kD(0, kD_WRIST);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 40, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
+                true, 40, 40, 0.5);
         wristMotor.configSupplyCurrentLimit(limit);
         feedforward = new ArmFeedforward(kS_WRIST, kG_WRIST, kV_WRIST);
         wristPotentiometer = new AnalogPotentiometer(
-                WRIST_POTENTIOMETER_PORTNUM, ARM_WRIST_POTENTIOMETER_MULT, ARM_WRIST_POTENTIOMETER_ADD);
+                WRIST_POTENTIOMETER_PORTNUM, ARM_WRIST_POTENTIOMETER_MULT,
+                ARM_WRIST_POTENTIOMETER_ADD);
         // offset 0 is a placeholder, due to the fact we have no means of
         // determining actual degree offset right now
     }
@@ -63,9 +65,9 @@ public class ArmWrist extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-            double FF = feedforward.calculate(angle, 0, 0);
-            wristMotor.set(TalonFXControlMode.Position, angleToTick(angle),
-                    DemandType.ArbitraryFeedForward, FF);
+        double FF = feedforward.calculate(angle, 0, 0);
+        wristMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                DemandType.ArbitraryFeedForward, FF);
     }
 
     public Command setWristAngleCommandPos(int angleIndex) {

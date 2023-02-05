@@ -42,7 +42,8 @@ public class ArmBase extends SubsystemBase {
 
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 80, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
+                true, 40, 80, 0.5);
         baseMotor.configSupplyCurrentLimit(limit);
         baseMotor.config_kP(0, kP_BASE);
         baseMotor.config_kI(0, kI_BASE);
@@ -67,9 +68,9 @@ public class ArmBase extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-            double FF = feedforward.calculate(angle, 0, 0) / 12.0;
-            baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
-                    DemandType.ArbitraryFeedForward, FF);
+        double FF = feedforward.calculate(angle, 0, 0) / 12.0;
+        baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                DemandType.ArbitraryFeedForward, FF);
     }
 
     public Command setBaseAngleCommandPos(int angleIndex) {
