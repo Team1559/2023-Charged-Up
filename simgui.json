@@ -1,8 +1,29 @@
 {
+  "HALProvider": {
+    "Solenoids": {
+      "0": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Field": "Field2d"
+      "/Shuffleboard/Arm/ArmElbow": "Subsystem",
+      "/Shuffleboard/Arm/ArmWrist": "Subsystem",
+      "/Shuffleboard/Arm/Base": "Subsystem",
+      "/Shuffleboard/Arm/Base/Motor": "Motor Controller",
+      "/Shuffleboard/Arm/Base/Subsystem": "Subsystem",
+      "/Shuffleboard/Arm/Elbow": "Subsystem",
+      "/Shuffleboard/Arm/Elbow/Motor": "Motor Controller",
+      "/Shuffleboard/Arm/Elbow/Subsystem": "Subsystem",
+      "/Shuffleboard/Arm/Wrist": "Subsystem",
+      "/Shuffleboard/Arm/Wrist/Motor": "Motor Controller",
+      "/Shuffleboard/Arm/Wrist/Subsystem": "Subsystem",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/base subsystem": "Subsystem"
     },
     "windows": {
       "/SmartDashboard/Field": {
@@ -29,8 +50,20 @@
   },
   "NetworkTables": {
     "transitory": {
+      "Shuffleboard": {
+        "Arm": {
+          "Base": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      },
       "SmartDashboard": {
         "Field": {
+          "open": true
+        },
+        "base subsystem": {
           "open": true
         },
         "open": true

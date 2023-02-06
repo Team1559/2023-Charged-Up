@@ -3,9 +3,6 @@ package frc.robot.subsystems.arm;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,46 +10,38 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.lib.DTTalonFX;
 
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_ELBOW;
-import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Wiring.ELBOW_POTENTIOMETER_PORTNUM;
-import static frc.robot.Constants.Arm.TELEOP_ANGLE_VELOCITY;
-import static frc.robot.Constants.Arm.kP_ELBOW;
-import static frc.robot.Constants.Arm.kI_ELBOW;
-import static frc.robot.Constants.Arm.kD_ELBOW;
-import static frc.robot.Constants.Arm.kG_ELBOW;
-import static frc.robot.Constants.Arm.kV_ELBOW;
-import static frc.robot.Constants.Arm.kS_ELBOW;
-import static frc.robot.Constants.Arm.ARM_ELBOW_POTENTIOMETER_MULT;
-import static frc.robot.Constants.Arm.ARM_ELBOW_POTENTIOMETER_ADD;
+import static frc.robot.Constants.Arm.*;
 
 public class ArmElbow extends SubsystemBase {
 
-    private final TalonFX       elbowMotor;
+    private final DTTalonFX     elbowMotor;
     private AnalogPotentiometer elbowPotentiometer;
-    private ArmFeedforward      feedforward;
+    private DTArmFeedforward    feedforward;
     private final double[]      elbowPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     public ArmElbow() {
-        elbowMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
-
-        elbowMotor.configFactoryDefault();
-        elbowMotor.enableVoltageCompensation(true);
+        elbowMotor = new DTTalonFX(ARM_MOTOR_ID_ELBOW, kP_ELBOW, kI_ELBOW,
+                kD_ELBOW, 0);
         SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
                 true, 40, 60, 0.5);
         elbowMotor.configSupplyCurrentLimit(limit);
-        elbowMotor.config_kP(0, kP_ELBOW);
-        elbowMotor.config_kI(0, kI_ELBOW);
-        elbowMotor.config_kD(0, kD_ELBOW);
-        feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW);
+        feedforward = new DTArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW,
+                kA_ELBOW);
 
         elbowPotentiometer = new AnalogPotentiometer(
                 ELBOW_POTENTIOMETER_PORTNUM, ARM_ELBOW_POTENTIOMETER_MULT,
                 ARM_ELBOW_POTENTIOMETER_ADD);
         // offset 0 is a placeholder, due to the fact we have no means of
         // determining actual degree offset right now
+
+        this.addChild("Motor", elbowMotor);
+        this.addChild("Feedforward", feedforward);
+        this.addChild("Potentiometer", elbowPotentiometer);
     }
 
     public double getAngle() {

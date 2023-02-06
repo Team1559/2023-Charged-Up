@@ -6,6 +6,10 @@ package frc.robot;
 
 import static frc.robot.Constants.FeatureFlags.*;
 
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -43,11 +47,15 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
+
         base = new ArmBase();
         elbow = new ArmElbow();
         armWrist = new ArmWrist();
+        // var armTab = Shuffleboard.getTab("Arm");
+        // armTab.add("Base", base);
+        // armTab.add("Elbow", elbow);
+        // armTab.add("Wrist", armWrist);
         arm = new FullArmCommands(base, elbow, armWrist);
-
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive(controller0);
         } else {
