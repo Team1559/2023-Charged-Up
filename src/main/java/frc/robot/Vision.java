@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
-    private final PhotonCamera             camera;
+    private PhotonCamera                   camera;
     private final AprilTagFieldLayout      aprilTagFieldLayout;
     private final PhotonPoseEstimator      photonPoseEstimator;
     private final SwerveDrivePoseEstimator swervePoseEstimator;
@@ -44,9 +44,9 @@ public class Vision extends SubsystemBase {
         Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
         boolean resultPresent = result.isPresent();
         PhotonTrackedTarget bestTarget = camera.getLatestResult()
-                                   .getBestTarget();
-        boolean lowAmbiguity = bestTarget != null &&
-                                   bestTarget.getPoseAmbiguity() < 0.2;
+                                               .getBestTarget();
+        boolean lowAmbiguity = bestTarget != null
+                && bestTarget.getPoseAmbiguity() < 0.2;
         SmartDashboard.putBoolean("Apriltag", resultPresent);
 
         if (resultPresent && lowAmbiguity) {
@@ -61,11 +61,14 @@ public class Vision extends SubsystemBase {
                     pose.estimatedPose.toPose2d()
                                       .getRotation()
                                       .getDegrees());
-            try {
-                swervePoseEstimator.addVisionMeasurement(
-                        pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-            } catch (ConcurrentModificationException e) {
-                // ignore
+            if (Constants.FeatureFlags.CHASSIS_ENABLED) {
+                try {
+                    swervePoseEstimator.addVisionMeasurement(
+                            pose.estimatedPose.toPose2d(),
+                            pose.timestampSeconds);
+                } catch (ConcurrentModificationException e) {
+                    // ignore
+                }
             }
         }
     }
