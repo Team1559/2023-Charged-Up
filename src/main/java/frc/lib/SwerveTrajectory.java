@@ -52,7 +52,7 @@ public class SwerveTrajectory {
         List<Trajectory.State> states = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             Point p = points[i];
-            states.add( new Trajectory.State(p.time, p.predictedVelocity,
+            states.add(new Trajectory.State(p.time, p.predictedVelocity,
                     p.acceleration, p.pose, p.curvature));
         }
         return new Trajectory(states);
