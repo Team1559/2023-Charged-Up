@@ -87,22 +87,15 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
-        controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
-        controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
-        if (GRABBER_ENABLED) {
-            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                    controller1);
-            wrist.setDefaultCommand(teleopWristCommand);
-
-            /**
-             * Delete these 3 commands later, these are only for testing We will
-             * create sequence commands later
-             */
-            controller1.aButton.onTrue(claw.closeClawCONECommand());
-            controller1.bButton.onTrue(claw.closeClawCUBECommand());
-            controller1.yButton.onTrue(claw.openClawCommand());
-        }
+        Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
+                controller1);
+        wrist.setDefaultCommand(teleopWristCommand);
+        /**
+         * Delete these 3 commands later, these are only for testing We will
+         * create sequence commands later
+         */
+        controller1.bButton.onTrue(claw.closeClawCommand());
+        controller1.yButton.onTrue(claw.openClawCommand());
     }
 
     /**
