@@ -66,9 +66,9 @@ public class ArmWrist extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-            double FF = feedforward.calculate(angle, 0, 0);
-            wristMotor.set(TalonFXControlMode.Position, angleToTick(angle),
-                    DemandType.ArbitraryFeedForward, FF);
+        double FF = feedforward.calculate(angle, 0, 0);
+        wristMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                DemandType.ArbitraryFeedForward, FF);
     }
 
     public int degreeSetUp(){

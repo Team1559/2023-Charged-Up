@@ -52,7 +52,7 @@ public final class Constants {
         public static final int CLAW_SOLENOID_ID          = 1234;
         public static final int CLAW_PRESSURE_SOLENOID_ID = 5678;
         public static final int WRIST_CANCODER_ID         = 3333;
-        public static final int WRIST_MOTOR_PORT          = 0;
+        public static final int WRIST_SERVO_PORT          = 0;
 
     }
 
@@ -141,7 +141,7 @@ public final class Constants {
         
         public static final double kP_WRIST = 0.2;
         public static final double kD_WRIST = 0;
-        public static final double kI_WRIST = 0; 
+        public static final double kI_WRIST = 0;
         public static final double kG_WRIST = 0;
         public static final double kV_WRIST = 0;
         public static final double kS_WRIST = 0;
@@ -156,8 +156,8 @@ public final class Constants {
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY
                 / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
-        public static final int FIRST_DOUBLE_SOLENOID_CHANNEL        = 11111;
-        public static final int SECOND_DOUBLE_SOLENOID_CHANNEL       = 22222;
+        public static final int    FIRST_DOUBLE_SOLENOID_CHANNEL     = 11111;
+        public static final int    SECOND_DOUBLE_SOLENOID_CHANNEL    = 22222;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
         public static final double MINIMUM_WRIST_ANGLE               = -90D;
         public static final double MAXIMUN_WRIST_ANGLE               = 90D;

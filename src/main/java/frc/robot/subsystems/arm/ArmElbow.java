@@ -35,7 +35,8 @@ public class ArmElbow extends SubsystemBase {
         elbowMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
         elbowMotor.configFactoryDefault();
         elbowMotor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 60, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
+                true, 40, 60, 0.5);
         elbowMotor.configSupplyCurrentLimit(limit);
         elbowMotor.config_kP(0, kP_ELBOW);
         elbowMotor.config_kI(0, kI_ELBOW);
@@ -66,9 +67,9 @@ public class ArmElbow extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-            double FF = feedforward.calculate(angle, 0, 0);
-            elbowMotor.set(TalonFXControlMode.Position, angleToTick(angle),
-                    DemandType.ArbitraryFeedForward, FF);
+        double FF = feedforward.calculate(angle, 0, 0);
+        elbowMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                DemandType.ArbitraryFeedForward, FF);
     }
 
     public int degreeSetUp(){

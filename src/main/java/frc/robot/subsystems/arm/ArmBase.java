@@ -69,9 +69,9 @@ public class ArmBase extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-            double FF = feedforward.calculate(angle, 0, 0) / 12.0;
-            baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
-                    DemandType.ArbitraryFeedForward, FF);
+        double FF = feedforward.calculate(angle, 0, 0) / 12.0;
+        baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
+                DemandType.ArbitraryFeedForward, FF);
     }
 
     public Command setBaseAngleCommandPos(int angleIndex) {

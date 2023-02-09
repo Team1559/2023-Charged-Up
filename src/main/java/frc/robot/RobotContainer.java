@@ -31,10 +31,11 @@ public class RobotContainer {
     private final GrabberWrist     wrist;
     private final GrabberClaw      claw;
     private final Vision           vision;
-    private final FullArmCommands arm;
-    private final ArmBase base;
-    private final ArmElbow elbow;
-    private final ArmWrist armWrist; 
+    private final FullArmCommands  arm;
+    private final ArmBase          base;
+    private final ArmElbow         elbow;
+    private final ArmWrist         armWrist;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and
      * commands.
@@ -102,8 +103,7 @@ public class RobotContainer {
              * Delete these 3 commands later, these are only for testing
              * We will create sequence commands later
              */
-            controller1.aButton.onTrue(claw.closeClawCONECommand());
-            controller1.bButton.onTrue(claw.closeClawCUBECommand());
+            controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
         }
     }
