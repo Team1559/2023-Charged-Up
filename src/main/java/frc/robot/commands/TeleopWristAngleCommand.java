@@ -1,10 +1,7 @@
 package frc.robot.commands;
 
-// import static frc.robot.Constants.Grabber.MAXIMUN_WRIST_ANGLE;
-// import static frc.robot.Constants.Grabber.MINIMUM_WRIST_ANGLE;
-// import static frc.robot.Constants.Grabber.TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
-import static frc.robot.Constants.Grabber.ZERO_ANGLE;
 import static frc.robot.Constants.Grabber.SERVO_RANGE;
+import static frc.robot.Constants.Grabber.ZERO_ANGLE;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.DTXboxController;

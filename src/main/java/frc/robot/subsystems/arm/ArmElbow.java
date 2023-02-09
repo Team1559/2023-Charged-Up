@@ -1,5 +1,19 @@
 package frc.robot.subsystems.arm;
 
+import static frc.robot.Constants.FALCON_TICKS_PER_REV;
+import static frc.robot.Constants.Arm.ARM_ELBOW_POTENTIOMETER_ADD;
+import static frc.robot.Constants.Arm.ARM_ELBOW_POTENTIOMETER_MULT;
+import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
+import static frc.robot.Constants.Arm.TELEOP_ANGLE_VELOCITY;
+import static frc.robot.Constants.Arm.kD_ELBOW;
+import static frc.robot.Constants.Arm.kG_ELBOW;
+import static frc.robot.Constants.Arm.kI_ELBOW;
+import static frc.robot.Constants.Arm.kP_ELBOW;
+import static frc.robot.Constants.Arm.kS_ELBOW;
+import static frc.robot.Constants.Arm.kV_ELBOW;
+import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_ELBOW;
+import static frc.robot.Constants.Wiring.ELBOW_POTENTIOMETER_PORTNUM;
+
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -13,20 +27,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-
-import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_ELBOW;
-import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
-import static frc.robot.Constants.FALCON_TICKS_PER_REV;
-import static frc.robot.Constants.Wiring.ELBOW_POTENTIOMETER_PORTNUM;
-import static frc.robot.Constants.Arm.TELEOP_ANGLE_VELOCITY;
-import static frc.robot.Constants.Arm.kP_ELBOW;
-import static frc.robot.Constants.Arm.kI_ELBOW;
-import static frc.robot.Constants.Arm.kD_ELBOW;
-import static frc.robot.Constants.Arm.kG_ELBOW;
-import static frc.robot.Constants.Arm.kV_ELBOW;
-import static frc.robot.Constants.Arm.kS_ELBOW;
-import static frc.robot.Constants.Arm.ARM_ELBOW_POTENTIOMETER_MULT;
-import static frc.robot.Constants.Arm.ARM_ELBOW_POTENTIOMETER_ADD;
 
 public class ArmElbow extends SubsystemBase {
 

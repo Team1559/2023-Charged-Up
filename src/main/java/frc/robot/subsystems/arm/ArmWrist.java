@@ -2,17 +2,17 @@ package frc.robot.subsystems.arm;
 
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.ARM_WRIST_GEAR_RATIO;
+import static frc.robot.Constants.Arm.ARM_WRIST_POTENTIOMETER_ADD;
+import static frc.robot.Constants.Arm.ARM_WRIST_POTENTIOMETER_MULT;
+import static frc.robot.Constants.Arm.TELEOP_ANGLE_VELOCITY;
+import static frc.robot.Constants.Arm.kD_WRIST;
+import static frc.robot.Constants.Arm.kG_WRIST;
+import static frc.robot.Constants.Arm.kI_WRIST;
+import static frc.robot.Constants.Arm.kP_WRIST;
+import static frc.robot.Constants.Arm.kS_WRIST;
+import static frc.robot.Constants.Arm.kV_WRIST;
 import static frc.robot.Constants.Wiring.ARM_FALCON_ID_WRIST;
 import static frc.robot.Constants.Wiring.WRIST_POTENTIOMETER_PORTNUM;
-import static frc.robot.Constants.Arm.TELEOP_ANGLE_VELOCITY;
-import static frc.robot.Constants.Arm.ARM_WRIST_POTENTIOMETER_MULT;
-import static frc.robot.Constants.Arm.ARM_WRIST_POTENTIOMETER_ADD;
-import static frc.robot.Constants.Arm.kP_WRIST;
-import static frc.robot.Constants.Arm.kI_WRIST;
-import static frc.robot.Constants.Arm.kD_WRIST;
-import static frc.robot.Constants.Arm.kS_WRIST;
-import static frc.robot.Constants.Arm.kG_WRIST;
-import static frc.robot.Constants.Arm.kV_WRIST;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
