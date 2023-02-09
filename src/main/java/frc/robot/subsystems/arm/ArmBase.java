@@ -19,6 +19,7 @@ import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_BASE;
+import static frc.robot.Constants.Wiring.BASE_CANCODER_ID;
 import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.*;
@@ -32,7 +33,7 @@ public class ArmBase extends SubsystemBase {
     private int degrees;
     
     public ArmBase() {
-        canCoder = new CANCoder(0);
+        canCoder = new CANCoder(BASE_CANCODER_ID);
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);

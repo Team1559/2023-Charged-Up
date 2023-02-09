@@ -126,10 +126,10 @@ public final class Constants {
         public static final double kP_BASE = 0.2; 
         public static final double kD_BASE = 0;
         public static final double kI_BASE = 0; 
-        public static final double kG_BASE = 0.56;
+        public static final double kG_BASE = 1.36;
         public static final double kV_BASE = 1.54;
         public static final double kS_BASE = 0;
-        public static final double kA_BASE = 0.05;
+        public static final double kA_BASE = 0.17;
 
         public static final double kP_ELBOW = 0.2;
         public static final double kD_ELBOW = 0;
