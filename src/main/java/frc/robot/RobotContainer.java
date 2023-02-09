@@ -4,10 +4,14 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.FeatureFlags.*;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
+
+import frc.robot.subsystems.arm.*;
 import frc.robot.commands.TeleopWristAngleCommand;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
@@ -27,6 +31,10 @@ public class RobotContainer {
     private final GrabberWrist     wrist;
     private final GrabberClaw      claw;
     private final Vision           vision;
+    private final FullArmCommands  arm;
+    private final ArmBase          base;
+    private final ArmElbow         elbow;
+    private final ArmWrist         armWrist;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -35,12 +43,35 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        swerve = new SwerveDrive(controller0);
-        wrist = new GrabberWrist();
-        claw = new GrabberClaw();
+        base = new ArmBase();
+        elbow = new ArmElbow();
+        armWrist = new ArmWrist();
+        arm = new FullArmCommands(base, elbow, armWrist);
 
+        if (CHASSIS_ENABLED) {
+            swerve = new SwerveDrive(controller0);
+        } else {
+            swerve = null;
+        }
+
+        if (GRABBER_ENABLED) {
+            wrist = new GrabberWrist();
+            claw = new GrabberClaw();
+        } else {
+            wrist = null;
+            claw = null;
+        }
+
+        if (VISION_ENABLED) {
+            if (CHASSIS_ENABLED) {
+                vision = new Vision(swerve.getPoseEstimator());
+            } else {
+                vision = new Vision(null);
+            }
+        } else {
+            vision = null;
+        }
         configureBindings();
-        vision = new Vision(swerve.getPoseEstimator());
     }
 
     /**
