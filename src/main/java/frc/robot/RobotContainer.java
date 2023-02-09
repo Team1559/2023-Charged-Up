@@ -86,9 +86,13 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
+        /**
+         * Delete these commands after initial testing!!!
+         */
         controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
         controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
         controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
+        
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
                     controller1);
