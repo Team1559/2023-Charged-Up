@@ -1,16 +1,9 @@
 package frc.robot.subsystems.grabber;
 
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kForward;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kReverse;
-import static edu.wpi.first.wpilibj.DoubleSolenoid.Value.kOff;
 import static frc.robot.Constants.Grabber.CLAW_PNEUMATIC_WAIT_TIME;
-import static frc.robot.Constants.Grabber.FIRST_DOUBLE_SOLENOID_CHANNEL;
-import static frc.robot.Constants.Grabber.SECOND_DOUBLE_SOLENOID_CHANNEL;
 import static frc.robot.Constants.Wiring.CLAW_SOLENOID_ID;
 import static frc.robot.Constants.Wiring.PDH_ID;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,71 +14,36 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class GrabberClaw extends SubsystemBase {
-    // pneumatic solenoid
-    public enum State{
-        CONE, CUBE, OPEN;
-    }
-    private Solenoid clawSolenoid;
-    private DoubleSolenoid clawPressure = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, FIRST_DOUBLE_SOLENOID_CHANNEL, SECOND_DOUBLE_SOLENOID_CHANNEL);
+    private Solenoid       clawSolenoid;
 
     public GrabberClaw() {
         clawSolenoid = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH,
                 CLAW_SOLENOID_ID);
-        clawPressure = new DoubleSolenoid(PneumaticsModuleType.REVPH, FIRST_DOUBLE_SOLENOID_CHANNEL, SECOND_DOUBLE_SOLENOID_CHANNEL);
     }
 
     public void openClaw() {
         clawSolenoid.set(true);
-        clawPressure.set(kForward);
     }
 
-    public void grabCone(){
-        closeClaw(true);
-    }
-
-    public void grabCube(){
-        closeClaw(false);
-    }
-    private void closeClaw(boolean pressure) {
-        clawPressure.set(kReverse);
-
+    private void closeClaw() {
         clawSolenoid.set(false);
     }
 
-    public Command openClawCommand() { //bound to a button in robotContainer
-        return Commands.sequence(
-                new InstantCommand(() -> openClaw(), this),
+    public Command openClawCommand() { // bound to a button in robotContainer
+        return Commands.sequence(new InstantCommand(this::openClaw, this),
                 new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
     }
 
-    public Command closeClawCUBECommand() { //bound to a button in robotContainer
-        return Commands.sequence(
-                new InstantCommand(() -> grabCube(), this),
-                new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
+    public Command closeClawCommand() {
+        return Commands.sequence(new InstantCommand(this::closeClaw, this), new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
     }
 
-    public Command closeClawCONECommand() { //bound to a button in robotContainer
-        return Commands.sequence(
-                new InstantCommand(() -> grabCone(), this),
-                new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
-    }
-    
-    public State clawState() {
-        if (clawPressure.get() == kReverse && clawSolenoid.get() == false) {
-            return State.CONE;
-        } else if (clawSolenoid.get() && clawPressure.get() == kOff) {
-            return State.OPEN;
-        } else {
-            return State.CUBE;
-        }
-    }
-
-    public Value pressureState() {
-        return clawPressure.get();
+    public boolean clawIsOpen() {
+        return clawSolenoid.get();
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Claw Status", clawState().toString());
+        SmartDashboard.putBoolean("Claw Closed", !clawIsOpen());
     }
 }
