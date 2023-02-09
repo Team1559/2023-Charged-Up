@@ -48,6 +48,11 @@ public class RobotContainer {
             elbow = new ArmElbow();
             armWrist = new ArmWrist();
             arm = new FullArmCommands(base, elbow, armWrist);
+        } else {
+            base = null;
+            elbow = null;
+            armWrist = null;
+            arm = null;
         }
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive(controller0);
