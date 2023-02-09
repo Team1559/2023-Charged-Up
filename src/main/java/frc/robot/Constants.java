@@ -41,13 +41,13 @@ public final class Constants {
         public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
         public static final int   PIGEON_IMU             = 0;
 
-        //Arm wiring ports + ids
-        public static final int ARM_MOTOR_ID_BASE = 18;
-        public static final int ARM_MOTOR_ID_ELBOW = 41;
-        public static final int ARM_MOTOR_ID_WRIST = 42;
-        public static final int BASE_CANCODER_ID= 2;
-        public static final int ELBOW_CANCODER_ID = 3;
-        public static final int ARM_WRIST_CANCODER_ID = 4; 
+        // Arm wiring ports + ids
+        public static final int ARM_MOTOR_ID_BASE         = 18;
+        public static final int ARM_MOTOR_ID_ELBOW        = 41;
+        public static final int ARM_MOTOR_ID_WRIST        = 42;
+        public static final int BASE_CANCODER_ID          = 2;
+        public static final int ELBOW_CANCODER_ID         = 3;
+        public static final int ARM_WRIST_CANCODER_ID     = 4;
         public static final int PDH_ID                    = 420000;
         public static final int CLAW_SOLENOID_ID          = 1234;
         public static final int CLAW_PRESSURE_SOLENOID_ID = 5678;
@@ -110,22 +110,26 @@ public final class Constants {
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
                 new Rotation3d(0, 0, CAMERA_ANGLE));
     }
-    public static class Arm{
-        public static final double GEAR_RATIO_BASE = (1 / 64.0) * (50/72.0); 
-        public static final double INV_GEAR_RATIO_BASE = 1 / GEAR_RATIO_BASE;
-        public static final double ARM_WRIST_GEAR_RATIO = 1; 
-        public static final double TELEOP_ANGLE_VELOCITY = 90D;
-        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE  = TELEOP_ANGLE_VELOCITY / 50.0;
-        public static final double ZERO_ANGLE = 0; 
-        public static final double MAXIMUM_ANGLE_ERROR = 2;
 
-        public static final double BASE_CC_OFFSET = 0;
-        public static final double ELBOW_CC_OFFSET = 0;
+    public static class Arm {
+        public static final double GEAR_RATIO_BASE                 = (1 / 64.0)
+                * (50 / 72.0);
+        public static final double INV_GEAR_RATIO_BASE             = 1
+                / GEAR_RATIO_BASE;
+        public static final double ARM_WRIST_GEAR_RATIO            = 1;
+        public static final double TELEOP_ANGLE_VELOCITY           = 90D;
+        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
+                / 50.0;
+        public static final double ZERO_ANGLE                      = 0;
+        public static final double MAXIMUM_ANGLE_ERROR             = 2;
+
+        public static final double BASE_CC_OFFSET      = 0;
+        public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE = 0.2; 
+        public static final double kP_BASE = 0.2;
         public static final double kD_BASE = 0;
-        public static final double kI_BASE = 0; 
+        public static final double kI_BASE = 0;
         public static final double kG_BASE = 1.36;
         public static final double kV_BASE = 1.54;
         public static final double kS_BASE = 0;
@@ -138,7 +142,7 @@ public final class Constants {
         public static final double kV_ELBOW = 0;
         public static final double kS_ELBOW = 0;
         public static final double kA_ELBOW = 0;
-        
+
         public static final double kP_WRIST = 0.2;
         public static final double kD_WRIST = 0;
         public static final double kI_WRIST = 0;
