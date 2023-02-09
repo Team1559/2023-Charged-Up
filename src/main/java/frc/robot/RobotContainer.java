@@ -4,15 +4,20 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.FeatureFlags.*;
+import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
+import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
+import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
+import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
-
-import frc.robot.subsystems.arm.*;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.arm.ArmBase;
+import frc.robot.subsystems.arm.ArmElbow;
+import frc.robot.subsystems.arm.ArmWrist;
+import frc.robot.subsystems.arm.FullArmCommands;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -43,7 +48,7 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        if (ARM_ENABLED){
+        if (ARM_ENABLED) {
             base = new ArmBase();
             elbow = new ArmElbow();
             armWrist = new ArmWrist();
@@ -96,10 +101,10 @@ public class RobotContainer {
         /**
          * Delete these commands after initial testing!!!
          */
-        if (ARM_ENABLED){        
-        controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
-        controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
-        controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
+        if (ARM_ENABLED) {
+            controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
+            controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
+            controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
@@ -107,8 +112,8 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
 
             /**
-             * Delete these 3 commands later, these are only for testing
-             * We will create sequence commands later
+             * Delete these 3 commands later, these are only for testing We will
+             * create sequence commands later
              */
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
