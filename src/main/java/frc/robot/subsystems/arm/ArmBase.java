@@ -13,13 +13,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_BASE;
-import static frc.robot.Constants.Wiring.BASE_CANCODER_ID;
 import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.*;
@@ -45,20 +39,9 @@ public class ArmBase extends SubsystemBase {
         baseMotor.setSelectedSensorPosition(angleToTick(90));
         feedforward = new ArmFeedforward(kS_BASE, kG_BASE, kV_BASE, kA_BASE);
     }
-    
-    /**private void configCancoder() {
-        CANCoderConfiguration config = new CANCoderConfiguration();
-        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        config.magnetOffsetDegrees = 0;
-        config.sensorDirection = false;
-        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        canCoder.configAllSettings(config);
-        canCoder.setPosition(
-                canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
-    }*/
 
     public double getAngle() {
-        return baseMotor.getSelectedSensorPosition();
+        return tickToAngle(baseMotor.getSelectedSensorPosition());
     }
 
     public static double angleToTick(double angle) {
@@ -66,6 +49,12 @@ public class ArmBase extends SubsystemBase {
         double motorRevolutions = revolutionsOfArm * INV_GEAR_RATIO_BASE;
         double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;
         return angleTicks;
+    }
+    public static double tickToAngle(double ticks){
+        double motorRevolutions = ticks / FALCON_TICKS_PER_REV;
+        double revolutionsOfArm = motorRevolutions/INV_GEAR_RATIO_BASE;
+        double angle = revolutionsOfArm * 360;
+        return angle;
     }
 
     public void setAngle(double angle) {

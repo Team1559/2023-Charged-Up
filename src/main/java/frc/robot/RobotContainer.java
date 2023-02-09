@@ -94,7 +94,8 @@ public class RobotContainer {
      */
     private void configureBindings() {
         /**
-         * Delete these commands after initial testing!!!
+         * Delete these commands after initial testing-
+         * also, START ARM @ 90 DEGREES!!!!!!!
          */
         if (ARM_ENABLED){        
         controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
