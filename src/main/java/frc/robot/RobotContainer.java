@@ -43,11 +43,12 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        base = new ArmBase();
-        elbow = new ArmElbow();
-        armWrist = new ArmWrist();
-        arm = new FullArmCommands(base, elbow, armWrist);
-
+        if (ARM_ENABLED){
+            base = new ArmBase();
+            elbow = new ArmElbow();
+            armWrist = new ArmWrist();
+            arm = new FullArmCommands(base, elbow, armWrist);
+        }
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive(controller0);
         } else {
