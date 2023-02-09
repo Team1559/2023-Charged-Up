@@ -18,48 +18,63 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_WRIST;
+import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
+import static frc.robot.Constants.FALCON_TICKS_PER_REV;
+import static frc.robot.Constants.Wiring.ARM_WRIST_CANCODER_ID;
+import static frc.robot.Constants.Arm.*;
 
 public class ArmWrist extends SubsystemBase {
-    private ArmFeedforward      feedforward;
+    //private final CANCoder      canCoder;
     private final TalonFX       wristMotor;
-    private AnalogPotentiometer wristPotentiometer;
-    private final double[]      wristPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private ArmFeedforward      feedforward;
+    private final double[]      wristPos = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private int degrees;
 
     public ArmWrist() {
-        wristMotor = new TalonFX(ARM_FALCON_ID_WRIST);
-
+        //canCoder = new CANCoder(ARM_WRIST_CANCODER_ID);
+        wristMotor = new TalonFX(ARM_MOTOR_ID_WRIST);
         wristMotor.configFactoryDefault();
         wristMotor.enableVoltageCompensation(true);
-        wristMotor.config_kP(0, kP_WRIST);
-        wristMotor.config_kI(0, kI_WRIST);
-        wristMotor.config_kD(0, kD_WRIST);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
-                true, 40, 40, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 60, 0.5);
         wristMotor.configSupplyCurrentLimit(limit);
-        feedforward = new ArmFeedforward(kS_WRIST, kG_WRIST, kV_WRIST);
-        wristPotentiometer = new AnalogPotentiometer(
-                WRIST_POTENTIOMETER_PORTNUM, ARM_WRIST_POTENTIOMETER_MULT,
-                ARM_WRIST_POTENTIOMETER_ADD);
-        // offset 0 is a placeholder, due to the fact we have no means of
-        // determining actual degree offset right now
+        wristMotor.config_kP(0, kP_ELBOW);
+        wristMotor.config_kI(0, kI_ELBOW);
+        wristMotor.config_kD(0, kD_ELBOW);
+        feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW);
     }
 
+    /**private void configCancoder() {
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        config.magnetOffsetDegrees = 0;
+        config.sensorDirection = false;
+        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        canCoder.configAllSettings(config);
+        canCoder.setPosition(
+                canCoder.getAbsolutePosition() - ARM_WRIST_CC_OFFSET);
+    }*/
+
     public double getAngle() {
-        return wristPotentiometer.get();
+        return wristMotor.getSelectedSensorPosition();
     }
 
     public static double angleToTick(double angle) {
         double revolutionsOfArm = angle / 360.0;
-        double motorRevolutions = revolutionsOfArm * ARM_WRIST_GEAR_RATIO;
+        double motorRevolutions = revolutionsOfArm * INV_GEAR_RATIO_BASE;
         double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;
         return angleTicks;
     }
@@ -70,17 +85,48 @@ public class ArmWrist extends SubsystemBase {
                 DemandType.ArbitraryFeedForward, FF);
     }
 
+    public int degreeSetUp(){
+        degrees += 10;
+        if (degrees > 90){
+            degrees = 90;
+        }
+        return degrees;
+    }
+    public int degreeSetDown(){
+        degrees -= 10;
+        if (degrees < 0){
+            degrees = 0;
+        }
+        return degrees;
+    }
+    public Command degreesUp(){
+        return Commands.sequence(
+            new InstantCommand(() -> degreeSetUp(), this),
+            new InstantCommand(() -> setAngle(degrees), this)
+        );
+    }
+    public Command degreesDown(){
+        return Commands.sequence(
+            new InstantCommand(() -> degreeSetDown(), this),
+            new InstantCommand(() -> setAngle(degrees), this)
+        );
+    }
+
     public Command setWristAngleCommandPos(int angleIndex) {
         double angle = wristPos[angleIndex];
-        return Commands.sequence(
-                new InstantCommand(() -> setAngle(angle), this),
-                new WaitCommand(
-                        Math.abs(angle - getAngle()) / TELEOP_ANGLE_VELOCITY));
+        return new FunctionalCommand(() -> {setAngle(angle);}, () -> {}, (a) -> {}, () -> {return isArmWristAtPosition(angle);}, this);
+    }
+    public boolean isArmWristAtPosition(double angle){
+        double angleError = Math.abs(angle - getAngle());
+        if (angleError < 0.05){
+            return true;
+        }
+        return false;
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("U/D wrist potentiometer reading ",
+        SmartDashboard.putNumber("Wrist CANCoder reading (in deg):",
                 getAngle());
     }
 }

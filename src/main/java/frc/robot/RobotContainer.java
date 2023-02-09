@@ -47,11 +47,17 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        base = new ArmBase();
-        elbow = new ArmElbow();
-        armWrist = new ArmWrist();
-        arm = new FullArmCommands(base, elbow, armWrist);
-
+        if (ARM_ENABLED){
+            base = new ArmBase();
+            elbow = new ArmElbow();
+            armWrist = new ArmWrist();
+            arm = new FullArmCommands(base, elbow, armWrist);
+        } else {
+            base = null;
+            elbow = null;
+            armWrist = null;
+            arm = null;
+        }
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive(controller0);
         } else {
@@ -91,15 +97,26 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                controller1);
-        wrist.setDefaultCommand(teleopWristCommand);
         /**
-         * Delete these 3 commands later, these are only for testing We will
-         * create sequence commands later
+         * Delete these commands after initial testing!!!
          */
-        controller1.bButton.onTrue(claw.closeClawCommand());
-        controller1.yButton.onTrue(claw.openClawCommand());
+        if (ARM_ENABLED){        
+        controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
+        controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
+        controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
+        }
+        if (GRABBER_ENABLED) {
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
+                    controller1);
+            wrist.setDefaultCommand(teleopWristCommand);
+
+            /**
+             * Delete these 3 commands later, these are only for testing
+             * We will create sequence commands later
+             */
+            controller1.aButton.onTrue(claw.closeClawCommand());
+            controller1.yButton.onTrue(claw.openClawCommand());
+        }
     }
 
     /**
