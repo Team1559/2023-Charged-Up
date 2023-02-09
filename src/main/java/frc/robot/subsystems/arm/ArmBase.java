@@ -27,13 +27,13 @@ import static frc.robot.Constants.Arm.*;
 public class ArmBase extends SubsystemBase {
 
     private final TalonFX             baseMotor;
-    private final CANCoder canCoder;
+    //private final CANCoder canCoder;
     private final ArmFeedforward      feedforward;
     private final double[]            basePos = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
     private int degrees;
     
     public ArmBase() {
-        canCoder = new CANCoder(BASE_CANCODER_ID);
+        //canCoder = new CANCoder(BASE_CANCODER_ID);
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);
@@ -42,11 +42,11 @@ public class ArmBase extends SubsystemBase {
         baseMotor.config_kP(0, kP_BASE);
         baseMotor.config_kI(0, kI_BASE);
         baseMotor.config_kD(0, kD_BASE);
-        baseMotor.setSelectedSensorPosition(angleToTick(canCoder.getPosition() % 360));
+        baseMotor.setSelectedSensorPosition(angleToTick(90));
         feedforward = new ArmFeedforward(kS_BASE, kG_BASE, kV_BASE, kA_BASE);
     }
     
-    private void configCancoder() {
+    /**private void configCancoder() {
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         config.magnetOffsetDegrees = 0;
@@ -55,10 +55,10 @@ public class ArmBase extends SubsystemBase {
         canCoder.configAllSettings(config);
         canCoder.setPosition(
                 canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
-    }
+    }*/
 
     public double getAngle() {
-        return canCoder.getAbsolutePosition();
+        return baseMotor.getSelectedSensorPosition();
     }
 
     public static double angleToTick(double angle) {

@@ -24,14 +24,14 @@ import static frc.robot.Constants.Wiring.ARM_WRIST_CANCODER_ID;
 import static frc.robot.Constants.Arm.*;
 
 public class ArmWrist extends SubsystemBase {
-    private final CANCoder      canCoder;
+    //private final CANCoder      canCoder;
     private final TalonFX       wristMotor;
     private ArmFeedforward      feedforward;
     private final double[]      wristPos = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private int degrees;
 
     public ArmWrist() {
-        canCoder = new CANCoder(ARM_WRIST_CANCODER_ID);
+        //canCoder = new CANCoder(ARM_WRIST_CANCODER_ID);
         wristMotor = new TalonFX(ARM_MOTOR_ID_WRIST);
         wristMotor.configFactoryDefault();
         wristMotor.enableVoltageCompensation(true);
@@ -43,7 +43,7 @@ public class ArmWrist extends SubsystemBase {
         feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW);
     }
 
-    private void configCancoder() {
+    /**private void configCancoder() {
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         config.magnetOffsetDegrees = 0;
@@ -52,10 +52,10 @@ public class ArmWrist extends SubsystemBase {
         canCoder.configAllSettings(config);
         canCoder.setPosition(
                 canCoder.getAbsolutePosition() - ARM_WRIST_CC_OFFSET);
-    }
+    }*/
     
     public double getAngle() {
-        return canCoder.getAbsolutePosition();
+        return wristMotor.getSelectedSensorPosition();
     }
 
     public static double angleToTick(double angle) {

@@ -24,14 +24,14 @@ import static frc.robot.Constants.Wiring.ELBOW_CANCODER_ID;
 import static frc.robot.Constants.Arm.*;
 
 public class ArmElbow extends SubsystemBase {
-    private final CANCoder      canCoder;
+    //private final CANCoder      canCoder;
     private final TalonFX       elbowMotor;
     private ArmFeedforward      feedforward;
     private final double[]      elbowPos = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private int degrees;
 
     public ArmElbow() {
-        canCoder = new CANCoder(ELBOW_CANCODER_ID);
+        //canCoder = new CANCoder(ELBOW_CANCODER_ID);
         elbowMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
         elbowMotor.configFactoryDefault();
         elbowMotor.enableVoltageCompensation(true);
@@ -43,7 +43,7 @@ public class ArmElbow extends SubsystemBase {
         feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW);
     }
 
-    private void configCancoder() {
+    /**private void configCancoder() {
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         config.magnetOffsetDegrees = 0;
@@ -52,10 +52,10 @@ public class ArmElbow extends SubsystemBase {
         canCoder.configAllSettings(config);
         canCoder.setPosition(
                 canCoder.getAbsolutePosition() - ELBOW_CC_OFFSET);
-    }
+    }*/
     
     public double getAngle() {
-        return canCoder.getAbsolutePosition();
+        return elbowMotor.getSelectedSensorPosition();
     }
 
     public static double angleToTick(double angle) {

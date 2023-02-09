@@ -89,9 +89,9 @@ public class RobotContainer {
         /**
          * Delete these commands after initial testing!!!
          */
-        controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
-        controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
-        controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
+        controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
+        controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
+        controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
         
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
