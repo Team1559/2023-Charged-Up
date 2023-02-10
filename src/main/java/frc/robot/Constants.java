@@ -24,10 +24,10 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = true;
+        public static final boolean CHASSIS_ENABLED = false;
         public static final boolean ARM_ENABLED     = true;
-        public static final boolean GRABBER_ENABLED = true;
-        public static final boolean VISION_ENABLED  = true;
+        public static final boolean GRABBER_ENABLED = false;
+        public static final boolean VISION_ENABLED  = false;
     }
 
     public static final double FALCON_TICKS_PER_REV = 2048;
@@ -123,13 +123,15 @@ public final class Constants {
         public static final double ELBOW_CC_OFFSET = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE = 0.2; 
+        public static final double kP_BASE = 0.03;
         public static final double kD_BASE = 0;
-        public static final double kI_BASE = 0; 
-        public static final double kG_BASE = 1.36;
+        public static final double kI_BASE = kP_BASE / 50; 
+        public static final double kIZ_BASE = 5; // degrees 
+        
+        public static final double kG_BASE = 0.8;
         public static final double kV_BASE = 1.54;
         public static final double kS_BASE = 0;
-        public static final double kA_BASE = 0.17;
+        public static final double kA_BASE = 0.10;
 
         public static final double kP_ELBOW = 0.2;
         public static final double kD_ELBOW = 0;

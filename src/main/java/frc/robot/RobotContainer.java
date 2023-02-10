@@ -7,6 +7,7 @@ package frc.robot;
 import static frc.robot.Constants.FeatureFlags.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
@@ -45,9 +46,9 @@ public class RobotContainer {
         controller1 = new DTXboxController(1);
         if (ARM_ENABLED){
             base = new ArmBase();
-            elbow = new ArmElbow();
-            armWrist = new ArmWrist();
-            arm = new FullArmCommands(base, elbow, armWrist);
+            elbow = null; // new ArmElbow();
+            armWrist = null; // new ArmWrist();
+            arm = null; // new FullArmCommands(base, elbow, armWrist);
         } else {
             base = null;
             elbow = null;
@@ -101,6 +102,7 @@ public class RobotContainer {
         controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
         controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
         controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
+        controller0.xButton.onTrue(new InstantCommand(()->base.resetEncoderForTesting(90)));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
