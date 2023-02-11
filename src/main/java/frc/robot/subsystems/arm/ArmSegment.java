@@ -19,9 +19,9 @@ public class ArmSegment extends SubsystemBase {
     private final String  name;
     private final TalonFX motor;
     // private final CANCoder canCoder;
-    private final ArmFeedforward feedforward;
-    private final double[]       positions;
-    private final double         gearReduction;
+    private ArmFeedforward feedforward;
+    private final double[] positions;
+    private final double   gearReduction;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp,
             double ki, double kd, double izone, double gearReduction,
@@ -37,13 +37,14 @@ public class ArmSegment extends SubsystemBase {
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
         SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
-                true, 20, 25, 0.5);
+                true, 20, 80, 0.5);
         motor.configSupplyCurrentLimit(limit);
         motor.config_kP(0, kp);
         motor.config_kI(0, ki);
         motor.config_kD(0, kd);
         motor.config_IntegralZone(0, izone);
-        motor.setSelectedSensorPosition(angleToTick(90));
+        motor.configNeutralDeadband(0.005);
+        motor.setSelectedSensorPosition(angleToTick(60));
     }
 
     public void resetEncoderForTesting(double angle) {
@@ -97,5 +98,8 @@ public class ArmSegment extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber(name + " angle: ", getAngle());
         SmartDashboard.putNumber(name + " current: ", motor.getStatorCurrent());
+        SmartDashboard.putNumber(name + " motor temperature: ",
+                motor.getTemperature());
+        System.out.println(getAngle());
     }
 }

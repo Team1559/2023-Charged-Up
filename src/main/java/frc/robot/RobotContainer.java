@@ -97,13 +97,14 @@ public class RobotContainer {
         /**
          * Delete these commands after initial testing- also, START ARM @ 90
          * DEGREES!!!!!!!
+         * Lower arm from top to test angle FF/PID 
          */
         if (ARM_ENABLED) {
             controller0.aButton.onTrue(base.setAngleCommandPos(9));
             controller0.bButton.onTrue(base.setAngleCommandPos(8));
             controller0.yButton.onTrue(base.setAngleCommandPos(7));
             controller0.xButton.onTrue(
-                    new InstantCommand(() -> base.resetEncoderForTesting(90)));
+                    new InstantCommand(() -> base.resetEncoderForTesting(60)));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,

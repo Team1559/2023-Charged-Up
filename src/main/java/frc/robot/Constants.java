@@ -116,31 +116,31 @@ public final class Constants {
                 * (50 / 72.0);
         public static final double INV_GEAR_RATIO_BASE             = 1
                 / GEAR_RATIO_BASE;
-        public static final double ELBOW_GEAR_RATIO                = 1;
+        public static final double ELBOW_GEAR_RATIO                = 1/64.0;
         public static final double INV_ELBOW_GEAR_RATIO            = 1
                 / ELBOW_GEAR_RATIO;
-        public static final double ARM_WRIST_GEAR_RATIO            = 1;
+        public static final double ARM_WRIST_GEAR_RATIO            = 1 / 64.0;
         public static final double INV_ARM_WRIST_GEAR_RATIO        = 1
                 / ARM_WRIST_GEAR_RATIO;
         public static final double TELEOP_ANGLE_VELOCITY           = 90D;
         public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
                 / 50.0;
         public static final double ZERO_ANGLE                      = 0;
-        public static final double MAXIMUM_ANGLE_ERROR             = 2;
+        public static final double MAXIMUM_ANGLE_ERROR             = 0.5;
 
         public static final double BASE_CC_OFFSET      = 0;
         public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE  = 0.03;
+        public static final double kP_BASE  = 0.07;
         public static final double kD_BASE  = 0;
-        public static final double kI_BASE  = kP_BASE / 50;
-        public static final double kIZ_BASE = 5;           // degrees
+        public static final double kI_BASE  = kP_BASE / 5.0;
+        public static final double kIZ_BASE = 7;           // degrees
 
         public static final double kG_BASE = 0.8;
-        public static final double kV_BASE = 1.54;
+        public static final double kV_BASE = 1.54; //~1.54
         public static final double kS_BASE = 0;
-        public static final double kA_BASE = 0.10;
+        public static final double kA_BASE = 0.1;
 
         public static final double kP_ELBOW  = 0.2;
         public static final double kD_ELBOW  = 0;
