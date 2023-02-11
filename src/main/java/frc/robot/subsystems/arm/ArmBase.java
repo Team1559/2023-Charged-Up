@@ -36,12 +36,14 @@ public class ArmBase extends SubsystemBase {
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 20, 25, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 60, 0.5);
         baseMotor.configSupplyCurrentLimit(limit);
         baseMotor.config_kP(0, kP_BASE);
         baseMotor.config_kI(0, kI_BASE);
         baseMotor.config_kD(0, kD_BASE);
+        baseMotor.config_IntegralZone(0, angleToTick(kIZ_BASE));
         baseMotor.setSelectedSensorPosition(angleToTick(90));
+        // baseMotor.setInverted(true);
         feedforward = new ArmFeedforward(kS_BASE, kG_BASE, kV_BASE, kA_BASE);
     }
     private void configCancoder() {
@@ -54,11 +56,15 @@ public class ArmBase extends SubsystemBase {
         canCoder.setPosition(
                 canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
     }
+    public void resetEncoderForTesting(double angle) {
+        baseMotor.setSelectedSensorPosition(angleToTick(angle));
+    }
     public double getAngle() {
         return tickToAngle(baseMotor.getSelectedSensorPosition());
     }
 
     public static double angleToTick(double angle) {
+        // Approx 524 ticks per degree
         double revolutionsOfArm = angle / 360.0;
         double motorRevolutions = revolutionsOfArm * INV_GEAR_RATIO_BASE;
         double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;
@@ -73,6 +79,7 @@ public class ArmBase extends SubsystemBase {
 
     public void setAngle(double angle) {
         double FF = feedforward.calculate(angle, 0, 0) / 12.0;
+        SmartDashboard.putNumber("base feedforward", FF);
         baseMotor.set(TalonFXControlMode.Position, angleToTick(angle),
                 DemandType.ArbitraryFeedForward, FF);
     }
@@ -117,7 +124,9 @@ public class ArmBase extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Base potentiometer reading: ",
-                getAngle());
+        SmartDashboard.putNumber("Base angle: ", getAngle());
+        SmartDashboard.putNumber("Base error: ", baseMotor.getClosedLoopError());
+        SmartDashboard.putNumber("Base current: ", baseMotor.getStatorCurrent());
+        SmartDashboard.putNumber("Base temperature: ", baseMotor.getTemperature());
     }
 }
