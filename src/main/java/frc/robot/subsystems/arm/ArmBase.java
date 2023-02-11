@@ -6,7 +6,7 @@ import static frc.robot.Constants.Wiring.BASE_CANCODER_ID;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
 public class ArmBase extends ArmSegment {
-    private static final double[] basePos = { 0, 10, 20, 30, 40, 50, 60, 70, 80,
+    private static final double[] basePos = { 0, 10, 20, 30, 40, 50, 60, 60, 75,
             90 };
 
     public ArmBase() {

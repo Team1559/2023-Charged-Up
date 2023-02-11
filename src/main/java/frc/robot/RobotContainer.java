@@ -95,7 +95,7 @@ public class RobotContainer {
      */
     private void configureBindings() {
         /**
-         * Delete these commands after initial testing- also, START ARM @ 90
+         * Delete these commands after initial testing- also, START ARM @ 60
          * DEGREES!!!!!!!
          * Lower arm from top to test angle FF/PID 
          */
