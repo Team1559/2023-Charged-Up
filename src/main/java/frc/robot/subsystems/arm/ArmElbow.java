@@ -4,6 +4,10 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,19 +18,20 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_ELBOW;
+import static frc.robot.Constants.Wiring.ELBOW_CANCODER_ID;
 import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.*;
 
 public class ArmElbow extends SubsystemBase {
-    //private final CANCoder      canCoder;
+    private final CANCoder      canCoder;
     private final TalonFX       elbowMotor;
     private ArmFeedforward      feedforward;
     private final double[]      elbowPos = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     private int degrees;
 
     public ArmElbow() {
-        //canCoder = new CANCoder(ELBOW_CANCODER_ID);
+        canCoder = new CANCoder(ELBOW_CANCODER_ID);
         elbowMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
         elbowMotor.configFactoryDefault();
         elbowMotor.enableVoltageCompensation(true);
@@ -38,9 +43,18 @@ public class ArmElbow extends SubsystemBase {
         elbowMotor.config_kD(0, kD_ELBOW);
         feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW);
     }
-
+    private void configCancoder() {
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        config.magnetOffsetDegrees = 0;
+        config.sensorDirection = false;
+        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        canCoder.configAllSettings(config);
+        canCoder.setPosition(
+                canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
+    }
     public double getAngle() {
-        return elbowMotor.getSelectedSensorPosition();
+        return tickToAngle(elbowMotor.getSelectedSensorPosition());
     }
 
     public static double angleToTick(double angle) {

@@ -4,6 +4,10 @@ import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_BASE;
+import static frc.robot.Constants.Wiring.BASE_CANCODER_ID;
 import static frc.robot.Constants.Arm.INV_GEAR_RATIO_BASE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.*;
@@ -21,13 +26,13 @@ import static frc.robot.Constants.Arm.*;
 public class ArmBase extends SubsystemBase {
 
     private final TalonFX             baseMotor;
-    //private final CANCoder canCoder;
+    private final CANCoder canCoder;
     private final ArmFeedforward      feedforward;
     private final double[]            basePos = {0, 10, 20, 30, 40, 50, 60, 70, 80, 90};
     private int degrees;
     
     public ArmBase() {
-        //canCoder = new CANCoder(BASE_CANCODER_ID);
+        canCoder = new CANCoder(BASE_CANCODER_ID);
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);
@@ -39,7 +44,16 @@ public class ArmBase extends SubsystemBase {
         baseMotor.setSelectedSensorPosition(angleToTick(90));
         feedforward = new ArmFeedforward(kS_BASE, kG_BASE, kV_BASE, kA_BASE);
     }
-
+    private void configCancoder() {
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        config.magnetOffsetDegrees = 0;
+        config.sensorDirection = false;
+        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
+        canCoder.configAllSettings(config);
+        canCoder.setPosition(
+                canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
+    }
     public double getAngle() {
         return tickToAngle(baseMotor.getSelectedSensorPosition());
     }
