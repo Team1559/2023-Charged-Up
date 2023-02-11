@@ -44,7 +44,7 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        if (ARM_ENABLED){
+        if (ARM_ENABLED) {
             base = new ArmBase();
             elbow = null; // new ArmElbow();
             armWrist = null; // new ArmWrist();
@@ -95,14 +95,15 @@ public class RobotContainer {
      */
     private void configureBindings() {
         /**
-         * Delete these commands after initial testing-
-         * also, START ARM @ 90 DEGREES!!!!!!!
+         * Delete these commands after initial testing- also, START ARM @ 90
+         * DEGREES!!!!!!!
          */
-        if (ARM_ENABLED){        
-        controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
-        controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
-        controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
-        controller0.xButton.onTrue(new InstantCommand(()->base.resetEncoderForTesting(90)));
+        if (ARM_ENABLED) {
+            controller0.aButton.onTrue(base.setAngleCommandPos(9));
+            controller0.bButton.onTrue(base.setAngleCommandPos(8));
+            controller0.yButton.onTrue(base.setAngleCommandPos(7));
+            controller0.xButton.onTrue(
+                    new InstantCommand(() -> base.resetEncoderForTesting(90)));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
@@ -110,8 +111,8 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
 
             /**
-             * Delete these 3 commands later, these are only for testing
-             * We will create sequence commands later
+             * Delete these 3 commands later, these are only for testing We will
+             * create sequence commands later
              */
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
