@@ -1,14 +1,12 @@
 package frc.robot;
 
 import java.util.Arrays;
-import java.util.function.Function;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
 

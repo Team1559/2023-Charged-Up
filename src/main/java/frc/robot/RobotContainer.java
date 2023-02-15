@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
 import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
@@ -50,11 +51,17 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        base = new ArmBase();
-        elbow = new ArmElbow();
-        armWrist = new ArmWrist();
-        arm = new FullArmCommands(base, elbow, armWrist);
-
+        if (ARM_ENABLED) {
+            base = new ArmBase();
+            elbow = new ArmElbow();
+            armWrist = new ArmWrist();
+            arm = new FullArmCommands(base, elbow, armWrist);
+        } else {
+            base = null;
+            elbow = null;
+            armWrist = null;
+            arm = null;
+        }
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive(controller0);
         } else {
@@ -94,9 +101,14 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
-        controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
-        controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
+        /**
+         * Delete these commands after initial testing!!!
+         */
+        if (ARM_ENABLED) {
+            controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
+            controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
+            controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
+        }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
                     controller1);
@@ -106,8 +118,7 @@ public class RobotContainer {
              * Delete these 3 commands later, these are only for testing We will
              * create sequence commands later
              */
-            controller1.aButton.onTrue(claw.closeClawCONECommand());
-            controller1.bButton.onTrue(claw.closeClawCUBECommand());
+            controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
         }
     }
