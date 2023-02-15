@@ -7,6 +7,7 @@ package frc.robot;
 import static frc.robot.Constants.FeatureFlags.*;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -46,7 +47,7 @@ public class RobotContainer {
         controller1 = new DTXboxController(1);
         if (ARM_ENABLED) {
             base = new ArmBase();
-            elbow = null; // new ArmElbow();
+            elbow = new ArmElbow(base); // new ArmElbow();
             armWrist = null; // new ArmWrist();
             arm = null; // new FullArmCommands(base, elbow, armWrist);
         } else {
@@ -100,11 +101,13 @@ public class RobotContainer {
          * Lower arm from top to test angle FF/PID 
          */
         if (ARM_ENABLED) {
-            controller0.aButton.onTrue(base.setAngleCommandPos(9));
-            controller0.bButton.onTrue(base.setAngleCommandPos(8));
-            controller0.yButton.onTrue(base.setAngleCommandPos(7));
+            controller0.aButton.onTrue(Commands.parallel(elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
+            controller0.bButton.onTrue(elbow.setAngleCommandPos(8));
+            controller0.yButton.onTrue(elbow.setAngleCommandPos(7));
             controller0.xButton.onTrue(
-                    new InstantCommand(() -> base.resetEncoderForTesting(60)));
+                    new InstantCommand(() -> base.resetEncoderForTesting(90)));
+            controller0.leftBumper.onTrue(
+                    new InstantCommand(() -> elbow.resetEncoderForTesting(0)));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,

@@ -43,8 +43,8 @@ public final class Constants {
 
         // Arm wiring ports + ids
         public static final int ARM_MOTOR_ID_BASE         = 18;
-        public static final int ARM_MOTOR_ID_ELBOW        = 41;
-        public static final int ARM_MOTOR_ID_WRIST        = 42;
+        public static final int ARM_MOTOR_ID_ELBOW        = 17;
+        public static final int ARM_MOTOR_ID_WRIST        = 19;
         public static final int BASE_CANCODER_ID          = 2;
         public static final int ELBOW_CANCODER_ID         = 3;
         public static final int ARM_WRIST_CANCODER_ID     = 4;
@@ -142,12 +142,12 @@ public final class Constants {
         public static final double kS_BASE = 0;
         public static final double kA_BASE = 0; //0.1
 
-        public static final double kP_ELBOW  = 0.2;
+        public static final double kP_ELBOW  = 0; //0.2 
         public static final double kD_ELBOW  = 0;
         public static final double kI_ELBOW  = 0;
         public static final double kIZ_ELBOW = 0;  // degrees
 
-        public static final double kG_ELBOW = 0;
+        public static final double kG_ELBOW = 0.18;
         public static final double kV_ELBOW = 0;
         public static final double kS_ELBOW = 0;
         public static final double kA_ELBOW = 0;

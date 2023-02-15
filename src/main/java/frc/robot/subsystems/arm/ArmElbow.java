@@ -6,12 +6,12 @@ import static frc.robot.Constants.Wiring.ELBOW_CANCODER_ID;
 import edu.wpi.first.math.controller.ArmFeedforward;
 
 public class ArmElbow extends ArmSegment {
-    private static final double[] elbowPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+    private static final double[] elbowPos = { 0, 0, 0, 0, 0, 0, -90, -60, -30, 0 };
 
-    public ArmElbow() {
+    public ArmElbow(ArmSegment previousSegment) {
         super("Elbow", ARM_MOTOR_ID_ELBOW, ELBOW_CANCODER_ID, kP_ELBOW,
                 kI_ELBOW, kD_ELBOW, kIZ_ELBOW, INV_ELBOW_GEAR_RATIO,
                 new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW),
-                elbowPos);
+                elbowPos, previousSegment);
     }
 }

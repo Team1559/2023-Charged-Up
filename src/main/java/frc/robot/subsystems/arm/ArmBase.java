@@ -13,6 +13,6 @@ public class ArmBase extends ArmSegment {
         super("Base", ARM_MOTOR_ID_BASE, BASE_CANCODER_ID, kP_BASE, kI_BASE,
                 kD_BASE, kIZ_BASE, INV_GEAR_RATIO_BASE,
                 new ArmFeedforward(kS_BASE, kG_BASE, kV_BASE, kA_BASE),
-                basePos);
+                basePos, null);
     }
 }

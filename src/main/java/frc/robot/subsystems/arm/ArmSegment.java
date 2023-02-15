@@ -15,18 +15,20 @@ import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
 
 public class ArmSegment extends SubsystemBase {
-
+    private double previousSetPoint;
     private final String  name;
     private final TalonFX motor;
     // private final CANCoder canCoder;
     private ArmFeedforward feedforward;
     private final double[] positions;
     private final double   gearReduction;
+    private ArmSegment previousSegment;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp,
             double ki, double kd, double izone, double gearReduction,
-            ArmFeedforward feedforward, double[] positions) {
-
+            ArmFeedforward feedforward, double[] positions, ArmSegment previousSegment) {
+        
+        this.previousSegment = previousSegment;
         this.name = name;
         this.feedforward = feedforward;
         this.gearReduction = gearReduction;
@@ -44,7 +46,6 @@ public class ArmSegment extends SubsystemBase {
         motor.config_kD(0, kd);
         motor.config_IntegralZone(0, izone);
         motor.configNeutralDeadband(0.005);
-        motor.setSelectedSensorPosition(angleToTick(60));
     }
 
     public void resetEncoderForTesting(double angle) {
@@ -53,6 +54,15 @@ public class ArmSegment extends SubsystemBase {
 
     public double getAngle() {
         return tickToAngle(motor.getSelectedSensorPosition());
+    }
+
+    public double getGroundAngle(){
+        double groundAnglePrevious = 0;
+        if (previousSegment != null){
+            groundAnglePrevious = previousSegment.getGroundAngle();
+        }
+        double groundAngle = groundAnglePrevious + previousSetPoint;
+        return groundAngle;
     }
 
     public double angleToTick(double angle) {
@@ -70,7 +80,9 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public void setAngle(double angle) {
-        double FF = feedforward.calculate(angle, 0, 0) / 12.0;
+        previousSetPoint = angle;
+        double groundAngle = getGroundAngle();
+        double FF = feedforward.calculate(groundAngle, 0, 0) / 12.0;
         motor.set(TalonFXControlMode.Position, angleToTick(angle),
                 DemandType.ArbitraryFeedForward, FF);
     }
@@ -100,6 +112,7 @@ public class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " current: ", motor.getStatorCurrent());
         SmartDashboard.putNumber(name + " motor temperature: ",
                 motor.getTemperature());
-        System.out.println(getAngle());
+        SmartDashboard.putNumber(name + "raw tick value", angleToTick(getAngle()));
+        
     }
 }
