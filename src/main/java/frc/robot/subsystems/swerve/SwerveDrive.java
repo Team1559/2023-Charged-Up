@@ -2,10 +2,10 @@ package frc.robot.subsystems.swerve;
 
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
-import static frc.robot.Constants.Swerve.MINIMUM_ANGULAR_VELOCITY;
-import static frc.robot.Constants.Swerve.MINIMUM_LINEAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
+import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
+import static frc.robot.Constants.Wiring.PIGEON_IMU;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
@@ -21,9 +21,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import frc.lib.DTXboxController;
-import frc.robot.Constants;
 
 public class SwerveDrive extends SubsystemBase {
     private final DTXboxController         controller;
@@ -48,7 +46,7 @@ public class SwerveDrive extends SubsystemBase {
             modules[i] = new SwerveModule(i);
             modulePositions[i] = modules[i].getCurrentPosition();
         }
-        gyro = new Pigeon2(Constants.Wiring.PIGEON_IMU);
+        gyro = new Pigeon2(PIGEON_IMU, CANIVORE_BUS_ID);
         kinematics = new SwerveDriveKinematics(
                 new Translation2d(MODULE_X, MODULE_Y),
                 new Translation2d(MODULE_X, -MODULE_Y),
@@ -73,7 +71,6 @@ public class SwerveDrive extends SubsystemBase {
                 minCosine = cosine;
             }
         }
-        SmartDashboard.putNumber("Cosine", minCosine);
         for (int i = 0; i < modules.length; i++) {
             states[i].speedMetersPerSecond *= minCosine;
             modules[i].setState(states[i]);
@@ -163,13 +160,14 @@ public class SwerveDrive extends SubsystemBase {
                     * MAXIMUM_LINEAR_VELOCITY;
             double vr = -controller.getRightStickXSquared()
                     * MAXIMUM_ANGULAR_VELOCITY;
-            if (Math.abs(vx) > MINIMUM_LINEAR_VELOCITY
-                    || Math.abs(vy) > MINIMUM_LINEAR_VELOCITY
-                    || Math.abs(vr) > MINIMUM_ANGULAR_VELOCITY) {
-                driveVelocity(vx, vy, vr);
-            } else {
-                stopDriving();
-            }
+            driveVelocity(vx, vy, vr);
+            // if (Math.abs(vx) > MINIMUM_LINEAR_VELOCITY
+            // || Math.abs(vy) > MINIMUM_LINEAR_VELOCITY
+            // || Math.abs(vr) > MINIMUM_ANGULAR_VELOCITY) {
+            // driveVelocity(vx, vy, vr);
+            // } else {
+            // stopDriving();
+            // }
         }
 
         updatePositions();

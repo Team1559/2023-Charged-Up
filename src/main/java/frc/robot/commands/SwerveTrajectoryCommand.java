@@ -10,7 +10,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.lib.SwerveTrajectory;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
@@ -127,6 +126,11 @@ public class SwerveTrajectoryCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        if (closestPointIndex < trajectory.length - 3) {
+            // Haven't run the whole route, start might be same as end
+            // Allow for a bit of leeway (length-3 instead of length-1)
+            return false;
+        }
         Transform2d delta = targetPose.minus(swerveDrive.getEstimatedPose());
         return delta.getTranslation()
                     .getNorm() < LINEAR_TOLERANCE

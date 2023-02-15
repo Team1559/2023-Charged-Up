@@ -4,15 +4,22 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.FeatureFlags.*;
+import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
+import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
+import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
-
-import frc.robot.subsystems.arm.*;
+import frc.lib.SwerveTrajectoryGenerator;
+import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.arm.ArmBase;
+import frc.robot.subsystems.arm.ArmElbow;
+import frc.robot.subsystems.arm.ArmWrist;
+import frc.robot.subsystems.arm.FullArmCommands;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -111,7 +118,10 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        // TODO: need points to run in a square
+        Pose2d[] waypoints = {};
         // TODO: implement autonomous command
-        return null;
+        return new SwerveTrajectoryCommand(swerve,
+                SwerveTrajectoryGenerator.calculateTrajectory(waypoints));
     }
 }
