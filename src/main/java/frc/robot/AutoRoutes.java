@@ -33,11 +33,11 @@ public class AutoRoutes {
                         180);
 
         // Define common positions
-        public static final Pose2d START_POINT_1 = new Pose2d(2.2, 4.7,
+        public static final Pose2d START_POINT_3 = new Pose2d(2.2, 4.7,
                         DEGREES_180);
         public static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75,
                         DEGREES_180);
-        public static final Pose2d START_POINT_3 = new Pose2d(2.2, 0.75,
+        public static final Pose2d START_POINT_1 = new Pose2d(2.2, 0.75,
                         DEGREES_180);
 
         public static final Pose2d GAME_PIECE_4 = new Pose2d(6.8, 4.6,
@@ -55,36 +55,127 @@ public class AutoRoutes {
         public static final Pose2d CS_EDGE_2 = new Pose2d(4.8, 4.0, DEGREES_0);
         public static final Pose2d CS_EDGE_3 = new Pose2d(4.8, 1.5, DEGREES_0);
         public static final Pose2d CS_EDGE_4 = new Pose2d(2.9, 4.0, DEGREES_0);
-        public static final Pose2d CS_CENTER = new Pose2d(3.9, 0.4, DEGREES_0);
+        public static final Pose2d CS_CENTER = new Pose2d(3.9, 2.75, DEGREES_0);
 
-        // Define specific routes
-        private static final Pose2d S1_P1_A = new Pose2d(4.0, 4.7, DEGREES_180);
-        private static final Pose2d S1_P1_B = new Pose2d(4.6, 4.8, DEGREES_150);
-        private static final Pose2d S1_P1_C = new Pose2d(5.1, 4.9, DEGREES_90);
-        private static final Pose2d S1_P1_D = new Pose2d(5.6, 4.7, DEGREES_30);
-        private static final Pose2d S1_P1_E = new Pose2d(6.2, 4.6, DEGREES_0);
+        /*
+         * Define specific routes Eventually maybe add mid points to have not a
+         * sharp rotation We do not want to have each one rotating
+         */
 
-        public static final Pose2d[] START_1_TO_PIECE_1 = { START_POINT_1,
-                        S1_P1_A, S1_P1_B, S1_P1_C, S1_P1_D, S1_P1_E,
-                        GAME_PIECE_1 };
-        public static final Pose2d[] PIECE_1_TO_START_1 = { GAME_PIECE_1,
-                        S1_P1_E, S1_P1_D, S1_P1_C, S1_P1_B, S1_P1_A,
-                        START_POINT_1 };
-
-        private static final Pose2d S3_P4_A = new Pose2d(5.2, 0.75,
+        // Start 1 Piece 1 Drive to piece
+        private static final Pose2d S1_P1_A = new Pose2d(1.49, 1.07, DEGREES_0);
+        private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
+        private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
+        private static final Pose2d S1_P1_D = new Pose2d(6.5, 0.92,
                         DEGREES_180);
-        private static final Pose2d S3_P4_B = new Pose2d(5.4, 0.85,
-                        DEGREES_150);
-        private static final Pose2d S3_P4_C = new Pose2d(5.7, 0.9, DEGREES_90);
-        private static final Pose2d S3_P4_D = new Pose2d(6.0, 0.9, DEGREES_30);
-        private static final Pose2d S3_P4_E = new Pose2d(6.3, 0.9, DEGREES_0);
+        private static final Pose2d S1_P1_E = new Pose2d(6.82, 0.92,
+                        DEGREES_180);
 
-        public static final Pose2d[] START_3_TO_PIECE_4 = { START_POINT_3,
-                        S3_P4_A, S3_P4_B, S3_P4_C, S3_P4_D, S3_P4_E,
-                        GAME_PIECE_4 };
-        public static final Pose2d[] PIECE_4_TO_START_3 = { GAME_PIECE_4,
-                        S3_P4_E, S3_P4_D, S3_P4_C, S3_P4_B, S3_P4_A,
-                        START_POINT_3 };
+        public static final Pose2d[] START_1_TO_PIECE_1 = { S1_P1_A, S1_P1_B,
+                        S1_P1_C, S1_P1_D, S1_P1_E };
+
+        // Piece 1 Start 1 Drive back to start
+        private static final Pose2d P1_S1_A = new Pose2d(6.82, 0.92,
+                        DEGREES_180);
+        private static final Pose2d P1_S1_B = new Pose2d(4.83, 0.92, DEGREES_0);
+        private static final Pose2d P1_S1_C = new Pose2d(2.94, 0.92, DEGREES_0);
+        private static final Pose2d P1_S1_D = new Pose2d(1.49, 0.92, DEGREES_0);
+
+        public static final Pose2d[] PIECE_1_START_1 = { P1_S1_A, P1_S1_B,
+                        P1_S1_C, P1_S1_D };
+
+        // Position 1 Exit Community
+        private static final Pose2d S1_COM_A = new Pose2d(1.49, 1.07,
+                        DEGREES_0);
+        private static final Pose2d S1_COM_B = new Pose2d(2.94, 0.92,
+                        DEGREES_0);
+        private static final Pose2d S1_COM_C = new Pose2d(4.83, 0.92,
+                        DEGREES_0);
+        private static final Pose2d S1_COM_D = new Pose2d(5.52, 0.92,
+                        DEGREES_180);
+
+        public static final Pose2d[] START_1_TO_COMMUNITY = { S1_COM_A,
+                        S1_COM_B, S1_COM_C, S1_COM_D };
+
+        // Start 3 Piece 4 Drive to piece
+        private static final Pose2d S3_P4_A = new Pose2d(1.49, 4.42, DEGREES_0);
+        private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_0);
+        private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_0);
+        private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58,
+                        DEGREES_180);
+        private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58,
+                        DEGREES_180);
+
+        public static final Pose2d[] START_3_TO_PIECE_4 = { S3_P4_A, S3_P4_B,
+                        S3_P4_C, S3_P4_D, S3_P4_E };
+
+        // Piece 4 Start 3 Drive back to start
+        private static final Pose2d P4_S3_A = new Pose2d(6.82, 4.58,
+                        DEGREES_180);
+        private static final Pose2d P4_S3_B = new Pose2d(4.83, 4.58, DEGREES_0);
+        private static final Pose2d P4_S3_C = new Pose2d(2.94, 4.58, DEGREES_0);
+        private static final Pose2d P4_S3_D = new Pose2d(1.49, 4.42, DEGREES_0);
+
+        public static final Pose2d[] PIECE_4_TO_START_3 = { P4_S3_A, P4_S3_B,
+                        P4_S3_C, P4_S3_D };
+
+        // Position 3 Exit Community
+        private static final Pose2d S3_COM_A = new Pose2d(1.49, 4.42,
+                        DEGREES_0);
+        private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.58,
+                        DEGREES_0);
+        private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.58,
+                        DEGREES_0);
+        private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.58,
+                        DEGREES_180);
+
+        public static final Pose2d[] START_3_EXIT_COMMUNITY = { S3_COM_A,
+                        S3_COM_B, S3_COM_C, S3_COM_D };
+
+        // Center of Charge Station From Start 2
+        private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
+        private static final Pose2d S2_CS_B = new Pose2d(2.94, 2.75, DEGREES_0);
+        private static final Pose2d S2_CS_C = new Pose2d(3.88, 2.75, DEGREES_0);
+
+        public static final Pose2d[] START_2_TO_CHARGE_STATION = { S2_CS_A,
+                        S2_CS_B, S2_CS_C };
+
+        // Go over charge station from start 2
+        private static final Pose2d S2_OCS_A = new Pose2d(1.49, 2.75,
+                        DEGREES_0);
+        private static final Pose2d S2_OCS_B = new Pose2d(2.94, 2.75,
+                        DEGREES_0);
+        private static final Pose2d S2_OCS_C = new Pose2d(4.19, 2.75,
+                        DEGREES_0);
+        private static final Pose2d S2_OCS_D = new Pose2d(5.52, 2.75,
+                        DEGREES_0);
+        private static final Pose2d S2_OCS_E = new Pose2d(5.52, 2.75,
+                        DEGREES_180);
+
+        public static final Pose2d[] START_2_OVER_CHARGE_STATION = { S2_OCS_A,
+                        S2_OCS_B, S2_OCS_C, S2_OCS_D, S2_OCS_E };
+
+        // public static final Pose2d[] START_1_TO_PIECE_1 = { START_POINT_1,
+        // S1_P1_A, S1_P1_B, S1_P1_C, S1_P1_D, S1_P1_E,
+        // GAME_PIECE_1 };
+        // public static final Pose2d[] PIECE_1_TO_START_1 = { GAME_PIECE_1,
+        // S1_P1_E, S1_P1_D, S1_P1_C, S1_P1_B, S1_P1_A,
+        // START_POINT_1 };
+
+        // private static final Pose2d S3_P4_A = new Pose2d(5.2, 0.75,
+        // DEGREES_180);
+        // private static final Pose2d S3_P4_B = new Pose2d(5.4, 0.85,
+        // DEGREES_150);
+        // private static final Pose2d S3_P4_C = new Pose2d(5.7, 0.9,
+        // DEGREES_90);
+        // private static final Pose2d S3_P4_D = new Pose2d(6.0, 0.9,
+        // DEGREES_30);
+        // private static final Pose2d S3_P4_E = new Pose2d(6.3, 0.9,
+        // DEGREES_0);
+
+        // public static final Pose2d[] PIECE_4_TO_START_3 = { GAME_PIECE_4,
+        // S3_P4_E, S3_P4_D, S3_P4_C, S3_P4_B, S3_P4_A,
+        // START_POINT_3 };
 
         static {
                 if (RobotBase.isSimulation()) {
