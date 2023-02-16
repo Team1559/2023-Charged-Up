@@ -125,6 +125,10 @@ public final class Constants {
         public static final double TELEOP_ANGLE_VELOCITY           = 90D;
         public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
                 / 50.0;
+
+        public static final double ANGULAR_VELOCITY_UNIT_DPS = 10D;
+        public static final double ANGULAR_VELOCITY_UNIT_TICKS = ANGULAR_VELOCITY_UNIT_DPS / 50.0;
+
         public static final double ZERO_ANGLE                      = 0;
         public static final double MAXIMUM_ANGLE_ERROR             = 0.5;
 

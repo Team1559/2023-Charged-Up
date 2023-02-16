@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
+import static frc.robot.Constants.Arm.ANGULAR_VELOCITY_UNIT_TICKS;
 
 public class ArmSegment extends SubsystemBase {
     private double previousSetPoint;
@@ -50,6 +51,9 @@ public class ArmSegment extends SubsystemBase {
         motor.configClosedloopRamp(0.5);
     }
 
+
+
+
     public Command resetEncoderForTesting(double angle) {
         return new InstantCommand(() -> motor.setSelectedSensorPosition(angleToTick(angle)));
     }
@@ -81,18 +85,21 @@ public class ArmSegment extends SubsystemBase {
         return angle;
     }
 
-    public void setAngle(double angle) {
+    public void setDestinationAngle(double angle) {
         previousSetPoint = angle;
+    }
+
+    private void setAngleOnMotor(double angle){
         double groundAngle = getGroundAngle();
         double FF = feedforward.calculate(groundAngle, 0, 0) / 12.0;
         motor.set(TalonFXControlMode.Position, angleToTick(angle),
                 DemandType.ArbitraryFeedForward, FF);
     }
-
+    
     public Command setAngleCommandPos(int angleIndex) {
         double angle = positions[angleIndex];
         return new FunctionalCommand(() -> {
-            setAngle(angle);
+            setDestinationAngle(angle);
         }, () -> {
         }, (a) -> {
         }, () -> {
@@ -115,6 +122,11 @@ public class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " motor temperature: ",
                 motor.getTemperature());
         SmartDashboard.putNumber(name + " raw tick value: ", angleToTick(getAngle()));
-        
+        double currentAngle = getAngle();
+        if (currentAngle < previousSetPoint - ANGULAR_VELOCITY_UNIT_TICKS){
+            setAngleOnMotor(currentAngle + ANGULAR_VELOCITY_UNIT_TICKS);
+        } else if (currentAngle > previousSetPoint + ANGULAR_VELOCITY_UNIT_TICKS){
+            setAngleOnMotor(currentAngle - ANGULAR_VELOCITY_UNIT_TICKS);
+        }
     }
 }
