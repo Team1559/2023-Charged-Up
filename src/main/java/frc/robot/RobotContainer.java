@@ -104,10 +104,8 @@ public class RobotContainer {
             controller0.aButton.onTrue(Commands.parallel(elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
             controller0.bButton.onTrue(elbow.setAngleCommandPos(8));
             controller0.yButton.onTrue(elbow.setAngleCommandPos(7));
-            controller0.xButton.onTrue(
-                    new InstantCommand(() -> base.resetEncoderForTesting(90)));
-            controller0.leftBumper.onTrue(
-                    new InstantCommand(() -> elbow.resetEncoderForTesting(0)));
+            controller0.leftBumper.onTrue(base.setAngleCommandPos(8));
+            controller0.xButton.onTrue(Commands.parallel(base.resetEncoderForTesting(90), elbow.resetEncoderForTesting(0)));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,

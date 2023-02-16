@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
@@ -26,7 +27,7 @@ public class ArmSegment extends SubsystemBase {
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp,
             double ki, double kd, double izone, double gearReduction,
-            ArmFeedforward feedforward, double[] positions, ArmSegment previousSegment) {
+            ArmFeedforward feedforward, double[] positions, ArmSegment previousSegment, double zeroAngle) {
         
         this.previousSegment = previousSegment;
         this.name = name;
@@ -46,10 +47,11 @@ public class ArmSegment extends SubsystemBase {
         motor.config_kD(0, kd);
         motor.config_IntegralZone(0, izone);
         motor.configNeutralDeadband(0.005);
+        motor.configClosedloopRamp(0.5);
     }
 
-    public void resetEncoderForTesting(double angle) {
-        motor.setSelectedSensorPosition(angleToTick(angle));
+    public Command resetEncoderForTesting(double angle) {
+        return new InstantCommand(() -> motor.setSelectedSensorPosition(angleToTick(angle)));
     }
 
     public double getAngle() {
@@ -112,7 +114,7 @@ public class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " current: ", motor.getStatorCurrent());
         SmartDashboard.putNumber(name + " motor temperature: ",
                 motor.getTemperature());
-        SmartDashboard.putNumber(name + "raw tick value", angleToTick(getAngle()));
+        SmartDashboard.putNumber(name + " raw tick value: ", angleToTick(getAngle()));
         
     }
 }
