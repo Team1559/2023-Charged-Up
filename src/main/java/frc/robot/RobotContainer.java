@@ -10,10 +10,15 @@ import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
+import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
@@ -129,10 +134,19 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // TODO: need points to run in a square
-        Pose2d[] waypoints = {};
-        // TODO: implement autonomous command
-        return new SwerveTrajectoryCommand(swerve,
-                SwerveTrajectoryGenerator.calculateTrajectory(waypoints));
+        Rotation2d degrees180 = Rotation2d.fromDegrees(180);
+        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180),
+                new Pose2d(11, 2.75, degrees180),
+                new Pose2d(11, 4.75, degrees180),
+                new Pose2d(13, 4.75, degrees180),
+                new Pose2d(13, 2.75, degrees180) };
+        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(
+                waypoints);
+        SmartDashboard.putNumber("Trajectory time", trajectory.time);
+        swerve.displayTrajectory(trajectory);
+        return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
+                true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
+                      .andThen(() -> SmartDashboard.putBoolean("Auto active",
+                              false));
     }
 }

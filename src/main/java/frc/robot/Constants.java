@@ -25,8 +25,8 @@ public final class Constants {
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
         public static final boolean CHASSIS_ENABLED = true;
-        public static final boolean ARM_ENABLED     = true;
-        public static final boolean GRABBER_ENABLED = true;
+        public static final boolean ARM_ENABLED     = false;
+        public static final boolean GRABBER_ENABLED = false;
         public static final boolean VISION_ENABLED  = true;
     }
 
@@ -65,6 +65,7 @@ public final class Constants {
                 * (10D / 60D);
         public static final double DRIVE_GEAR_RATIO_INV = 1D / DRIVE_GEAR_RATIO;
         public static final double STEER_GEAR_RATIO_INV = 1D / STEER_GEAR_RATIO;
+        public static final double STEER_DRIVE_BACKLASH = STEER_GEAR_RATIO * (50D / 14D);
 
         public static final double WHEELBASE_WIDTH     = Units.inchesToMeters(
                 24);
@@ -170,8 +171,8 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 1;
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 2;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.5 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 2 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;
         public static final double MAXIMUM_LINEAR_ACCELERATION  = MAXIMUM_LINEAR_VELOCITY
@@ -181,15 +182,15 @@ public final class Constants {
 
         public static final double LINEAR_TOLERANCE   = 0.05;
         public static final double ANGULAR_TOLERANCE  = 2;
-        public static final double LOOKAHEAD_DISTANCE = 0.5;
+        public static final double LOOKAHEAD_DISTANCE = 0.1;
 
         public static final double LINEAR_KP  = 1.5;
         public static final double ANGULAR_KP = 3;
 
-        public static final double DISTANCE_BETWEEN_POINTS = 0.05;
+        public static final double DISTANCE_BETWEEN_POINTS = 0.025;
         public static final double SMOOTH_TOLERANCE        = 0.001;
         public static final double SMOOTH_WEIGHT           = 0.75;
         public static final double VELOCITY_PROPORTION     = 5;
-        public static final double VELOCITY_POWER          = 0.25;
+        public static final double VELOCITY_POWER          = 0.2;
     }
 }

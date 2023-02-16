@@ -32,7 +32,7 @@ public class SwerveTrajectoryCommand extends CommandBase {
         xController = new PIDController(LINEAR_KP, 0, 0);
         yController = new PIDController(LINEAR_KP, 0, 0);
         rController = new PIDController(ANGULAR_KP, 0, 0);
-        rController.enableContinuousInput(-180, 180);
+        rController.enableContinuousInput(-Math.PI, Math.PI);
 
         targetPose = trajectory.points[trajectory.length - 1].pose;
         closestPointIndex = 0;
@@ -84,7 +84,9 @@ public class SwerveTrajectoryCommand extends CommandBase {
                 break;
             }
         }
-        if (index != -1) {
+        if (index == -1) {
+            lookAheadPointIndex = closestPointIndex;
+        } else {
             lookAheadPointIndex = index;
         }
     }
@@ -111,7 +113,7 @@ public class SwerveTrajectoryCommand extends CommandBase {
         // Scale linear velocity to meet velocity constraints
         double velocity = Math.hypot(vx, vy);
         double commandedVelocity = Math.max(
-                trajectory.points[closestPointIndex].commandedVelocity, 0.05);
+                trajectory.points[closestPointIndex].commandedVelocity, 0.1);
         double ratio = commandedVelocity / velocity;
         vx *= ratio;
         vy *= ratio;

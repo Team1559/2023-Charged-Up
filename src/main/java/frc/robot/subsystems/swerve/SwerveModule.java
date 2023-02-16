@@ -8,6 +8,7 @@ import static frc.robot.Constants.Swerve.MODULE_STEER_KD;
 import static frc.robot.Constants.Swerve.MODULE_STEER_KP;
 import static frc.robot.Constants.Swerve.TICKS_TO_DEGREES;
 import static frc.robot.Constants.Swerve.TICKS_TO_METERS;
+import static frc.robot.Constants.Swerve.STEER_DRIVE_BACKLASH;
 import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
 import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
 import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
@@ -24,6 +25,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class SwerveModule {
@@ -88,7 +90,10 @@ public class SwerveModule {
      */
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
-        driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms);
+        double backlashRate = steerMotor.getSelectedSensorVelocity()
+                * STEER_DRIVE_BACKLASH;
+        driveMotor.set(TalonFXControlMode.Velocity,
+                ticksPer100ms - backlashRate);
     }
 
     /**
@@ -152,8 +157,7 @@ public class SwerveModule {
      *         traveled by the module (used for odometry)
      */
     public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(
-                ticksToMeters(driveMotor.getSelectedSensorPosition()),
+        return new SwerveModulePosition(ticksToMeters(getDriveMotorPosition()),
                 getSteerAngle());
     }
 

@@ -9,6 +9,7 @@ import static frc.robot.Constants.Wiring.PIGEON_IMU;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,9 +20,11 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.DTXboxController;
+import frc.lib.SwerveTrajectory;
 
 public class SwerveDrive extends SubsystemBase {
     private final DTXboxController         controller;
@@ -30,6 +33,7 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveDriveKinematics    kinematics;
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pigeon2                  gyro;
+    private Field2d                        field2d;
 
     /**
      * @param c
@@ -52,8 +56,13 @@ public class SwerveDrive extends SubsystemBase {
                 new Translation2d(MODULE_X, -MODULE_Y),
                 new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
-        poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(),
-                modulePositions, new Pose2d(0, 0, getGyroAngle()));
+        Rotation2d yaw = Rotation2d.fromDegrees(gyro.getYaw());
+        poseEstimator = new SwerveDrivePoseEstimator(kinematics, yaw,
+                modulePositions, new Pose2d(0, 0, yaw),
+                VecBuilder.fill(0.01, 0.01, 0.01), VecBuilder.fill(2, 2, 2));
+
+        field2d = new Field2d();
+        SmartDashboard.putData(field2d);
 
         zeroYaw();
     }
@@ -110,6 +119,9 @@ public class SwerveDrive extends SubsystemBase {
     public void driveVelocity(double vx, double vy, double vr) {
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
                 getGyroAngle());
+        SmartDashboard.putNumber("Vx", vx);
+        SmartDashboard.putNumber("Vy", vy);
+        SmartDashboard.putNumber("Vr", vr);
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         setStates(newStates);
@@ -121,7 +133,8 @@ public class SwerveDrive extends SubsystemBase {
      */
     public Rotation2d getGyroAngle() {
         // WPILib uses CW+, CTRE uses CCW+; need to negate
-        return Rotation2d.fromDegrees(gyro.getYaw());
+        return poseEstimator.getEstimatedPosition()
+                            .getRotation();
     }
 
     /**
@@ -148,7 +161,7 @@ public class SwerveDrive extends SubsystemBase {
         for (int i = 0; i < positions.length; i++) {
             positions[i] = modules[i].getCurrentPosition();
         }
-        poseEstimator.update(getGyroAngle(), positions);
+        poseEstimator.update(Rotation2d.fromDegrees(gyro.getYaw()), positions);
     }
 
     @Override
@@ -172,6 +185,7 @@ public class SwerveDrive extends SubsystemBase {
 
         updatePositions();
         Pose2d currentPose = poseEstimator.getEstimatedPosition();
+        field2d.setRobotPose(currentPose);
 
         SmartDashboard.putNumber("Pos X", currentPose.getX());
         SmartDashboard.putNumber("Pos Y", currentPose.getY());
@@ -185,5 +199,10 @@ public class SwerveDrive extends SubsystemBase {
      */
     public SwerveModule[] getModules() {
         return modules;
+    }
+
+    public void displayTrajectory(SwerveTrajectory trajectory) {
+        field2d.getObject("trajectory")
+               .setTrajectory(trajectory.toTrajectory());
     }
 }
