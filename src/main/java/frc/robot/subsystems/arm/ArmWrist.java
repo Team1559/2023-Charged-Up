@@ -12,6 +12,6 @@ public class ArmWrist extends ArmSegment {
         super("Wrist", ARM_MOTOR_ID_WRIST, WRIST_CANCODER_ID, kP_WRIST,
                 kI_WRIST, kD_WRIST, kIZ_WRIST, INV_ARM_WRIST_GEAR_RATIO,
                 new ArmFeedforward(kS_WRIST, kG_WRIST, kV_WRIST, kA_WRIST),
-                wristPos, previousSegment, 0);
+                wristPos, previousSegment);
     }
 }

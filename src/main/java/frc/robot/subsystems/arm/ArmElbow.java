@@ -12,6 +12,6 @@ public class ArmElbow extends ArmSegment {
         super("Elbow", ARM_MOTOR_ID_ELBOW, ELBOW_CANCODER_ID, kP_ELBOW,
                 kI_ELBOW, kD_ELBOW, kIZ_ELBOW, INV_ELBOW_GEAR_RATIO,
                 new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW),
-                elbowPos, previousSegment, 0);
+                elbowPos, previousSegment);
     }
 }
