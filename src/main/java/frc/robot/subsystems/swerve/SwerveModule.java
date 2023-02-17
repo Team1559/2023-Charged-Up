@@ -6,9 +6,9 @@ import static frc.robot.Constants.Swerve.METERS_TO_TICKS;
 import static frc.robot.Constants.Swerve.MODULE_DRIVE_KP;
 import static frc.robot.Constants.Swerve.MODULE_STEER_KD;
 import static frc.robot.Constants.Swerve.MODULE_STEER_KP;
+import static frc.robot.Constants.Swerve.STEER_DRIVE_BACKLASH;
 import static frc.robot.Constants.Swerve.TICKS_TO_DEGREES;
 import static frc.robot.Constants.Swerve.TICKS_TO_METERS;
-import static frc.robot.Constants.Swerve.STEER_DRIVE_BACKLASH;
 import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
 import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
 import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
@@ -25,7 +25,6 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class SwerveModule {

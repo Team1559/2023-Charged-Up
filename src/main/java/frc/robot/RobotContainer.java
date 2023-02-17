@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
+import frc.robot.commands.SwerveTeleopDriveCommand;
+import frc.robot.commands.SwerveTeleopSnapRotateCommand;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
 import frc.robot.subsystems.arm.ArmBase;
@@ -68,7 +70,7 @@ public class RobotContainer {
             arm = null;
         }
         if (CHASSIS_ENABLED) {
-            swerve = new SwerveDrive(controller0);
+            swerve = new SwerveDrive();
         } else {
             swerve = null;
         }
@@ -125,6 +127,14 @@ public class RobotContainer {
              */
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
+        }
+        if (CHASSIS_ENABLED) {
+            swerve.setDefaultCommand(
+                    new SwerveTeleopDriveCommand(swerve, controller0));
+            controller0.leftBumper.onTrue(
+                    new SwerveTeleopSnapRotateCommand(swerve, false));
+            controller0.rightBumper.onTrue(
+                    new SwerveTeleopSnapRotateCommand(swerve, true));
         }
     }
 

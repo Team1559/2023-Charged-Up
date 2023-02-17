@@ -65,7 +65,8 @@ public final class Constants {
                 * (10D / 60D);
         public static final double DRIVE_GEAR_RATIO_INV = 1D / DRIVE_GEAR_RATIO;
         public static final double STEER_GEAR_RATIO_INV = 1D / STEER_GEAR_RATIO;
-        public static final double STEER_DRIVE_BACKLASH = STEER_GEAR_RATIO * (50D / 14D);
+        public static final double STEER_DRIVE_BACKLASH = STEER_GEAR_RATIO
+                * (50D / 14D);
 
         public static final double WHEELBASE_WIDTH     = Units.inchesToMeters(
                 24);
@@ -97,11 +98,16 @@ public final class Constants {
         public static final double MODULE_DRIVE_KP = 0.05;
         public static final double MODULE_STEER_KP = 0.22;
         public static final double MODULE_STEER_KD = 0.1;
+
+        public static final double ROTATION_KP = 12;
+        public static final double ENCODER_STDDEV = 0.01;
+        public static final double ROTATION_SNAP_THRESHOLD = 5;
     }
 
     public static class Vision {
         public static final String       CAMERA_NAME   = "Limelight 2P";
         public static final PoseStrategy POSE_STRATEGY = PoseStrategy.LOWEST_AMBIGUITY;
+        public static final double       AMBIGUITY_THRESHOLD = 0.2;
 
         public static final double CAMERA_X     = Units.inchesToMeters(-12.625);
         public static final double CAMERA_Y     = Units.inchesToMeters(-2.5);
@@ -171,7 +177,8 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.5 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.5
+                * Swerve.MAXIMUM_LINEAR_VELOCITY;
         public static final double MAXIMUM_ANGULAR_VELOCITY = 2 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;
@@ -183,9 +190,6 @@ public final class Constants {
         public static final double LINEAR_TOLERANCE   = 0.05;
         public static final double ANGULAR_TOLERANCE  = 2;
         public static final double LOOKAHEAD_DISTANCE = 0.1;
-
-        public static final double LINEAR_KP  = 1.5;
-        public static final double ANGULAR_KP = 3;
 
         public static final double DISTANCE_BETWEEN_POINTS = 0.025;
         public static final double SMOOTH_TOLERANCE        = 0.001;
