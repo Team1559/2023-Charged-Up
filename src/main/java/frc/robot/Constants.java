@@ -25,8 +25,8 @@ public final class Constants {
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
         public static final boolean CHASSIS_ENABLED = true;
-        public static final boolean ARM_ENABLED     = false;
-        public static final boolean GRABBER_ENABLED = false;
+        public static final boolean ARM_ENABLED     = true;
+        public static final boolean GRABBER_ENABLED = true;
         public static final boolean VISION_ENABLED  = true;
     }
 
@@ -99,14 +99,14 @@ public final class Constants {
         public static final double MODULE_STEER_KP = 0.22;
         public static final double MODULE_STEER_KD = 0.1;
 
-        public static final double ROTATION_KP = 12;
-        public static final double ENCODER_STDDEV = 0.01;
+        public static final double ROTATION_KP             = 12;
+        public static final double ENCODER_STDDEV          = 0.01;
         public static final double ROTATION_SNAP_THRESHOLD = 5;
     }
 
     public static class Vision {
-        public static final String       CAMERA_NAME   = "Limelight 2P";
-        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.LOWEST_AMBIGUITY;
+        public static final String       CAMERA_NAME         = "Limelight 2P";
+        public static final PoseStrategy POSE_STRATEGY       = PoseStrategy.LOWEST_AMBIGUITY;
         public static final double       AMBIGUITY_THRESHOLD = 0.2;
 
         public static final double CAMERA_X     = Units.inchesToMeters(-12.625);
