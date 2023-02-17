@@ -4,7 +4,10 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.FeatureFlags.*;
+import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
+import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
+import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
+import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
-
-import frc.robot.subsystems.arm.*;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.arm.ArmBase;
+import frc.robot.subsystems.arm.ArmElbow;
+import frc.robot.subsystems.arm.ArmWrist;
+import frc.robot.subsystems.arm.FullArmCommands;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -98,7 +103,7 @@ public class RobotContainer {
         /**
          * Delete these commands after initial testing- also, START ARM @ 60
          * DEGREES!!!!!!!
-         * Lower arm from top to test angle FF/PID 
+         * Lower arm from top to test angle FF/PID
          */
         if (ARM_ENABLED) {
             controller0.aButton.onTrue(Commands.parallel(elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));

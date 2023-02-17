@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class GrabberClaw extends SubsystemBase {
-    private Solenoid       clawSolenoid;
+    private Solenoid clawSolenoid;
 
     public GrabberClaw() {
         clawSolenoid = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH,
@@ -35,7 +35,8 @@ public class GrabberClaw extends SubsystemBase {
     }
 
     public Command closeClawCommand() {
-        return Commands.sequence(new InstantCommand(this::closeClaw, this), new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
+        return Commands.sequence(new InstantCommand(this::closeClaw, this),
+                new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
     }
 
     public boolean clawIsOpen() {

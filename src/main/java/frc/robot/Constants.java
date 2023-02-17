@@ -136,7 +136,7 @@ public final class Constants {
         public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE  = 0.07; 
+        public static final double kP_BASE  = 0.07;
         public static final double kD_BASE  = 0;
         public static final double kI_BASE  = kP_BASE / 5.0;
         public static final double kIZ_BASE = 7;           // degrees
@@ -146,7 +146,7 @@ public final class Constants {
         public static final double kS_BASE = 0;
         public static final double kA_BASE = 0; //0.1
 
-        public static final double kP_ELBOW  = 0.2; //0.2 
+        public static final double kP_ELBOW  = 0.2; //0.2
         public static final double kD_ELBOW  = 0;
         public static final double kI_ELBOW  = 0;
         public static final double kIZ_ELBOW = 0;  // degrees
