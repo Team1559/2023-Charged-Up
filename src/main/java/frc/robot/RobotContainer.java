@@ -40,6 +40,7 @@ import frc.robot.subsystems.swerve.SwerveDrive;
  * commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    private final AutoSelector     autoSelector;
     private final DTXboxController controller0;
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
@@ -56,6 +57,7 @@ public class RobotContainer {
      * commands.
      */
     public RobotContainer() {
+        autoSelector = new AutoSelector();
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         if (ARM_ENABLED) {
@@ -159,4 +161,5 @@ public class RobotContainer {
                       .andThen(() -> SmartDashboard.putBoolean("Auto active",
                               false));
     }
+
 }

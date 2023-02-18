@@ -2,9 +2,17 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Field": "Field2d"
+      "/SmartDashboard/Auto Start Position": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Route Selector": "String Chooser",
+      "/SmartDashboard/SendableChooser[0]": "String Chooser"
     },
     "windows": {
+      "/SmartDashboard/Auto Start Position": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Field": {
         "Robot": {
           "arrows": false,
@@ -21,6 +29,11 @@
           "width": 1.0
         },
         "width": 16.540000915527344,
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Route Selector": {
         "window": {
           "visible": true
         }
