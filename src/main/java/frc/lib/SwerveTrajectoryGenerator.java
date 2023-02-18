@@ -13,6 +13,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import frc.lib.SwerveTrajectory.Point;
 
 public class SwerveTrajectoryGenerator {
+    private SwerveTrajectoryGenerator() {}
+
     public static SwerveTrajectory calculateTrajectory(Pose2d... waypoints) {
         // Generate the coordinates of the path
         Pose2d[] path = injectAndSmooth(waypoints);
@@ -252,31 +254,5 @@ public class SwerveTrajectoryGenerator {
             // 2 is beyond 1 or 3
             return Double.NaN;
         }
-    }
-
-    public static void main(String... args) {
-        Rotation2d DEGREES_0 = new Rotation2d();
-        Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
-
-        Pose2d startPose1 = new Pose2d(2.2, 4.6, DEGREES_180);
-        Pose2d startPose2 = new Pose2d(2.2, 2.7, DEGREES_180);
-        Pose2d startPose3 = new Pose2d(2.2, 0.75, DEGREES_180);
-
-        Pose2d chargingDock = new Pose2d(3.87, 2.7, DEGREES_180);
-
-        // Piece Position 1X = (6.70, 4.60, 0)
-        Pose2d fieldPiece1 = new Pose2d(6.7, 4.6, DEGREES_0);
-        // Piece Position 2A = (6.70, 3.40, 0)
-        Pose2d fieldPiece2a = new Pose2d(6.7, 3.4, DEGREES_0);
-        // Piece Position 2B = (6,70, 2.10, 0)
-        Pose2d fieldPiece2b = new Pose2d(6.7, 2.1, DEGREES_0);
-        // Piece Position 3X = (6.70, 0.90, 0)
-        Pose2d fieldPiece3 = new Pose2d(6.7, 0.9, DEGREES_0);
-
-        Pose2d[] waypoints = { startPose1, fieldPiece1 };
-        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(
-                waypoints);
-
-        System.out.println(trajectory.toString("\n"));
     }
 }

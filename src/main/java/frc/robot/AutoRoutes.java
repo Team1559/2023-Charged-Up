@@ -66,12 +66,15 @@ public class AutoRoutes {
         }
     }
 
+    private AutoRoutes() {}
+
     public static Pose2d[] mirror(Pose2d[] path) {
         Pose2d[] mirrored = new Pose2d[path.length];
         for (int i = 0; i < path.length; i++) {
             mirrored[i] = new Pose2d(FIELD_LENGTH - path[i].getX(),
-                    path[i].getY(), path[i].getRotation()
-                                           .unaryMinus());
+                    path[i].getY(),
+                    Rotation2d.fromDegrees(180 - path[i].getRotation()
+                                                        .getDegrees()));
         }
         return mirrored;
     }

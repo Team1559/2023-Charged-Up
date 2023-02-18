@@ -6,8 +6,10 @@ import static frc.robot.Constants.Swerve.METERS_TO_TICKS;
 import static frc.robot.Constants.Swerve.MODULE_DRIVE_KP;
 import static frc.robot.Constants.Swerve.MODULE_STEER_KD;
 import static frc.robot.Constants.Swerve.MODULE_STEER_KP;
+import static frc.robot.Constants.Swerve.STEER_DRIVE_BACKLASH;
 import static frc.robot.Constants.Swerve.TICKS_TO_DEGREES;
 import static frc.robot.Constants.Swerve.TICKS_TO_METERS;
+import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
 import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
 import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
 import static frc.robot.Constants.Wiring.MODULE_STEER_MOTOR_IDS;
@@ -39,24 +41,33 @@ public class SwerveModule {
      */
     public SwerveModule(int moduleID) {
         id = moduleID;
-        driveMotor = new TalonFX(MODULE_DRIVE_MOTOR_IDS[id]);
-        steerMotor = new TalonFX(MODULE_STEER_MOTOR_IDS[id]);
-        cancoder = new CANCoder(MODULE_CANCODER_IDS[id]);
+        driveMotor = new TalonFX(MODULE_DRIVE_MOTOR_IDS[id], CANIVORE_BUS_ID);
+        steerMotor = new TalonFX(MODULE_STEER_MOTOR_IDS[id], CANIVORE_BUS_ID);
+        cancoder = new CANCoder(MODULE_CANCODER_IDS[id], CANIVORE_BUS_ID);
 
-        configCancoder();
+        new Thread(() -> {
+            // Delay to ensure the Canivore has enough time to boot up
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
-        driveMotor.configFactoryDefault();
-        driveMotor.setNeutralMode(NeutralMode.Brake);
-        driveMotor.setInverted(true);
-        driveMotor.setSelectedSensorPosition(0D);
-        driveMotor.config_kP(0, MODULE_DRIVE_KP);
+            configCancoder();
 
-        steerMotor.configFactoryDefault();
-        steerMotor.setNeutralMode(NeutralMode.Brake);
-        steerMotor.config_kP(0, MODULE_STEER_KP);
-        steerMotor.config_kD(0, MODULE_STEER_KD);
-        steerMotor.setSelectedSensorPosition(
-                degreesToTicks(cancoder.getPosition() % 360));
+            driveMotor.configFactoryDefault();
+            driveMotor.setNeutralMode(NeutralMode.Brake);
+            driveMotor.setInverted(true);
+            driveMotor.setSelectedSensorPosition(0D);
+            driveMotor.config_kP(0, MODULE_DRIVE_KP);
+
+            steerMotor.configFactoryDefault();
+            steerMotor.setNeutralMode(NeutralMode.Brake);
+            steerMotor.config_kP(0, MODULE_STEER_KP);
+            steerMotor.config_kD(0, MODULE_STEER_KD);
+            steerMotor.setSelectedSensorPosition(
+                    degreesToTicks(cancoder.getPosition() % 360));
+        }).start();
     }
 
     private void configCancoder() {
@@ -78,7 +89,10 @@ public class SwerveModule {
      */
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
-        driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms);
+        double backlashRate = steerMotor.getSelectedSensorVelocity()
+                * STEER_DRIVE_BACKLASH;
+        driveMotor.set(TalonFXControlMode.Velocity,
+                ticksPer100ms - backlashRate);
     }
 
     /**
@@ -142,8 +156,7 @@ public class SwerveModule {
      *         traveled by the module (used for odometry)
      */
     public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(
-                ticksToMeters(driveMotor.getSelectedSensorPosition()),
+        return new SwerveModulePosition(ticksToMeters(getDriveMotorPosition()),
                 getSteerAngle());
     }
 

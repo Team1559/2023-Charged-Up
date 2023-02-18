@@ -36,10 +36,11 @@ public final class Constants {
     public static class Wiring {
         // Swerve drive
         // Modules are ordered as [ FL, FR, BL, BR ] in arrays
-        public static final int[] MODULE_DRIVE_MOTOR_IDS = { 10, 1, 7, 4 };
-        public static final int[] MODULE_STEER_MOTOR_IDS = { 12, 3, 9, 6 };
-        public static final int[] MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
-        public static final int   PIGEON_IMU             = 0;
+        public static final int[]  MODULE_DRIVE_MOTOR_IDS = { 10, 1, 7, 4 };
+        public static final int[]  MODULE_STEER_MOTOR_IDS = { 12, 3, 9, 6 };
+        public static final int[]  MODULE_CANCODER_IDS    = { 11, 2, 8, 5 };
+        public static final int    PIGEON_IMU             = 0;
+        public static final String CANIVORE_BUS_ID        = "1559Canivore";
 
         // Arm wiring ports + ids
         public static final int ARM_MOTOR_ID_BASE         = 18;
@@ -64,6 +65,8 @@ public final class Constants {
                 * (10D / 60D);
         public static final double DRIVE_GEAR_RATIO_INV = 1D / DRIVE_GEAR_RATIO;
         public static final double STEER_GEAR_RATIO_INV = 1D / STEER_GEAR_RATIO;
+        public static final double STEER_DRIVE_BACKLASH = STEER_GEAR_RATIO
+                * (50D / 14D);
 
         public static final double WHEELBASE_WIDTH     = Units.inchesToMeters(
                 24);
@@ -95,16 +98,21 @@ public final class Constants {
         public static final double MODULE_DRIVE_KP = 0.05;
         public static final double MODULE_STEER_KP = 0.22;
         public static final double MODULE_STEER_KD = 0.1;
+
+        public static final double ROTATION_KP             = 12;
+        public static final double ENCODER_STDDEV          = 0.01;
+        public static final double ROTATION_SNAP_THRESHOLD = 5;
     }
 
     public static class Vision {
-        public static final String       CAMERA_NAME   = "OV5647";
-        public static final PoseStrategy POSE_STRATEGY = PoseStrategy.LOWEST_AMBIGUITY;
+        public static final String       CAMERA_NAME         = "Limelight 2P";
+        public static final PoseStrategy POSE_STRATEGY       = PoseStrategy.LOWEST_AMBIGUITY;
+        public static final double       AMBIGUITY_THRESHOLD = 0.2;
 
-        public static final double CAMERA_X     = Units.inchesToMeters(4);
-        public static final double CAMERA_Y     = Units.inchesToMeters(0);
-        public static final double CAMERA_Z     = Units.inchesToMeters(5.5);
-        public static final double CAMERA_ANGLE = Math.toRadians(0);
+        public static final double CAMERA_X     = Units.inchesToMeters(-12.625);
+        public static final double CAMERA_Y     = Units.inchesToMeters(-2.5);
+        public static final double CAMERA_Z     = Units.inchesToMeters(21.875);
+        public static final double CAMERA_ANGLE = Math.toRadians(180);
 
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
@@ -169,12 +177,11 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.7
-                * Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 0.5
-                * Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.5
+                * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 2 * Math.PI;
 
-        public static final double ACCELERATION_TIME            = 1;
+        public static final double ACCELERATION_TIME            = 0.5;
         public static final double MAXIMUM_LINEAR_ACCELERATION  = MAXIMUM_LINEAR_VELOCITY
                 / ACCELERATION_TIME;
         public static final double MAXIMUM_ANGULAR_ACCELERATION = MAXIMUM_ANGULAR_VELOCITY
@@ -182,15 +189,12 @@ public final class Constants {
 
         public static final double LINEAR_TOLERANCE   = 0.05;
         public static final double ANGULAR_TOLERANCE  = 2;
-        public static final double LOOKAHEAD_DISTANCE = 0.5;
+        public static final double LOOKAHEAD_DISTANCE = 0.1;
 
-        public static final double LINEAR_KP  = 1.5;
-        public static final double ANGULAR_KP = 3;
-
-        public static final double DISTANCE_BETWEEN_POINTS = 0.02;
+        public static final double DISTANCE_BETWEEN_POINTS = 0.025;
         public static final double SMOOTH_TOLERANCE        = 0.001;
-        public static final double SMOOTH_WEIGHT           = 0.99;
+        public static final double SMOOTH_WEIGHT           = 0.75;
         public static final double VELOCITY_PROPORTION     = 5;
-        public static final double VELOCITY_POWER          = 0.25;
+        public static final double VELOCITY_POWER          = 0.2;
     }
 }
