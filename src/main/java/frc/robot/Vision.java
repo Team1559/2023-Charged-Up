@@ -37,8 +37,8 @@ public class Vision extends SubsystemBase {
         swervePoseEstimator = poseEstimator;
         camera = new PhotonCamera(CAMERA_NAME);
 
-        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-                POSE_STRATEGY, camera, ROBOT_TO_CAMERA);
+        photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, POSE_STRATEGY, camera,
+                ROBOT_TO_CAMERA);
     }
 
     @Override
@@ -74,18 +74,13 @@ public class Vision extends SubsystemBase {
                                             .getNorm();
                 SmartDashboard.putNumber("Vision StdDev", stdDev);
                 if (poseSet) {
-                    swervePoseEstimator.addVisionMeasurement(
-                            pose.estimatedPose.toPose2d(),
-                            pose.timestampSeconds,
-                            VecBuilder.fill(stdDev, stdDev, stdDev));
+                    swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+                            pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
                 } else {
-                    swervePoseEstimator.addVisionMeasurement(
-                            pose.estimatedPose.toPose2d(),
+                    swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(0, 0, 0));
-                    swervePoseEstimator.addVisionMeasurement(
-                            pose.estimatedPose.toPose2d(),
-                            pose.timestampSeconds,
-                            VecBuilder.fill(stdDev, stdDev, stdDev));
+                    swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
+                            pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
                     poseSet = true;
                 }
             } catch (ConcurrentModificationException e) {

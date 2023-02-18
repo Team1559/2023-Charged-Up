@@ -36,14 +36,13 @@ public class ArmWrist extends SubsystemBase {
         wristMotor = new TalonFX(ARM_MOTOR_ID_WRIST);
         wristMotor.configFactoryDefault();
         wristMotor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
-                true, 40, 60, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 60,
+                0.5);
         wristMotor.configSupplyCurrentLimit(limit);
         wristMotor.config_kP(0, kP_ELBOW);
         wristMotor.config_kI(0, kI_ELBOW);
         wristMotor.config_kD(0, kD_ELBOW);
-        feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW,
-                kA_ELBOW);
+        feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW);
     }
 
     /**
@@ -95,8 +94,7 @@ public class ArmWrist extends SubsystemBase {
     }
 
     public Command degreesDown() {
-        return Commands.sequence(
-                new InstantCommand(() -> degreeSetDown(), this),
+        return Commands.sequence(new InstantCommand(() -> degreeSetDown(), this),
                 new InstantCommand(() -> setAngle(degrees), this));
     }
 
@@ -121,7 +119,6 @@ public class ArmWrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Wrist CANCoder reading (in deg):",
-                getAngle());
+        SmartDashboard.putNumber("Wrist CANCoder reading (in deg):", getAngle());
     }
 }
