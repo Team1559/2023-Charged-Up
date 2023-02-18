@@ -8,6 +8,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
@@ -32,6 +33,9 @@ public final class Constants {
 
     public static final double FALCON_TICKS_PER_REV = 2048;
     public static final double FALCON_MAX_RPM       = 6380;
+    public static final double FALCON_STALL_TORQUE  = 4.69;
+    public static final double GRAVITY_ACCELERATION = 9.8;
+    public static final double NOMINAL_VOLTAGE      = 12D;
 
     public static class Wiring {
         // Swerve drive
@@ -116,7 +120,7 @@ public final class Constants {
                 * (50 / 72.0);
         public static final double INV_GEAR_RATIO_BASE             = 1
                 / GEAR_RATIO_BASE;
-        public static final double ELBOW_GEAR_RATIO                = 1/64.0;
+        public static final double ELBOW_GEAR_RATIO                = 1 / 64.0;
         public static final double INV_ELBOW_GEAR_RATIO            = 1
                 / ELBOW_GEAR_RATIO;
         public static final double ARM_WRIST_GEAR_RATIO            = 1 / 64.0;
@@ -126,11 +130,12 @@ public final class Constants {
         public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
                 / 50.0;
 
-        public static final double ANGULAR_VELOCITY_UNIT_DPS = 10D;
-        public static final double ANGULAR_VELOCITY_UNIT_TICKS = ANGULAR_VELOCITY_UNIT_DPS / 50.0;
+        public static final double ANGULAR_VELOCITY_UNIT_DPS   = 10D;
+        public static final double ANGULAR_VELOCITY_UNIT_TICKS = ANGULAR_VELOCITY_UNIT_DPS
+                / 50.0;
 
-        public static final double ZERO_ANGLE                      = 0;
-        public static final double MAXIMUM_ANGLE_ERROR             = 0.5;
+        public static final double ZERO_ANGLE          = 0;
+        public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
         public static final double BASE_CC_OFFSET      = 0;
         public static final double ELBOW_CC_OFFSET     = 0;
@@ -139,17 +144,17 @@ public final class Constants {
         public static final double kP_BASE  = 0.07;
         public static final double kD_BASE  = 0;
         public static final double kI_BASE  = kP_BASE / 5.0;
-        public static final double kIZ_BASE = 7;           // degrees
+        public static final double kIZ_BASE = 7;            // degrees
 
-        public static final double kG_BASE = 1.6; //0.8
-        public static final double kV_BASE = 0; //1.54
+        public static final double kG_BASE = 1.6; // 0.8
+        public static final double kV_BASE = 0;   // 1.54
         public static final double kS_BASE = 0;
-        public static final double kA_BASE = 0; //0.1
+        public static final double kA_BASE = 0;   // 0.1
 
-        public static final double kP_ELBOW  = 0.2; //0.2
+        public static final double kP_ELBOW  = 0.2; // 0.2
         public static final double kD_ELBOW  = 0;
         public static final double kI_ELBOW  = 0;
-        public static final double kIZ_ELBOW = 0;  // degrees
+        public static final double kIZ_ELBOW = 0;   // degrees
 
         public static final double kG_ELBOW = 0.18;
         public static final double kV_ELBOW = 0;
@@ -165,6 +170,29 @@ public final class Constants {
         public static final double kV_WRIST = 0;
         public static final double kS_WRIST = 0;
         public static final double kA_WRIST = 0;
+
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.86;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.4;
+        public static final double WRIST_SEGMENT_EFFICIENCY = 0.7;
+
+        public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(
+                17);
+        public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(7);
+        public static final double WRIST_SEGMENT_MASS = 0;
+
+        public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(
+                32.125);
+        public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(
+                28.125);
+        public static final double WRIST_SEGMENT_LENGTH = 0;
+
+        public static final Translation2d BASE_SEGMENT_CENTER_OF_MASS  = new Translation2d(
+                BASE_SEGMENT_LENGTH / 2, 0);
+        public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
+                ELBOW_SEGMENT_LENGTH / 2, 0);
+        public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
+                WRIST_SEGMENT_LENGTH / 2, 0);
+
     }
 
     public static class Grabber {

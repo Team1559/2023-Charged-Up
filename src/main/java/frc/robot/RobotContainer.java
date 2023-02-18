@@ -11,15 +11,14 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
 import frc.robot.subsystems.arm.ArmElbow;
 import frc.robot.subsystems.arm.ArmWrist;
-import frc.robot.subsystems.arm.FullArmCommands;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -38,7 +37,7 @@ public class RobotContainer {
     private final GrabberWrist     wrist;
     private final GrabberClaw      claw;
     private final Vision           vision;
-    private final FullArmCommands  arm;
+    private final Arm              arm;
     private final ArmBase          base;
     private final ArmElbow         elbow;
     private final ArmWrist         armWrist;
@@ -52,8 +51,10 @@ public class RobotContainer {
         controller1 = new DTXboxController(1);
         if (ARM_ENABLED) {
             base = new ArmBase();
-            elbow = new ArmElbow(base); // new ArmElbow();
-            armWrist = null; // new ArmWrist();
+            elbow = new ArmElbow();
+            base.setHigherSegment(elbow);
+            elbow.setLowerSegment(base);
+            armWrist = null;
             arm = null; // new FullArmCommands(base, elbow, armWrist);
         } else {
             base = null;
@@ -102,25 +103,22 @@ public class RobotContainer {
     private void configureBindings() {
         /**
          * Delete these commands after initial testing- also, START ARM @ 60
-         * DEGREES!!!!!!!
-         * Lower arm from top to test angle FF/PID
+         * DEGREES!!!!!!! Lower arm from top to test angle FF/PID
          */
         if (ARM_ENABLED) {
-            controller0.aButton.onTrue(Commands.parallel(elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
+            controller0.aButton.onTrue(Commands.parallel(
+                    elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
             controller0.bButton.onTrue(elbow.setAngleCommandPos(8));
             controller0.yButton.onTrue(elbow.setAngleCommandPos(7));
             controller0.leftBumper.onTrue(base.setAngleCommandPos(8));
-            controller0.xButton.onTrue(Commands.parallel(base.resetEncoderForTesting(90), elbow.resetEncoderForTesting(0)));
+            controller0.xButton.onTrue(
+                    Commands.parallel(base.resetEncoderForTesting(90),
+                            elbow.resetEncoderForTesting(0)));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
                     controller1);
             wrist.setDefaultCommand(teleopWristCommand);
-
-            /**
-             * Delete these 3 commands later, these are only for testing We will
-             * create sequence commands later
-             */
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
         }

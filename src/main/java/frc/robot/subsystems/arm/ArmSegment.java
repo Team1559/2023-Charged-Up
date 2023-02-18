@@ -1,43 +1,59 @@
 package frc.robot.subsystems.arm;
 
+import static frc.robot.Constants.FALCON_STALL_TORQUE;
+import static frc.robot.Constants.FALCON_TICKS_PER_REV;
+import static frc.robot.Constants.GRAVITY_ACCELERATION;
+import static frc.robot.Constants.NOMINAL_VOLTAGE;
+import static frc.robot.Constants.Arm.ANGULAR_VELOCITY_UNIT_TICKS;
+import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
+
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import static frc.robot.Constants.FALCON_TICKS_PER_REV;
-import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
-import static frc.robot.Constants.Arm.ANGULAR_VELOCITY_UNIT_TICKS;
-
 public class ArmSegment extends SubsystemBase {
-    private double        previousSetPoint;
-    private final String  name;
+    private final String name;
+    private ArmSegment   lowerSegment;
+    private ArmSegment   higherSegment;
+
     private final TalonFX motor;
     // private final CANCoder canCoder;
-    private ArmFeedforward feedforward;
+
+    private final Translation2d centerOfMass;
+    private final double        mass;
+    private final double        length;
+    private final double        stallTorque;
+    private final double        gearRatio;
+    private final double        efficiency;
+
     private final double[] positions;
-    private final double   gearReduction;
-    private ArmSegment     previousSegment;
+    private double         setpoint;
     private boolean        isSetPointCommanded = false;
-    private double currentSetpoint;
+    private double         interpolatedSetpoint;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp,
-            double ki, double kd, double izone, double gearReduction,
-            ArmFeedforward feedforward, double[] positions,
-            ArmSegment previousSegment) {
-        this.previousSegment = previousSegment;
+            double ki, double kd, double izone, double gearRatio,
+            double[] positions, double efficiency, double mass, double length,
+            Translation2d centerOfMass) {
         this.name = name;
-        this.feedforward = feedforward;
-        this.gearReduction = gearReduction;
+        this.gearRatio = gearRatio;
         this.positions = positions;
+
+        this.efficiency = efficiency;
+        this.mass = mass;
+        this.length = length;
+        this.centerOfMass = centerOfMass;
+
+        this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
 
         // canCoder = new CANCoder(cancoderID);
         motor = new TalonFX(motorID);
@@ -64,37 +80,88 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double getGroundAngle() {
-        double groundAnglePrevious = 0;
-        if (previousSegment != null) {
-            groundAnglePrevious = previousSegment.getGroundAngle();
+        return lowerSegment == null ? interpolatedSetpoint
+                : (interpolatedSetpoint + lowerSegment.getGroundAngle());
+    }
+
+    public double getMass() {
+        return mass;
+    }
+
+    public double getHigherMass() {
+        return higherSegment == null ? mass
+                : (mass + higherSegment.getHigherMass());
+    }
+
+    public Translation2d getRelativeEndpoint() {
+        return new Translation2d(length,
+                Rotation2d.fromDegrees(interpolatedSetpoint));
+    }
+
+    public Translation2d getRelativeCenterOfMass() {
+        Rotation2d pivotPosition = Rotation2d.fromDegrees(interpolatedSetpoint);
+        if (higherSegment == null) {
+            return centerOfMass.rotateBy(pivotPosition);
         }
-        double groundAngle = groundAnglePrevious + previousSetPoint;
-        return groundAngle;
+
+        double higherMass = higherSegment.getHigherMass();
+        Translation2d higherCenterOfMass = higherSegment.getRelativeCenterOfMass()
+                                                        .plus(getRelativeEndpoint());
+        Translation2d scaledHigherCoM = higherCenterOfMass.times(higherMass);
+        Translation2d scaledMyCoM = centerOfMass.times(mass);
+        Translation2d centerOfMassCalc = scaledHigherCoM.plus(scaledMyCoM)
+                                                        .div(higherMass + mass);
+        return centerOfMassCalc.rotateBy(pivotPosition);
+    }
+
+    public double calculateKG() {
+        return calculateKG(getRelativeCenterOfMass());
+    }
+
+    public double calculateKG(Translation2d totalCenterOfMass) {
+        double torqueRequired = getHigherMass() * GRAVITY_ACCELERATION
+                * totalCenterOfMass.getNorm();
+        return torqueRequired / stallTorque * NOMINAL_VOLTAGE * efficiency;
+    }
+
+    public double calculateFeedForward() {
+        Translation2d totalCenterOfMass = getRelativeCenterOfMass();
+        double kG = calculateKG(totalCenterOfMass);
+        return kG * totalCenterOfMass.getAngle()
+                                     .getCos();
+    }
+
+    public void setLowerSegment(ArmSegment lowerSegment) {
+        this.lowerSegment = lowerSegment;
+    }
+
+    public void setHigherSegment(ArmSegment higherSegment) {
+        this.higherSegment = higherSegment;
     }
 
     public double angleToTick(double angle) {
         double revolutionsOfArm = angle / 360.0;
-        double motorRevolutions = revolutionsOfArm * gearReduction;
+        double motorRevolutions = revolutionsOfArm * gearRatio;
         double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;
         return angleTicks;
     }
 
     public double tickToAngle(double ticks) {
         double motorRevolutions = ticks / FALCON_TICKS_PER_REV;
-        double revolutionsOfArm = motorRevolutions / gearReduction;
+        double revolutionsOfArm = motorRevolutions / gearRatio;
         double angle = revolutionsOfArm * 360;
         return angle;
     }
 
     public void setDestinationAngle(double angle) {
-        currentSetpoint = getAngle();
-        previousSetPoint = angle;
+        interpolatedSetpoint = getAngle();
+        setpoint = angle;
         isSetPointCommanded = true;
     }
 
     private void setAngleOnMotor(double angle) {
-        double groundAngle = getGroundAngle();
-        double FF = feedforward.calculate(groundAngle, 0, 0) / 12.0;
+        // double groundAngle = getGroundAngle();
+        double FF = calculateFeedForward();
         motor.set(TalonFXControlMode.Position, angleToTick(angle),
                 DemandType.ArbitraryFeedForward, FF);
         System.out.println("The method has been called. Setpoint = " + angle);
@@ -130,22 +197,24 @@ public class ArmSegment extends SubsystemBase {
                 angleToTick(getAngle()));
         System.out.println("Setpoint Commanded = " + isSetPointCommanded);
         if (isSetPointCommanded == true) {
-            System.out.println("in \"if\" statement, current angle = " + currentSetpoint);
-            System.out.println("The previous stepoint is " + previousSetPoint);
-            if (currentSetpoint < previousSetPoint - ANGULAR_VELOCITY_UNIT_TICKS) {
+            System.out.println("in \"if\" statement, current angle = "
+                    + interpolatedSetpoint);
+            System.out.println("The previous stepoint is " + setpoint);
+            if (interpolatedSetpoint < setpoint - ANGULAR_VELOCITY_UNIT_TICKS) {
                 System.out.println("commanding setpoint increase");
-                currentSetpoint += ANGULAR_VELOCITY_UNIT_TICKS;
-                setAngleOnMotor(currentSetpoint);
-            } 
-            if (currentSetpoint > previousSetPoint + ANGULAR_VELOCITY_UNIT_TICKS) {
+                interpolatedSetpoint += ANGULAR_VELOCITY_UNIT_TICKS;
+                setAngleOnMotor(interpolatedSetpoint);
+            }
+            if (interpolatedSetpoint > setpoint + ANGULAR_VELOCITY_UNIT_TICKS) {
                 System.out.println("commanding setpoint decrease");
-                currentSetpoint -= ANGULAR_VELOCITY_UNIT_TICKS;
-                setAngleOnMotor(currentSetpoint);
+                interpolatedSetpoint -= ANGULAR_VELOCITY_UNIT_TICKS;
+                setAngleOnMotor(interpolatedSetpoint);
             }
         } else {
             isSetPointCommanded = false;
         }
-        SmartDashboard.putNumber(name + " previous commanded angle ", previousSetPoint);
-        SmartDashboard.putBoolean(name + " \"is setpoint commanded\": ", isSetPointCommanded);
+        SmartDashboard.putNumber(name + " previous commanded angle ", setpoint);
+        SmartDashboard.putBoolean(name + " \"is setpoint commanded\": ",
+                isSetPointCommanded);
     }
 }

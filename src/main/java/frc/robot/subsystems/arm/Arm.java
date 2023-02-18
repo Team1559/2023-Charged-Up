@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class FullArmCommands {
+public class Arm {
     private ArmBase  base;
     private ArmElbow elbow;
     private ArmWrist wrist;
 
-    public FullArmCommands(ArmBase base, ArmElbow elbow, ArmWrist wrist) {
+    public Arm(ArmBase base, ArmElbow elbow, ArmWrist wrist) {
         this.base = base;
         this.elbow = elbow;
         this.wrist = wrist;
