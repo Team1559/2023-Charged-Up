@@ -130,7 +130,7 @@ public final class Constants {
         public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
                 / 50.0;
 
-        public static final double ANGULAR_VELOCITY_UNIT_DPS   = 10D;
+        public static final double ANGULAR_VELOCITY_UNIT_DPS   = 20D;
         public static final double ANGULAR_VELOCITY_UNIT_TICKS = ANGULAR_VELOCITY_UNIT_DPS
                 / 50.0;
 
@@ -141,10 +141,10 @@ public final class Constants {
         public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE  = 0.07;
+        public static final double kP_BASE  = 0.03; // 0.07
         public static final double kD_BASE  = 0;
-        public static final double kI_BASE  = kP_BASE / 5.0;
-        public static final double kIZ_BASE = 7;            // degrees
+        public static final double kI_BASE  = 0; // kP_BASE / 5.0
+        public static final double kIZ_BASE = 0;            // 7
 
         public static final double kG_BASE = 1.6; // 0.8
         public static final double kV_BASE = 0;   // 1.54
@@ -171,8 +171,8 @@ public final class Constants {
         public static final double kS_WRIST = 0;
         public static final double kA_WRIST = 0;
 
-        public static final double BASE_SEGMENT_EFFICIENCY  = 0.86;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.4;
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 1;
         public static final double WRIST_SEGMENT_EFFICIENCY = 0.7;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(

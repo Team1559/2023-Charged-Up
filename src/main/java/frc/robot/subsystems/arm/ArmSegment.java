@@ -15,6 +15,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -82,8 +83,7 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double getGroundAngle() {
-        return lowerSegment == null ? interpolatedSetpoint
-                : (interpolatedSetpoint + lowerSegment.getGroundAngle());
+        return interpolatedSetpoint;
     }
 
     public double getMass() {
@@ -96,8 +96,8 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public Translation2d getRelativeEndpoint() {
-        return new Translation2d(length,
-                Rotation2d.fromDegrees(interpolatedSetpoint));
+        return new Translation2d(length, Rotation2d.fromDegrees(
+                interpolatedSetpoint));
     }
 
     public Translation2d getRelativeCenterOfMass() {
@@ -110,10 +110,15 @@ public class ArmSegment extends SubsystemBase {
         Translation2d higherCenterOfMass = higherSegment.getRelativeCenterOfMass()
                                                         .plus(getRelativeEndpoint());
         Translation2d scaledHigherCoM = higherCenterOfMass.times(higherMass);
-        Translation2d scaledMyCoM = centerOfMass.times(mass);
+        Translation2d scaledMyCoM = centerOfMass.rotateBy(pivotPosition).times(mass);
         Translation2d centerOfMassCalc = scaledHigherCoM.plus(scaledMyCoM)
                                                         .div(higherMass + mass);
-        return centerOfMassCalc.rotateBy(pivotPosition);
+        SmartDashboard.putNumber(name + " higher mass: ", higherMass);
+        SmartDashboard.putString(name + " higher com: ",
+                formatPolar(higherCenterOfMass));
+        SmartDashboard.putString(name + " com calc: ",
+                formatPolar(centerOfMassCalc));
+        return centerOfMassCalc;
     }
 
     public double calculateKG() {
@@ -123,7 +128,7 @@ public class ArmSegment extends SubsystemBase {
     public double calculateKG(Translation2d totalCenterOfMass) {
         double torqueRequired = getHigherMass() * GRAVITY_ACCELERATION
                 * totalCenterOfMass.getNorm();
-        return torqueRequired / stallTorque * NOMINAL_VOLTAGE * efficiency;
+        return torqueRequired / stallTorque * efficiency;
     }
 
     public double calculateFeedForward() {
@@ -164,12 +169,12 @@ public class ArmSegment extends SubsystemBase {
     private void setAngleOnMotor(double angle) {
         // double groundAngle = getGroundAngle();
         double FF = calculateFeedForward();
-        if (name.equals("Base")) {
-            motor.neutralOutput();
-        } else {
+        // if (name.equalsIgnoreCase("base")) {
+        //     motor.neutralOutput();
+        // } else {
             motor.set(TalonFXControlMode.Position, angleToTick(angle),
                     DemandType.ArbitraryFeedForward, FF);
-        }
+        // }
     }
 
     public Command setAngleCommandPos(int angleIndex) {
@@ -185,19 +190,42 @@ public class ArmSegment extends SubsystemBase {
 
     public boolean IsAtPosition(double angle) {
         double angleError = Math.abs(angle - getAngle());
-        if (angleError < MAXIMUM_ANGLE_ERROR) {
-            return true;
-        }
-        return false;
+        return angleError < MAXIMUM_ANGLE_ERROR;
     }
 
     @Override
     public void periodic() {
+        if (!DriverStation.isTeleopEnabled()) {
+            isSetPointCommanded = false;
+            interpolatedSetpoint = getAngle();
+            setpoint = getAngle();
+        }
         SmartDashboard.putNumber(name + " kG: ", calculateKG());
         SmartDashboard.putNumber(name + " angle: ", getAngle());
         SmartDashboard.putNumber(name + " setpoint: ", interpolatedSetpoint);
+        SmartDashboard.putNumber(name + " ff", calculateFeedForward());
+        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
+        Translation2d com = getRelativeCenterOfMass();
+        SmartDashboard.putString(name + " Center of mass: ",
+                String.format(formatPolar(com)));
         if (isSetPointCommanded) {
+            double magnitude = Math.abs(interpolatedSetpoint - setpoint);
+            if (magnitude < ANGULAR_VELOCITY_UNIT_TICKS) {
+                interpolatedSetpoint = setpoint;
+            } else if (interpolatedSetpoint > setpoint) {
+                interpolatedSetpoint -= ANGULAR_VELOCITY_UNIT_TICKS;
+            } else {
+                interpolatedSetpoint += ANGULAR_VELOCITY_UNIT_TICKS;
+            }
             setAngleOnMotor(interpolatedSetpoint);
+        } else {
+            motor.neutralOutput();
         }
+    }
+
+    private static String formatPolar(Translation2d t) {
+        return String.format("ø=%4.1f, m=%4.2f", t.getAngle()
+                                                  .getDegrees(),
+                t.getNorm());
     }
 }
