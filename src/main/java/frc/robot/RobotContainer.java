@@ -55,7 +55,7 @@ public class RobotContainer {
             base.setHigherSegment(elbow);
             elbow.setLowerSegment(base);
             armWrist = null;
-            arm = null; // new FullArmCommands(base, elbow, armWrist);
+            arm = null;
         } else {
             base = null;
             elbow = null;
@@ -101,10 +101,6 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        /**
-         * Delete these commands after initial testing- also, START ARM @ 60
-         * DEGREES!!!!!!! Lower arm from top to test angle FF/PID
-         */
         if (ARM_ENABLED) {
             controller0.aButton.onTrue(Commands.parallel(
                     elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));

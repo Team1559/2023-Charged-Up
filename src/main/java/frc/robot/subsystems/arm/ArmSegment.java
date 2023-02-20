@@ -8,6 +8,7 @@ import static frc.robot.Constants.Arm.ANGULAR_VELOCITY_UNIT_TICKS;
 import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -68,6 +69,7 @@ public class ArmSegment extends SubsystemBase {
         motor.config_IntegralZone(0, izone);
         motor.configNeutralDeadband(0.005);
         motor.configClosedloopRamp(0.5);
+        motor.setNeutralMode(NeutralMode.Coast);
     }
 
     public Command resetEncoderForTesting(double angle) {
@@ -162,10 +164,12 @@ public class ArmSegment extends SubsystemBase {
     private void setAngleOnMotor(double angle) {
         // double groundAngle = getGroundAngle();
         double FF = calculateFeedForward();
-        motor.set(TalonFXControlMode.Position, angleToTick(angle),
-                DemandType.ArbitraryFeedForward, FF);
-        System.out.println("The method has been called. Setpoint = " + angle);
-        SmartDashboard.putNumber(name + " Current motor setpoint: ", angle);
+        if (name.equals("Base")) {
+            motor.neutralOutput();
+        } else {
+            motor.set(TalonFXControlMode.Position, angleToTick(angle),
+                    DemandType.ArbitraryFeedForward, FF);
+        }
     }
 
     public Command setAngleCommandPos(int angleIndex) {
@@ -189,32 +193,11 @@ public class ArmSegment extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber(name + " kG: ", calculateKG());
         SmartDashboard.putNumber(name + " angle: ", getAngle());
-        SmartDashboard.putNumber(name + " current: ", motor.getStatorCurrent());
-        SmartDashboard.putNumber(name + " motor temperature: ",
-                motor.getTemperature());
-        SmartDashboard.putNumber(name + " raw tick value: ",
-                angleToTick(getAngle()));
-        System.out.println("Setpoint Commanded = " + isSetPointCommanded);
-        if (isSetPointCommanded == true) {
-            System.out.println("in \"if\" statement, current angle = "
-                    + interpolatedSetpoint);
-            System.out.println("The previous stepoint is " + setpoint);
-            if (interpolatedSetpoint < setpoint - ANGULAR_VELOCITY_UNIT_TICKS) {
-                System.out.println("commanding setpoint increase");
-                interpolatedSetpoint += ANGULAR_VELOCITY_UNIT_TICKS;
-                setAngleOnMotor(interpolatedSetpoint);
-            }
-            if (interpolatedSetpoint > setpoint + ANGULAR_VELOCITY_UNIT_TICKS) {
-                System.out.println("commanding setpoint decrease");
-                interpolatedSetpoint -= ANGULAR_VELOCITY_UNIT_TICKS;
-                setAngleOnMotor(interpolatedSetpoint);
-            }
-        } else {
-            isSetPointCommanded = false;
+        SmartDashboard.putNumber(name + " setpoint: ", interpolatedSetpoint);
+        if (isSetPointCommanded) {
+            setAngleOnMotor(interpolatedSetpoint);
         }
-        SmartDashboard.putNumber(name + " previous commanded angle ", setpoint);
-        SmartDashboard.putBoolean(name + " \"is setpoint commanded\": ",
-                isSetPointCommanded);
     }
 }
