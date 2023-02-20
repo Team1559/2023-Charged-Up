@@ -13,8 +13,7 @@ public class SwerveTeleopDriveCommand extends CommandBase {
     private final DTXboxController controller;
     private final SwerveDrive      swerve;
 
-    public SwerveTeleopDriveCommand(SwerveDrive swerve,
-            DTXboxController controller) {
+    public SwerveTeleopDriveCommand(SwerveDrive swerve, DTXboxController controller) {
         this.swerve = swerve;
         this.controller = controller;
         controller.setDeadBand(0.075);
@@ -28,10 +27,8 @@ public class SwerveTeleopDriveCommand extends CommandBase {
         }
 
         double vx = controller.getLeftStickYSquared() * MAXIMUM_LINEAR_VELOCITY;
-        double vy = -controller.getLeftStickXSquared()
-                * MAXIMUM_LINEAR_VELOCITY;
-        double vr = -controller.getRightStickXSquared()
-                * MAXIMUM_ANGULAR_VELOCITY;
+        double vy = -controller.getLeftStickXSquared() * MAXIMUM_LINEAR_VELOCITY;
+        double vr = -controller.getRightStickXSquared() * MAXIMUM_ANGULAR_VELOCITY;
         if (DriverStation.getAlliance() == Alliance.Red) {
             // Invert control from red perspective to keep it consistent
             vx = -vx;

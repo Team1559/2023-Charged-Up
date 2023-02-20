@@ -12,8 +12,7 @@ public class TeleopWristAngleCommand extends CommandBase {
     private GrabberWrist     wrist;
     private final double     deadband = 0.05;
 
-    public TeleopWristAngleCommand(GrabberWrist wrist,
-            DTXboxController controller) {
+    public TeleopWristAngleCommand(GrabberWrist wrist, DTXboxController controller) {
         this.wrist = wrist;
         this.controller = controller;
         addRequirements(wrist);

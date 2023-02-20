@@ -52,13 +52,11 @@ public class SwerveDrive extends SubsystemBase {
         gyro = new Pigeon2(PIGEON_IMU, CANIVORE_BUS_ID);
 
         // Control software
-        kinematics = new SwerveDriveKinematics(
-                new Translation2d(MODULE_X, MODULE_Y),
-                new Translation2d(MODULE_X, -MODULE_Y),
-                new Translation2d(-MODULE_X, MODULE_Y),
+        kinematics = new SwerveDriveKinematics(new Translation2d(MODULE_X, MODULE_Y),
+                new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
-        poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(),
-                modulePositions, new Pose2d(0, 0, getGyroAngle()),
+        poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(), modulePositions,
+                new Pose2d(0, 0, getGyroAngle()),
                 VecBuilder.fill(ENCODER_STDDEV, ENCODER_STDDEV, ENCODER_STDDEV),
                 VecBuilder.fill(2, 2, 2));
         rController = new PIDController(ROTATION_KP, 0, 0);
@@ -76,12 +74,10 @@ public class SwerveDrive extends SubsystemBase {
     public void setStates(SwerveModuleState... states) {
         double minCosine = 1;
         for (int i = 0; i < modules.length; i++) {
-            states[i] = SwerveModuleState.optimize(states[i],
-                    modules[i].getSteerAngle());
-            double cosine = Math.cos(Units.degreesToRadians(
-                    modules[i].getSteerAngle()
-                              .getDegrees()
-                            - states[i].angle.getDegrees()));
+            states[i] = SwerveModuleState.optimize(states[i], modules[i].getSteerAngle());
+            double cosine = Math.cos(Units.degreesToRadians(modules[i].getSteerAngle()
+                                                                      .getDegrees()
+                    - states[i].angle.getDegrees()));
             if (cosine < minCosine) {
                 minCosine = cosine;
             }
@@ -147,8 +143,7 @@ public class SwerveDrive extends SubsystemBase {
             // rPIDSetpoint = Double.NaN;
         }
 
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr,
-                getRobotAngle());
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
 
         SmartDashboard.putBoolean("Rotating", rotating);
         SmartDashboard.putBoolean("Setpoint", setpointSet);
@@ -159,9 +154,8 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("rPIDSetpoint", Math.toDegrees(rPIDSetpoint));
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(newStates, speeds,
-                MAXIMUM_LINEAR_VELOCITY, MAXIMUM_LINEAR_VELOCITY,
-                MAXIMUM_ANGULAR_VELOCITY);
+        SwerveDriveKinematics.desaturateWheelSpeeds(newStates, speeds, MAXIMUM_LINEAR_VELOCITY,
+                MAXIMUM_LINEAR_VELOCITY, MAXIMUM_ANGULAR_VELOCITY);
         setStates(newStates);
     }
 

@@ -19,8 +19,7 @@ public class SwerveTrajectoryCommand extends CommandBase {
     private int                    closestPointIndex;
     private int                    lookAheadPointIndex;
 
-    public SwerveTrajectoryCommand(SwerveDrive swerveDrive,
-            SwerveTrajectory trajectory) {
+    public SwerveTrajectoryCommand(SwerveDrive swerveDrive, SwerveTrajectory trajectory) {
         this.swerveDrive = swerveDrive;
         this.trajectory = trajectory;
 

@@ -117,8 +117,7 @@ public class RobotContainer {
             controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
         }
         if (GRABBER_ENABLED) {
-            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                    controller1);
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
 
             /**
@@ -129,12 +128,9 @@ public class RobotContainer {
             controller1.yButton.onTrue(claw.openClawCommand());
         }
         if (CHASSIS_ENABLED) {
-            swerve.setDefaultCommand(
-                    new SwerveTeleopDriveCommand(swerve, controller0));
-            controller0.leftBumper.onTrue(
-                    new SwerveTeleopSnapRotateCommand(swerve, false));
-            controller0.rightBumper.onTrue(
-                    new SwerveTeleopSnapRotateCommand(swerve, true));
+            swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
+            controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
+            controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
     }
 
@@ -145,18 +141,14 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         Rotation2d degrees180 = Rotation2d.fromDegrees(180);
-        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180),
-                new Pose2d(11, 2.75, degrees180),
-                new Pose2d(11, 4.75, degrees180),
-                new Pose2d(13, 4.75, degrees180),
+        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180), new Pose2d(11, 2.75, degrees180),
+                new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
                 new Pose2d(13, 2.75, degrees180) };
-        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(
-                waypoints);
+        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
         SmartDashboard.putNumber("Trajectory time", trajectory.time);
         swerve.displayTrajectory(trajectory);
         return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
                 true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
-                      .andThen(() -> SmartDashboard.putBoolean("Auto active",
-                              false));
+                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false));
     }
 }
