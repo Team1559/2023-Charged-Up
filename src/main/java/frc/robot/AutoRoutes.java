@@ -33,12 +33,12 @@ public class AutoRoutes {
                         180);
 
         // Define common positions
-        public static final Pose2d START_POINT_3 = new Pose2d(2.2, 4.7,
-                        DEGREES_180);
-        public static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75,
-                        DEGREES_180);
-        public static final Pose2d START_POINT_1 = new Pose2d(2.2, 0.75,
-                        DEGREES_180);
+        // public static final Pose2d START_POINT_3 = new Pose2d(2.2, 4.7,
+        // DEGREES_180);
+        // public static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75,
+        // DEGREES_180);
+        // public static final Pose2d START_POINT_1 = new Pose2d(2.2, 0.75,
+        // DEGREES_180);
 
         public static final Pose2d GAME_PIECE_4 = new Pose2d(6.8, 4.6,
                         DEGREES_0);
@@ -81,7 +81,7 @@ public class AutoRoutes {
         private static final Pose2d P1_S1_C = new Pose2d(2.94, 0.92, DEGREES_0);
         private static final Pose2d P1_S1_D = new Pose2d(1.49, 0.92, DEGREES_0);
 
-        public static final Pose2d[] PIECE_1_START_1 = { P1_S1_A, P1_S1_B,
+        public static final Pose2d[] PIECE_1_TO_START_1 = { P1_S1_A, P1_S1_B,
                         P1_S1_C, P1_S1_D };
 
         // Position 1 Exit Community
@@ -94,7 +94,7 @@ public class AutoRoutes {
         private static final Pose2d S1_COM_D = new Pose2d(5.52, 0.92,
                         DEGREES_180);
 
-        public static final Pose2d[] START_1_TO_COMMUNITY = { S1_COM_A,
+        public static final Pose2d[] START_1_EXIT_COMMUNITY = { S1_COM_A,
                         S1_COM_B, S1_COM_C, S1_COM_D };
 
         // Start 3 Piece 4 Drive to piece
