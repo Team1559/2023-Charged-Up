@@ -3,7 +3,6 @@ package frc.robot.subsystems.arm;
 import static frc.robot.Constants.FALCON_STALL_TORQUE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.GRAVITY_ACCELERATION;
-import static frc.robot.Constants.NOMINAL_VOLTAGE;
 import static frc.robot.Constants.Arm.ANGULAR_VELOCITY_UNIT_TICKS;
 import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
 
@@ -42,10 +41,9 @@ public class ArmSegment extends SubsystemBase {
     private boolean        isSetPointCommanded = false;
     private double         interpolatedSetpoint;
 
-    public ArmSegment(String name, int motorID, int cancoderID, double kp,
-            double ki, double kd, double izone, double gearRatio,
-            double[] positions, double efficiency, double mass, double length,
-            Translation2d centerOfMass) {
+    public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
+            double izone, double gearRatio, double[] positions, double efficiency, double mass,
+            double length, Translation2d centerOfMass) {
         this.name = name;
         this.gearRatio = gearRatio;
         this.positions = positions;
@@ -61,8 +59,8 @@ public class ArmSegment extends SubsystemBase {
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
-                true, 20, 80, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 20, 80,
+                0.5);
         motor.configSupplyCurrentLimit(limit);
         motor.config_kP(0, kp);
         motor.config_kI(0, ki);
@@ -74,8 +72,7 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public Command resetEncoderForTesting(double angle) {
-        return new InstantCommand(
-                () -> motor.setSelectedSensorPosition(angleToTick(angle)));
+        return new InstantCommand(() -> motor.setSelectedSensorPosition(angleToTick(angle)));
     }
 
     public double getAngle() {
@@ -91,13 +88,11 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double getHigherMass() {
-        return higherSegment == null ? mass
-                : (mass + higherSegment.getHigherMass());
+        return higherSegment == null ? mass : (mass + higherSegment.getHigherMass());
     }
 
     public Translation2d getRelativeEndpoint() {
-        return new Translation2d(length, Rotation2d.fromDegrees(
-                interpolatedSetpoint));
+        return new Translation2d(length, Rotation2d.fromDegrees(interpolatedSetpoint));
     }
 
     public Translation2d getRelativeCenterOfMass() {
@@ -110,14 +105,13 @@ public class ArmSegment extends SubsystemBase {
         Translation2d higherCenterOfMass = higherSegment.getRelativeCenterOfMass()
                                                         .plus(getRelativeEndpoint());
         Translation2d scaledHigherCoM = higherCenterOfMass.times(higherMass);
-        Translation2d scaledMyCoM = centerOfMass.rotateBy(pivotPosition).times(mass);
+        Translation2d scaledMyCoM = centerOfMass.rotateBy(pivotPosition)
+                                                .times(mass);
         Translation2d centerOfMassCalc = scaledHigherCoM.plus(scaledMyCoM)
                                                         .div(higherMass + mass);
         SmartDashboard.putNumber(name + " higher mass: ", higherMass);
-        SmartDashboard.putString(name + " higher com: ",
-                formatPolar(higherCenterOfMass));
-        SmartDashboard.putString(name + " com calc: ",
-                formatPolar(centerOfMassCalc));
+        SmartDashboard.putString(name + " higher com: ", formatPolar(higherCenterOfMass));
+        SmartDashboard.putString(name + " com calc: ", formatPolar(centerOfMassCalc));
         return centerOfMassCalc;
     }
 
@@ -170,10 +164,10 @@ public class ArmSegment extends SubsystemBase {
         // double groundAngle = getGroundAngle();
         double FF = calculateFeedForward();
         // if (name.equalsIgnoreCase("base")) {
-        //     motor.neutralOutput();
+        // motor.neutralOutput();
         // } else {
-            motor.set(TalonFXControlMode.Position, angleToTick(angle),
-                    DemandType.ArbitraryFeedForward, FF);
+        motor.set(TalonFXControlMode.Position, angleToTick(angle), DemandType.ArbitraryFeedForward,
+                FF);
         // }
     }
 
@@ -206,8 +200,7 @@ public class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " ff", calculateFeedForward());
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
         Translation2d com = getRelativeCenterOfMass();
-        SmartDashboard.putString(name + " Center of mass: ",
-                String.format(formatPolar(com)));
+        SmartDashboard.putString(name + " Center of mass: ", String.format(formatPolar(com)));
         if (isSetPointCommanded) {
             double magnitude = Math.abs(interpolatedSetpoint - setpoint);
             if (magnitude < ANGULAR_VELOCITY_UNIT_TICKS) {
