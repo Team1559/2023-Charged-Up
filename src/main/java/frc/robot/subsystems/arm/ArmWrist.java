@@ -16,9 +16,8 @@ public class ArmWrist extends ArmSegment {
     private static final double[] wristPos = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     public ArmWrist() {
-        super("Wrist", ARM_MOTOR_ID_WRIST, WRIST_CANCODER_ID, kP_WRIST,
-                kI_WRIST, kD_WRIST, kIZ_WRIST, INV_ARM_WRIST_GEAR_RATIO,
-                wristPos, WRIST_SEGMENT_EFFICIENCY, WRIST_SEGMENT_MASS,
-                WRIST_SEGMENT_LENGTH, WRIST_SEGMENT_CENTER_OF_MASS);
+        super("Wrist", ARM_MOTOR_ID_WRIST, WRIST_CANCODER_ID, kP_WRIST, kI_WRIST, kD_WRIST,
+                kIZ_WRIST, INV_ARM_WRIST_GEAR_RATIO, wristPos, WRIST_SEGMENT_EFFICIENCY,
+                WRIST_SEGMENT_MASS, WRIST_SEGMENT_LENGTH, WRIST_SEGMENT_CENTER_OF_MASS);
     }
 }
