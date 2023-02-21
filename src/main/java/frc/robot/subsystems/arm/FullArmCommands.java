@@ -17,8 +17,7 @@ public class FullArmCommands {
 
     private Command moveArmToPosition(int index) {
         return new ParallelCommandGroup(base.setBaseAngleCommandPos(index),
-                elbow.setElbowAngleCommandPos(index),
-                wrist.setWristAngleCommandPos(index));
+                elbow.setElbowAngleCommandPos(index), wrist.setWristAngleCommandPos(index));
     }
 
     public SequentialCommandGroup moveToLocations(int... positions) {

@@ -65,8 +65,7 @@ public class SwerveModule {
             steerMotor.setNeutralMode(NeutralMode.Brake);
             steerMotor.config_kP(0, MODULE_STEER_KP);
             steerMotor.config_kD(0, MODULE_STEER_KD);
-            steerMotor.setSelectedSensorPosition(
-                    degreesToTicks(cancoder.getPosition() % 360));
+            steerMotor.setSelectedSensorPosition(degreesToTicks(cancoder.getPosition() % 360));
         }).start();
     }
 
@@ -77,8 +76,7 @@ public class SwerveModule {
         config.sensorDirection = false;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(config);
-        cancoder.setPosition(
-                cancoder.getAbsolutePosition() - CANCODER_OFFSETS[id]);
+        cancoder.setPosition(cancoder.getAbsolutePosition() - CANCODER_OFFSETS[id]);
     }
 
     /**
@@ -89,10 +87,8 @@ public class SwerveModule {
      */
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
-        double backlashRate = steerMotor.getSelectedSensorVelocity()
-                * STEER_DRIVE_BACKLASH;
-        driveMotor.set(TalonFXControlMode.Velocity,
-                ticksPer100ms - backlashRate);
+        double backlashRate = steerMotor.getSelectedSensorVelocity() * STEER_DRIVE_BACKLASH;
+        driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms - backlashRate);
     }
 
     /**
@@ -156,8 +152,7 @@ public class SwerveModule {
      *         traveled by the module (used for odometry)
      */
     public SwerveModulePosition getCurrentPosition() {
-        return new SwerveModulePosition(ticksToMeters(getDriveMotorPosition()),
-                getSteerAngle());
+        return new SwerveModulePosition(ticksToMeters(getDriveMotorPosition()), getSteerAngle());
     }
 
     /**
@@ -166,8 +161,7 @@ public class SwerveModule {
      * @see #getSteerAngleMod()
      */
     public Rotation2d getSteerAngle() {
-        return Rotation2d.fromDegrees(
-                ticksToDegrees(steerMotor.getSelectedSensorPosition()));
+        return Rotation2d.fromDegrees(ticksToDegrees(steerMotor.getSelectedSensorPosition()));
     }
 
     /**

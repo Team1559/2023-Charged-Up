@@ -10,8 +10,7 @@ public class SwerveTeleopSnapRotateCommand extends CommandBase {
     private final SwerveDrive swerve;
     private final boolean     turnRight;
 
-    public SwerveTeleopSnapRotateCommand(SwerveDrive swerve,
-            boolean turnRight) {
+    public SwerveTeleopSnapRotateCommand(SwerveDrive swerve, boolean turnRight) {
         this.swerve = swerve;
         this.turnRight = turnRight;
     }
