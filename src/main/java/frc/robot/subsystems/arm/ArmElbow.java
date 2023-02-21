@@ -37,14 +37,13 @@ public class ArmElbow extends SubsystemBase {
         elbowMotor = new TalonFX(ARM_MOTOR_ID_ELBOW);
         elbowMotor.configFactoryDefault();
         elbowMotor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
-                true, 40, 60, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 40, 60,
+                0.5);
         elbowMotor.configSupplyCurrentLimit(limit);
         elbowMotor.config_kP(0, kP_ELBOW);
         elbowMotor.config_kI(0, kI_ELBOW);
         elbowMotor.config_kD(0, kD_ELBOW);
-        feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW,
-                kA_ELBOW);
+        feedforward = new ArmFeedforward(kS_ELBOW, kG_ELBOW, kV_ELBOW, kA_ELBOW);
     }
 
     /**
@@ -96,8 +95,7 @@ public class ArmElbow extends SubsystemBase {
     }
 
     public Command degreesDown() {
-        return Commands.sequence(
-                new InstantCommand(() -> degreeSetDown(), this),
+        return Commands.sequence(new InstantCommand(() -> degreeSetDown(), this),
                 new InstantCommand(() -> setAngle(degrees), this));
     }
 
@@ -122,7 +120,6 @@ public class ArmElbow extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Elbow CANCoder reading (in deg): ",
-                getAngle());
+        SmartDashboard.putNumber("Elbow CANCoder reading (in deg): ", getAngle());
     }
 }
