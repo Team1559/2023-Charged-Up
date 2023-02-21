@@ -115,6 +115,7 @@ public class RobotContainer {
             controller0.bButton.onTrue(arm.moveToLocations(1));
             controller0.xButton.onTrue(arm.moveToLocations(2));
             controller0.yButton.onTrue(arm.moveToLocations(3));
+            controller0.rightStickButton.onTrue(arm.moveToLocations(4));
             // controller0.aButton.onTrue(Commands.parallel(
             // elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
             // controller0.bButton.onTrue(elbow.setAngleCommandPos(7));

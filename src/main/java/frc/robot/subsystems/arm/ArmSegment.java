@@ -3,8 +3,7 @@ package frc.robot.subsystems.arm;
 import static frc.robot.Constants.FALCON_STALL_TORQUE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.GRAVITY_ACCELERATION;
-import static frc.robot.Constants.Arm.ANGULAR_VELOCITY_UNIT_TICKS;
-import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
+import static frc.robot.Constants.Arm.*;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -35,19 +34,27 @@ public class ArmSegment extends SubsystemBase {
     private final double        stallTorque;
     private final double        gearRatio;
     private final double        efficiency;
+    private final double        maxSpeed;
+    private final double        acceleration;
 
     private final double[] positions;
-    private double         setpoint;
+    private double         target;
     private boolean        isSetPointCommanded = false;
-    private double         interpolatedSetpoint;
+    private double         setpoint;
+    private double         speed;
+    private double         stopAccelPoint;
+    private double         decelPoint;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
-            double izone, double gearRatio, double[] positions, double efficiency, double mass,
-            double length, Translation2d centerOfMass) {
+            double izone, double gearRatio, double[] positions, double efficiency,
+            double maxVelocity, double acceleration, double mass, double length,
+            Translation2d centerOfMass) {
         this.name = name;
         this.gearRatio = gearRatio;
         this.positions = positions;
 
+        this.maxSpeed = maxVelocity;
+        this.acceleration = acceleration;
         this.efficiency = efficiency;
         this.mass = mass;
         this.length = length;
@@ -66,7 +73,7 @@ public class ArmSegment extends SubsystemBase {
         motor.config_kI(0, ki);
         motor.config_kD(0, kd);
         motor.config_IntegralZone(0, izone);
-        motor.configNeutralDeadband(0.005);
+        motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Coast);
     }
@@ -80,7 +87,7 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double getGroundAngle() {
-        return interpolatedSetpoint;
+        return setpoint;
     }
 
     public double getMass() {
@@ -92,11 +99,11 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public Translation2d getRelativeEndpoint() {
-        return new Translation2d(length, Rotation2d.fromDegrees(interpolatedSetpoint));
+        return new Translation2d(length, Rotation2d.fromDegrees(setpoint));
     }
 
     public Translation2d getRelativeCenterOfMass() {
-        Rotation2d pivotPosition = Rotation2d.fromDegrees(interpolatedSetpoint);
+        Rotation2d pivotPosition = Rotation2d.fromDegrees(setpoint);
         if (higherSegment == null) {
             return centerOfMass.rotateBy(pivotPosition);
         }
@@ -109,9 +116,6 @@ public class ArmSegment extends SubsystemBase {
                                                 .times(mass);
         Translation2d centerOfMassCalc = scaledHigherCoM.plus(scaledMyCoM)
                                                         .div(higherMass + mass);
-        SmartDashboard.putNumber(name + " higher mass: ", higherMass);
-        SmartDashboard.putString(name + " higher com: ", formatPolar(higherCenterOfMass));
-        SmartDashboard.putString(name + " com calc: ", formatPolar(centerOfMassCalc));
         return centerOfMassCalc;
     }
 
@@ -155,20 +159,21 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public void setDestinationAngle(double angle) {
-        interpolatedSetpoint = getAngle();
-        setpoint = angle;
+        target = angle;
+        setpoint = getAngle();
         isSetPointCommanded = true;
+
+        double displacementToSetpoint = angle - setpoint;
+        double accelerationDisplacement = Math.copySign(
+                0.5 * maxSpeed * maxSpeed / acceleration, displacementToSetpoint);
+        stopAccelPoint = setpoint + accelerationDisplacement;
+        decelPoint = target - accelerationDisplacement;
     }
 
     private void setAngleOnMotor(double angle) {
-        // double groundAngle = getGroundAngle();
         double FF = calculateFeedForward();
-        // if (name.equalsIgnoreCase("base")) {
-        // motor.neutralOutput();
-        // } else {
         motor.set(TalonFXControlMode.Position, angleToTick(angle), DemandType.ArbitraryFeedForward,
                 FF);
-        // }
     }
 
     public Command setAngleCommandPos(int angleIndex) {
@@ -191,26 +196,56 @@ public class ArmSegment extends SubsystemBase {
     public void periodic() {
         if (!DriverStation.isTeleopEnabled()) {
             isSetPointCommanded = false;
-            interpolatedSetpoint = getAngle();
             setpoint = getAngle();
+            target = getAngle();
         }
         SmartDashboard.putNumber(name + " kG: ", calculateKG());
         SmartDashboard.putNumber(name + " angle: ", getAngle());
-        SmartDashboard.putNumber(name + " setpoint: ", interpolatedSetpoint);
+        SmartDashboard.putNumber(name + " setpoint: ", setpoint);
         SmartDashboard.putNumber(name + " ff", calculateFeedForward());
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
+        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
         Translation2d com = getRelativeCenterOfMass();
         SmartDashboard.putString(name + " Center of mass: ", String.format(formatPolar(com)));
         if (isSetPointCommanded) {
-            double magnitude = Math.abs(interpolatedSetpoint - setpoint);
-            if (magnitude < ANGULAR_VELOCITY_UNIT_TICKS) {
-                interpolatedSetpoint = setpoint;
-            } else if (interpolatedSetpoint > setpoint) {
-                interpolatedSetpoint -= ANGULAR_VELOCITY_UNIT_TICKS;
+            double distanceToTarget = Math.abs(setpoint - target);
+            if (distanceToTarget <= Math.max(speed, MINIMUM_TARGET_DISTANCE)) {
+                setpoint = target;
+                speed = 0;
             } else {
-                interpolatedSetpoint += ANGULAR_VELOCITY_UNIT_TICKS;
+                if (setpoint > target) {
+                    // Need to swap comparisons if moving in reverse
+                    if (setpoint <= decelPoint) {
+                        speed -= acceleration;
+                    } else if (setpoint > stopAccelPoint) {
+                        speed += acceleration;
+                    }
+                } else {
+                    if (setpoint >= decelPoint) {
+                        speed -= acceleration;
+                    } else if (setpoint < stopAccelPoint) {
+                        speed += acceleration;
+                    }
+                }
+
+                if (speed < maxSpeed * 0.05) {
+                    speed = maxSpeed * 0.05;
+                }
+
+                double nextSetpoint = setpoint;
+                if (setpoint > target) {
+                    nextSetpoint -= speed;
+                } else {
+                    nextSetpoint += speed;
+                }
+                if (nextSetpoint >= target != setpoint >= target) {
+                    setpoint = target;
+                } else {
+                    setpoint = nextSetpoint;
+                }
             }
-            setAngleOnMotor(interpolatedSetpoint);
+
+            setAngleOnMotor(setpoint);
         } else {
             motor.neutralOutput();
         }

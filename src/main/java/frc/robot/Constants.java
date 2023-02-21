@@ -36,6 +36,7 @@ public final class Constants {
     public static final double FALCON_STALL_TORQUE  = 4.69;
     public static final double GRAVITY_ACCELERATION = 9.8;
     public static final double NOMINAL_VOLTAGE      = 12D;
+    public static final double CYCLES_PER_SECOND    = 50D;
 
     public static class Wiring {
         // Swerve drive
@@ -123,10 +124,24 @@ public final class Constants {
         public static final double ARM_WRIST_GEAR_RATIO            = 1 / 64.0;
         public static final double INV_ARM_WRIST_GEAR_RATIO        = 1 / ARM_WRIST_GEAR_RATIO;
         public static final double TELEOP_ANGLE_VELOCITY           = 90D;
-        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY / 50.0;
+        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
+                / CYCLES_PER_SECOND;
 
-        public static final double ANGULAR_VELOCITY_UNIT_DPS   = 20D;
-        public static final double ANGULAR_VELOCITY_UNIT_TICKS = ANGULAR_VELOCITY_UNIT_DPS / 50.0;
+        public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
+        // public static final double ANGULAR_VELOCITY_UNIT_TICKS =
+        // ANGULAR_VELOCITY_UNIT_DPS / 50.0;
+        public static final double MAXIMUM_VELOCITY_WRIST  = 20D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW  = 60D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE   = 10D / CYCLES_PER_SECOND;
+        public static final double MINIMUM_TARGET_DISTANCE = 0.5;
+
+        public static final double ACCELERATION_TIME  = 0.5;
+        public static final double ACCELERATION_WRIST = MAXIMUM_VELOCITY_WRIST / CYCLES_PER_SECOND
+                / ACCELERATION_TIME;
+        public static final double ACCELERATION_ELBOW = MAXIMUM_VELOCITY_ELBOW / CYCLES_PER_SECOND
+                / ACCELERATION_TIME;
+        public static final double ACCELERATION_BASE  = MAXIMUM_VELOCITY_BASE / CYCLES_PER_SECOND
+                / ACCELERATION_TIME;
 
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
@@ -135,37 +150,22 @@ public final class Constants {
         public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE  = 0.03; // 0.07
+        public static final double kP_BASE  = 0.03;  // 0.07
         public static final double kD_BASE  = 0;
-        public static final double kI_BASE  = 0;    // kP_BASE / 5.0
-        public static final double kIZ_BASE = 0;    // 7
-
-        public static final double kG_BASE = 1.6; // 0.8
-        public static final double kV_BASE = 0;   // 1.54
-        public static final double kS_BASE = 0;
-        public static final double kA_BASE = 0;   // 0.1
+        public static final double kI_BASE  = 0.001; // kP_BASE / 5.0
+        public static final double kIZ_BASE = 0;     // 7
 
         public static final double kP_ELBOW  = 0.2; // 0.2
         public static final double kD_ELBOW  = 0;
         public static final double kI_ELBOW  = 0;
         public static final double kIZ_ELBOW = 0;   // degrees
 
-        public static final double kG_ELBOW = 0.18;
-        public static final double kV_ELBOW = 0;
-        public static final double kS_ELBOW = 0;
-        public static final double kA_ELBOW = 0;
-
         public static final double kP_WRIST  = 0.2;
         public static final double kD_WRIST  = 0;
         public static final double kI_WRIST  = 0;
         public static final double kIZ_WRIST = 0;  // degrees
 
-        public static final double kG_WRIST = 0;
-        public static final double kV_WRIST = 0;
-        public static final double kS_WRIST = 0;
-        public static final double kA_WRIST = 0;
-
-        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3;
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.35;
         public static final double ELBOW_SEGMENT_EFFICIENCY = 1;
         public static final double WRIST_SEGMENT_EFFICIENCY = 0.7;
 
