@@ -51,8 +51,7 @@ public class GrabberWrist extends SubsystemBase {
     }
 
     public Command setWristAngleCommand(double angle) {
-        return Commands.sequence(
-                new InstantCommand(() -> setAngle(angle), this));
+        return Commands.sequence(new InstantCommand(() -> setAngle(angle), this));
         // new WaitCommand(
         // Math.abs(angle - getAngle()) / MAX_ANGULAR_VELOCITY));
     }
@@ -65,8 +64,7 @@ public class GrabberWrist extends SubsystemBase {
     public void periodic() {
         // SmartDashboard.putNumber("Grabber Angle",wristMotor.get() *
         // SERVO_RANGE - ZERO_ANGLE);
-        SmartDashboard.putNumber("Grabber Angle",
-                wristServo.get() * SERVO_RANGE - ZERO_ANGLE);
+        SmartDashboard.putNumber("Grabber Angle", wristServo.get() * SERVO_RANGE - ZERO_ANGLE);
         SmartDashboard.putNumber("Grabber Servo Angle", wristServo.getAngle());
     }
     // private double calculateServoAngle(double targetAngle){

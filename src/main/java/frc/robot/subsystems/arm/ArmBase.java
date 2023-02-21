@@ -30,8 +30,7 @@ public class ArmBase extends SubsystemBase {
     private final TalonFX baseMotor;
     // private final CANCoder canCoder;
     private final ArmFeedforward feedforward;
-    private final double[]       basePos = { 0, 10, 20, 30, 40, 50, 60, 70, 80,
-            90 };
+    private final double[]       basePos = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90 };
     private int                  degrees;
 
     public ArmBase() {
@@ -39,8 +38,8 @@ public class ArmBase extends SubsystemBase {
         baseMotor = new TalonFX(ARM_MOTOR_ID_BASE);
         baseMotor.configFactoryDefault();
         baseMotor.enableVoltageCompensation(true);
-        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(
-                true, 20, 25, 0.5);
+        SupplyCurrentLimitConfiguration limit = new SupplyCurrentLimitConfiguration(true, 20, 25,
+                0.5);
         baseMotor.configSupplyCurrentLimit(limit);
         baseMotor.config_kP(0, kP_BASE);
         baseMotor.config_kI(0, kI_BASE);
@@ -109,8 +108,7 @@ public class ArmBase extends SubsystemBase {
     }
 
     public Command degreesDown() {
-        return Commands.sequence(
-                new InstantCommand(() -> degreeSetDown(), this),
+        return Commands.sequence(new InstantCommand(() -> degreeSetDown(), this),
                 new InstantCommand(() -> setAngle(degrees), this));
     }
 

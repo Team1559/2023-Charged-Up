@@ -12,8 +12,7 @@ public class ArmWristCommandsTeleop extends CommandBase {
     private final double angleVelPerSecond = 90D;
     private final double angleVelPerCycle  = angleVelPerSecond / 50.0;
 
-    public ArmWristCommandsTeleop(ArmWrist armWrist,
-            DTXboxController controller) {
+    public ArmWristCommandsTeleop(ArmWrist armWrist, DTXboxController controller) {
         this.wrist = armWrist;
         this.controller = controller;
     }

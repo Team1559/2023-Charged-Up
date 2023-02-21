@@ -17,8 +17,7 @@ public class GrabberClaw extends SubsystemBase {
     private Solenoid clawSolenoid;
 
     public GrabberClaw() {
-        clawSolenoid = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH,
-                CLAW_SOLENOID_ID);
+        clawSolenoid = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH, CLAW_SOLENOID_ID);
     }
 
     public void openClaw() {

@@ -45,10 +45,8 @@ public class DTXboxController {
     public final Trigger yButton          = new Trigger(this::getYButton);
     public final Trigger startButton      = new Trigger(this::getStartButton);
     public final Trigger backButton       = new Trigger(this::getBackButton);
-    public final Trigger leftStickButton  = new Trigger(
-            this::getLeftStickButton);
-    public final Trigger rightStickButton = new Trigger(
-            this::getRightStickButton);
+    public final Trigger leftStickButton  = new Trigger(this::getLeftStickButton);
+    public final Trigger rightStickButton = new Trigger(this::getRightStickButton);
     public final Trigger leftBumper       = new Trigger(this::getLeftBumper);
     public final Trigger rightBumper      = new Trigger(this::getRightBumper);
 
