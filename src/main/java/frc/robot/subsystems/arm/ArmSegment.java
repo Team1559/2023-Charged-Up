@@ -1,9 +1,12 @@
 package frc.robot.subsystems.arm;
 
+import static frc.robot.Constants.CYCLES_PER_SECOND;
+import static frc.robot.Constants.FALCON_MAX_RPM;
 import static frc.robot.Constants.FALCON_STALL_TORQUE;
 import static frc.robot.Constants.FALCON_TICKS_PER_REV;
 import static frc.robot.Constants.GRAVITY_ACCELERATION;
-import static frc.robot.Constants.Arm.*;
+import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
+import static frc.robot.Constants.Arm.MINIMUM_TARGET_DISTANCE;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -119,21 +122,29 @@ public class ArmSegment extends SubsystemBase {
         return centerOfMassCalc;
     }
 
-    public double calculateKG() {
-        return calculateKG(getRelativeCenterOfMass());
-    }
-
     public double calculateKG(Translation2d totalCenterOfMass) {
         double torqueRequired = getHigherMass() * GRAVITY_ACCELERATION
                 * totalCenterOfMass.getNorm();
         return torqueRequired / stallTorque * efficiency;
     }
 
-    public double calculateFeedForward() {
+    public double calculateKA(Translation2d totalCenterOfMass) {
+        return getHigherMass() * totalCenterOfMass.getNorm() / stallTorque * (Math.PI / 180);
+    }
+
+    public double calculateKV(Translation2d totalCenterOfMass) {
+        return 1 / (FALCON_MAX_RPM * 360 / 60) / totalCenterOfMass.getNorm();
+    }
+
+    public double calculateFeedForward(double velocity, double acceleration) {
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
-        return kG * totalCenterOfMass.getAngle()
-                                     .getCos();
+        double kV = calculateKV(totalCenterOfMass);
+        double kA = calculateKA(totalCenterOfMass);
+        return kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
+                                                                         .getCos();
+        // return kG * totalCenterOfMass.getAngle()
+        // .getCos();
     }
 
     public void setLowerSegment(ArmSegment lowerSegment) {
@@ -164,14 +175,14 @@ public class ArmSegment extends SubsystemBase {
         isSetPointCommanded = true;
 
         double displacementToSetpoint = angle - setpoint;
-        double accelerationDisplacement = Math.copySign(
-                0.5 * maxSpeed * maxSpeed / acceleration, displacementToSetpoint);
+        double accelerationDisplacement = Math.copySign(0.5 * maxSpeed * maxSpeed / acceleration,
+                displacementToSetpoint);
         stopAccelPoint = setpoint + accelerationDisplacement;
         decelPoint = target - accelerationDisplacement;
     }
 
-    private void setAngleOnMotor(double angle) {
-        double FF = calculateFeedForward();
+    private void setAngleOnMotor(double angle, double velocity, double acceleration) {
+        double FF = calculateFeedForward(velocity, acceleration);
         motor.set(TalonFXControlMode.Position, angleToTick(angle), DemandType.ArbitraryFeedForward,
                 FF);
     }
@@ -199,14 +210,8 @@ public class ArmSegment extends SubsystemBase {
             setpoint = getAngle();
             target = getAngle();
         }
-        SmartDashboard.putNumber(name + " kG: ", calculateKG());
-        SmartDashboard.putNumber(name + " angle: ", getAngle());
-        SmartDashboard.putNumber(name + " setpoint: ", setpoint);
-        SmartDashboard.putNumber(name + " ff", calculateFeedForward());
-        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
-        Translation2d com = getRelativeCenterOfMass();
-        SmartDashboard.putString(name + " Center of mass: ", String.format(formatPolar(com)));
+        double accel = 0;
+        double velo = 0;
         if (isSetPointCommanded) {
             double distanceToTarget = Math.abs(setpoint - target);
             if (distanceToTarget <= Math.max(speed, MINIMUM_TARGET_DISTANCE)) {
@@ -216,14 +221,18 @@ public class ArmSegment extends SubsystemBase {
                 if (setpoint > target) {
                     // Need to swap comparisons if moving in reverse
                     if (setpoint <= decelPoint) {
+                        accel = -acceleration;
                         speed -= acceleration;
                     } else if (setpoint > stopAccelPoint) {
+                        accel = acceleration;
                         speed += acceleration;
                     }
                 } else {
                     if (setpoint >= decelPoint) {
+                        accel = -acceleration;
                         speed -= acceleration;
                     } else if (setpoint < stopAccelPoint) {
+                        accel = acceleration;
                         speed += acceleration;
                     }
                 }
@@ -234,8 +243,10 @@ public class ArmSegment extends SubsystemBase {
 
                 double nextSetpoint = setpoint;
                 if (setpoint > target) {
+                    velo = -speed;
                     nextSetpoint -= speed;
                 } else {
+                    velo = speed;
                     nextSetpoint += speed;
                 }
                 if (nextSetpoint >= target != setpoint >= target) {
@@ -245,10 +256,24 @@ public class ArmSegment extends SubsystemBase {
                 }
             }
 
-            setAngleOnMotor(setpoint);
+            setAngleOnMotor(setpoint, velo * CYCLES_PER_SECOND,
+                    accel * CYCLES_PER_SECOND * CYCLES_PER_SECOND);
         } else {
             motor.neutralOutput();
         }
+
+        // Translation2d centerOfMass = getRelativeCenterOfMass();
+        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
+        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
+        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        // SmartDashboard.putNumber(name + " angle: ", getAngle());
+        // SmartDashboard.putNumber(name + " setpoint: ", setpoint);
+        // SmartDashboard.putNumber(name + " ff",
+        //         calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
+        // SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
+        // SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        // Translation2d com = getRelativeCenterOfMass();
+        // SmartDashboard.putString(name + " Center of mass: ", String.format(formatPolar(com)));
     }
 
     private static String formatPolar(Translation2d t) {
