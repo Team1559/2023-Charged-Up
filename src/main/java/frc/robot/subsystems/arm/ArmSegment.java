@@ -17,7 +17,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -80,6 +79,17 @@ public class ArmSegment extends SubsystemBase {
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Coast);
     }
+
+    // private void configCancoder() {
+    // CANCoderConfiguration config = new CANCoderConfiguration();
+    // config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+    // config.magnetOffsetDegrees = 0;
+    // config.sensorDirection = false;
+    // config.initializationStrategy =
+    // SensorInitializationStrategy.BootToAbsolutePosition;
+    // canCoder.configAllSettings(config);
+    // canCoder.setPosition(canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
+    // }
 
     public Command resetEncoderForTesting(double angle) {
         return new InstantCommand(() -> motor.setSelectedSensorPosition(angleToTick(angle)));
@@ -269,11 +279,15 @@ public class ArmSegment extends SubsystemBase {
         // SmartDashboard.putNumber(name + " angle: ", getAngle());
         // SmartDashboard.putNumber(name + " setpoint: ", setpoint);
         // SmartDashboard.putNumber(name + " ff",
-        //         calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
-        // SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
-        // SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
+        // CYCLES_PER_SECOND));
+        // SmartDashboard.putNumber(name + " current draw:",
+        // motor.getSupplyCurrent());
+        // SmartDashboard.putNumber(name + " error: ",
+        // motor.getClosedLoopError());
         // Translation2d com = getRelativeCenterOfMass();
-        // SmartDashboard.putString(name + " Center of mass: ", String.format(formatPolar(com)));
+        // SmartDashboard.putString(name + " Center of mass: ",
+        // String.format(formatPolar(com)));
     }
 
     private static String formatPolar(Translation2d t) {
