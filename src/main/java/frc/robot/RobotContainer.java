@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -116,29 +115,23 @@ public class RobotContainer {
             controller0.xButton.onTrue(arm.moveToLocations(2));
             controller0.yButton.onTrue(arm.moveToLocations(3));
             controller0.rightStickButton.onTrue(arm.moveToLocations(4));
+
             // controller0.aButton.onTrue(Commands.parallel(
             // elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
             // controller0.bButton.onTrue(elbow.setAngleCommandPos(7));
             // controller0.yButton.onTrue(elbow.setAngleCommandPos(0));
             // controller0.leftBumper.onTrue(base.setAngleCommandPos(6));
-            controller0.leftStickButton.onTrue(
-                    Commands.parallel(base.resetEncoderForTesting(90),
-                            elbow.resetEncoderForTesting(90)));
         }
         if (GRABBER_ENABLED) {
-            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                    controller1);
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
         }
         if (CHASSIS_ENABLED) {
-            swerve.setDefaultCommand(
-                    new SwerveTeleopDriveCommand(swerve, controller0));
-            controller0.leftBumper.onTrue(
-                    new SwerveTeleopSnapRotateCommand(swerve, false));
-            controller0.rightBumper.onTrue(
-                    new SwerveTeleopSnapRotateCommand(swerve, true));
+            swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
+            controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
+            controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
     }
 
@@ -149,18 +142,14 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         Rotation2d degrees180 = Rotation2d.fromDegrees(180);
-        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180),
-                new Pose2d(11, 2.75, degrees180),
-                new Pose2d(11, 4.75, degrees180),
-                new Pose2d(13, 4.75, degrees180),
+        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180), new Pose2d(11, 2.75, degrees180),
+                new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
                 new Pose2d(13, 2.75, degrees180) };
-        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(
-                waypoints);
+        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
         SmartDashboard.putNumber("Trajectory time", trajectory.time);
         swerve.displayTrajectory(trajectory);
         return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
                 true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
-                      .andThen(() -> SmartDashboard.putBoolean("Auto active",
-                              false));
+                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false));
     }
 }

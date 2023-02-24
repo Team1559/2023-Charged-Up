@@ -117,7 +117,7 @@ public final class Constants {
     }
 
     public static class Arm {
-        public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (50 / 72.0);
+        public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (34 / 84.0);
         public static final double INV_GEAR_RATIO_BASE             = 1 / GEAR_RATIO_BASE;
         public static final double ELBOW_GEAR_RATIO                = 1 / 64.0;
         public static final double INV_ELBOW_GEAR_RATIO            = 1 / ELBOW_GEAR_RATIO;
@@ -128,12 +128,10 @@ public final class Constants {
                 / CYCLES_PER_SECOND;
 
         public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
-        // public static final double ANGULAR_VELOCITY_UNIT_TICKS =
-        // ANGULAR_VELOCITY_UNIT_DPS / 50.0;
-        public static final double MAXIMUM_VELOCITY_WRIST  = 20D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_ELBOW  = 60D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_BASE   = 10D / CYCLES_PER_SECOND;
-        public static final double MINIMUM_TARGET_DISTANCE = 0.5;
+        public static final double MAXIMUM_VELOCITY_WRIST    = 20D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW    = 60D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE     = 10D / CYCLES_PER_SECOND;
+        public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
 
         public static final double ACCELERATION_TIME  = 0.5;
         public static final double ACCELERATION_WRIST = MAXIMUM_VELOCITY_WRIST / CYCLES_PER_SECOND
@@ -150,15 +148,15 @@ public final class Constants {
         public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE  = 0.03;  // 0.07
+        public static final double kP_BASE  = 0.03;
         public static final double kD_BASE  = 0;
-        public static final double kI_BASE  = 0.001; // kP_BASE / 5.0
-        public static final double kIZ_BASE = 0;     // 7
+        public static final double kI_BASE  = 0.001;
+        public static final double kIZ_BASE = 0;    // degrees
 
-        public static final double kP_ELBOW  = 0.2; // 0.2
+        public static final double kP_ELBOW  = 0.2;
         public static final double kD_ELBOW  = 0;
         public static final double kI_ELBOW  = 0;
-        public static final double kIZ_ELBOW = 0;   // degrees
+        public static final double kIZ_ELBOW = 0;  // degrees
 
         public static final double kP_WRIST  = 0.2;
         public static final double kD_WRIST  = 0;
@@ -169,13 +167,13 @@ public final class Constants {
         public static final double ELBOW_SEGMENT_EFFICIENCY = 1;
         public static final double WRIST_SEGMENT_EFFICIENCY = 0.7;
 
-        public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(17);
-        public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(7);
-        public static final double WRIST_SEGMENT_MASS = 0;
+        public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9);
+        public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6);
+        public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(2);
 
-        public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32.125);
-        public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28.125);
-        public static final double WRIST_SEGMENT_LENGTH = 0;
+        public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32);
+        public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28);
+        public static final double WRIST_SEGMENT_LENGTH = Units.inchesToMeters(21.75);
 
         public static final Translation2d BASE_SEGMENT_CENTER_OF_MASS  = new Translation2d(
                 BASE_SEGMENT_LENGTH / 2, 0);
