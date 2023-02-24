@@ -8,6 +8,7 @@ import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
 import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
+import static frc.robot.Constants.Wiring.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,6 +25,8 @@ import frc.robot.commands.SwerveTeleopDriveCommand;
 import frc.robot.commands.SwerveTeleopSnapRotateCommand;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.Color;
+import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
 import frc.robot.subsystems.arm.ArmElbow;
@@ -50,6 +53,7 @@ public class RobotContainer {
     private final ArmBase          base;
     private final ArmElbow         elbow;
     private final ArmWrist         armWrist;
+    private final Lighting         lighting;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -94,6 +98,9 @@ public class RobotContainer {
         } else {
             vision = null;
         }
+
+        lighting = new Lighting(PWM_RED_PORT, PWM_GREEN_PORT, PWM_BLUE_PORT);
+        lighting.setColor(Color.purpleColor);
         configureBindings();
     }
 
@@ -116,30 +123,31 @@ public class RobotContainer {
             controller0.xButton.onTrue(arm.moveToLocations(2));
             controller0.yButton.onTrue(arm.moveToLocations(3));
             controller0.rightStickButton.onTrue(arm.moveToLocations(4));
+
             // controller0.aButton.onTrue(Commands.parallel(
             // elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
             // controller0.bButton.onTrue(elbow.setAngleCommandPos(7));
             // controller0.yButton.onTrue(elbow.setAngleCommandPos(0));
             // controller0.leftBumper.onTrue(base.setAngleCommandPos(6));
-            controller0.leftStickButton.onTrue(
-                    Commands.parallel(base.resetEncoderForTesting(90),
-                            elbow.resetEncoderForTesting(90)));
+            controller0.leftStickButton.onTrue(Commands.parallel(base.resetEncoderForTesting(90),
+                    elbow.resetEncoderForTesting(90)));
         }
         if (GRABBER_ENABLED) {
-            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                    controller1);
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
         }
         if (CHASSIS_ENABLED) {
-            swerve.setDefaultCommand(
-                    new SwerveTeleopDriveCommand(swerve, controller0));
-            controller0.leftBumper.onTrue(
-                    new SwerveTeleopSnapRotateCommand(swerve, false));
-            controller0.rightBumper.onTrue(
-                    new SwerveTeleopSnapRotateCommand(swerve, true));
+            swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
+            controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
+            controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
+        Command toPurple = new InstantCommand(() -> lighting.setColor(Color.purpleColor));
+        Command toGreen = new InstantCommand(() -> lighting.setColor(Color.greenColor));
+        controller0.aButton.onTrue(toPurple);
+        controller0.bButton.onTrue(toGreen);
+
     }
 
     /**
@@ -149,18 +157,14 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         Rotation2d degrees180 = Rotation2d.fromDegrees(180);
-        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180),
-                new Pose2d(11, 2.75, degrees180),
-                new Pose2d(11, 4.75, degrees180),
-                new Pose2d(13, 4.75, degrees180),
+        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180), new Pose2d(11, 2.75, degrees180),
+                new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
                 new Pose2d(13, 2.75, degrees180) };
-        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(
-                waypoints);
+        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
         SmartDashboard.putNumber("Trajectory time", trajectory.time);
         swerve.displayTrajectory(trajectory);
         return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
                 true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
-                      .andThen(() -> SmartDashboard.putBoolean("Auto active",
-                              false));
+                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false));
     }
 }

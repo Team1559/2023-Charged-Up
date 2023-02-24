@@ -32,6 +32,7 @@ public class TeleopWristAngleCommand extends CommandBase {
         } else {
             wrist.setAngle(x * (SERVO_RANGE / 2));
         }
+        System.out.println(wrist.getAngle());
 
         // if (Math.abs(x) > deadband) {
         // if (x < 0) {
