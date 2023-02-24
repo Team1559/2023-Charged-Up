@@ -62,7 +62,7 @@ public final class Constants {
 
                 // Lighting PWM ports
                 public static final int PWM_RED_PORT   = 1;
-                public static final int PWM_GREEN_PORT = 0;
+                public static final int PWM_GREEN_PORT = 3;
                 public static final int PWM_BLUE_PORT  = 2;
 
         }

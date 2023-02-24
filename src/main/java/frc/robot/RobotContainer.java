@@ -147,6 +147,10 @@ public class RobotContainer {
         Command toGreen = new InstantCommand(() -> lighting.setColor(Color.greenColor));
         controller0.aButton.onTrue(toPurple);
         controller0.bButton.onTrue(toGreen);
+        Command toRed = new InstantCommand(() -> lighting.setColor(Color.redColor));
+        controller0.xButton.onTrue(toRed);
+        Command toBlue = new InstantCommand(() -> lighting.setColor(Color.blueColor));
+        controller0.yButton.onTrue(toBlue);
 
     }
 
