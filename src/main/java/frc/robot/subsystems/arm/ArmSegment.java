@@ -1,12 +1,7 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.Constants.CYCLES_PER_SECOND;
-import static frc.robot.Constants.FALCON_MAX_RPM;
-import static frc.robot.Constants.FALCON_STALL_TORQUE;
-import static frc.robot.Constants.FALCON_TICKS_PER_REV;
-import static frc.robot.Constants.GRAVITY_ACCELERATION;
-import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
-import static frc.robot.Constants.Arm.MINIMUM_TARGET_DISTANCE;
+import static frc.robot.Constants.Arm.*;
+import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -52,10 +47,10 @@ public class ArmSegment extends SubsystemBase {
     private double         stopAccelPoint;
     private double         decelPoint;
 
-    public ArmSegment(String name, int motorID, int cancoderID, double cancoderOffset, double kp,
-            double ki, double kd, double izone, double gearRatio, double[] positions,
-            double efficiency, double maxVelocity, double acceleration, double mass, double length,
-            Translation2d centerOfMass) {
+    public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
+            double izone, double gearRatio, double[] positions, double efficiency,
+            double maxVelocity, double acceleration, double mass, double length,
+            Translation2d centerOfMass, boolean isInverted) {
         this.name = name;
         this.gearRatio = gearRatio;
         this.positions = positions;
@@ -82,27 +77,33 @@ public class ArmSegment extends SubsystemBase {
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Coast);
-
+        motor.configClosedLoopPeakOutput(0, 0.03);
         canCoder = new CANCoder(cancoderID);
-        configCancoder(canCoder, cancoderOffset);
+        configCancoder(canCoder);
         // Configure the CanCoder to be remote sensor 0,
         // then select remote sensor 0 as our PID input.
         motor.configRemoteFeedbackFilter(canCoder, 0);
         motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+        if (isInverted) {
+            motor.configSelectedFeedbackCoefficient(-1);
+            // Motor is mounted in opposite orientation (inverted)
+        }
     }
 
-    private void configCancoder(CANCoder canCoder, double cancoderOffset) {
+    private void configCancoder(CANCoder canCoder) {
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
         config.magnetOffsetDegrees = 0;
+        // setting to true b/c CANcoders are on opposite side of robot
         config.sensorDirection = true;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         canCoder.configAllSettings(config);
-        canCoder.setPosition(canCoder.getAbsolutePosition() - cancoderOffset);
+        // canCoder.setPosition(canCoder.getAbsolutePosition() -
+        // cancoderOffset);
     }
 
     public double getJointAngle() {
-        return tickToAngle(canCoder.getPosition());
+        return tickToAngle(motor.getSelectedSensorPosition());
     }
 
     public double getSetpointGroundAngle() {
@@ -176,14 +177,11 @@ public class ArmSegment extends SubsystemBase {
 
     public double angleToTick(double angle) {
         double revolutionsOfArm = angle / 360.0;
-        double motorRevolutions = revolutionsOfArm * gearRatio;
-        double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;
-        return angleTicks;
+        return revolutionsOfArm * CANCODER_TICKS_PER_REV;
     }
 
     public double tickToAngle(double ticks) {
-        double motorRevolutions = ticks / FALCON_TICKS_PER_REV;
-        double revolutionsOfArm = motorRevolutions / gearRatio;
+        double revolutionsOfArm = ticks / CANCODER_TICKS_PER_REV;
         double angle = revolutionsOfArm * 360;
         return angle;
     }

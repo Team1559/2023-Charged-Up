@@ -31,12 +31,13 @@ public final class Constants {
         public static final boolean VISION_ENABLED  = false;
     }
 
-    public static final double FALCON_TICKS_PER_REV = 2048;
-    public static final double FALCON_MAX_RPM       = 6380;
-    public static final double FALCON_STALL_TORQUE  = 4.69;
-    public static final double GRAVITY_ACCELERATION = 9.8;
-    public static final double NOMINAL_VOLTAGE      = 12D;
-    public static final double CYCLES_PER_SECOND    = 50D;
+    public static final double FALCON_TICKS_PER_REV   = 2048;
+    public static final double CANCODER_TICKS_PER_REV = 4096;
+    public static final double FALCON_MAX_RPM         = 6380;
+    public static final double FALCON_STALL_TORQUE    = 4.69;
+    public static final double GRAVITY_ACCELERATION   = 9.8;
+    public static final double NOMINAL_VOLTAGE        = 12D;
+    public static final double CYCLES_PER_SECOND      = 50D;
 
     public static class Wiring {
         // Swerve drive
@@ -117,7 +118,7 @@ public final class Constants {
     }
 
     public static class Arm {
-        public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (34 / 84.0);
+        public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (38 / 84.0);
         public static final double INV_GEAR_RATIO_BASE             = 1 / GEAR_RATIO_BASE;
         public static final double ELBOW_GEAR_RATIO                = 1 / 64.0;
         public static final double INV_ELBOW_GEAR_RATIO            = 1 / ELBOW_GEAR_RATIO;
@@ -143,10 +144,6 @@ public final class Constants {
 
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
-
-        public static final double BASE_CC_OFFSET      = 0;
-        public static final double ELBOW_CC_OFFSET     = 0;
-        public static final double ARM_WRIST_CC_OFFSET = 0;
 
         public static final double kP_BASE  = 0.03;
         public static final double kD_BASE  = 0;
