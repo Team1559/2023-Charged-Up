@@ -47,7 +47,7 @@ public class ArmSegment extends SubsystemBase {
     private final double[] positions;
     private double         target;
     private boolean        isSetPointCommanded = false;
-    private double         setpoint;
+    private double         setpointJointAngle;
     private double         speed;
     private double         stopAccelPoint;
     private double         decelPoint;
@@ -101,16 +101,17 @@ public class ArmSegment extends SubsystemBase {
         canCoder.setPosition(canCoder.getAbsolutePosition() - cancoderOffset);
     }
 
-    public double getAngle() {
-        return tickToAngle(motor.getSelectedSensorPosition());
+    public double getJointAngle() {
+        return tickToAngle(canCoder.getPosition());
     }
 
-    public double getGroundAngle() {
+    public double getSetpointGroundAngle() {
         if (lowerSegment == null) {
-            // Base segment
-            return setpoint;
+            return setpointJointAngle;
         }
-        return setpoint + lowerSegment.getGroundAngle();
+        // A ground angle is the angle of the previous segment, added to the
+        // angle of the current segment.
+        return setpointJointAngle + lowerSegment.getSetpointGroundAngle();
     }
 
     public double getMass() {
@@ -122,11 +123,11 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public Translation2d getRelativeEndpoint() {
-        return new Translation2d(length, Rotation2d.fromDegrees(setpoint));
+        return new Translation2d(length, Rotation2d.fromDegrees(getSetpointGroundAngle()));
     }
 
     public Translation2d getRelativeCenterOfMass() {
-        Rotation2d pivotPosition = Rotation2d.fromDegrees(setpoint);
+        Rotation2d pivotPosition = Rotation2d.fromDegrees(getSetpointGroundAngle());
         if (higherSegment == null) {
             return centerOfMass.rotateBy(pivotPosition);
         }
@@ -187,19 +188,19 @@ public class ArmSegment extends SubsystemBase {
         return angle;
     }
 
-    public void setDestinationAngle(double angle) {
-        target = angle;
-        setpoint = getAngle();
+    public void setDestinationJointAngle(double destinationJointAngle) {
+        target = destinationJointAngle;
+        setpointJointAngle = getJointAngle();
         isSetPointCommanded = true;
 
-        double displacementToSetpoint = angle - setpoint;
+        double displacementToSetpoint = destinationJointAngle - setpointJointAngle;
         double accelerationDisplacement = Math.copySign(0.5 * maxSpeed * maxSpeed / acceleration,
                 displacementToSetpoint);
-        stopAccelPoint = setpoint + accelerationDisplacement;
+        stopAccelPoint = setpointJointAngle + accelerationDisplacement;
         decelPoint = target - accelerationDisplacement;
     }
 
-    private void setAngleOnMotor(double angle, double velocity, double acceleration) {
+    private void setJointAngleOnMotor(double angle, double velocity, double acceleration) {
         double FF = calculateFeedForward(velocity, acceleration);
         motor.set(TalonFXControlMode.Position, angleToTick(angle), DemandType.ArbitraryFeedForward,
                 FF);
@@ -208,7 +209,7 @@ public class ArmSegment extends SubsystemBase {
     public Command setAngleCommandPos(int angleIndex) {
         double angle = positions[angleIndex];
         return new FunctionalCommand(() -> {
-            setDestinationAngle(angle);
+            setDestinationJointAngle(angle);
         }, () -> {
         }, (a) -> {
         }, () -> {
@@ -216,8 +217,8 @@ public class ArmSegment extends SubsystemBase {
         }, this);
     }
 
-    public boolean IsAtPosition(double angle) {
-        double angleError = Math.abs(angle - getAngle());
+    public boolean IsAtPosition(double jointAngle) {
+        double angleError = Math.abs(jointAngle - getJointAngle());
         return angleError < MAXIMUM_ANGLE_ERROR;
     }
 
@@ -225,31 +226,31 @@ public class ArmSegment extends SubsystemBase {
     public void periodic() {
         if (!DriverStation.isTeleopEnabled()) {
             isSetPointCommanded = false;
-            setpoint = getAngle();
-            target = getAngle();
+            setpointJointAngle = getJointAngle();
+            target = setpointJointAngle;
         }
         double accel = 0;
         double velo = 0;
         if (isSetPointCommanded) {
-            double distanceToTarget = Math.abs(setpoint - target);
+            double distanceToTarget = Math.abs(setpointJointAngle - target);
             if (distanceToTarget <= Math.max(speed, MINIMUM_TARGET_DISTANCE)) {
-                setpoint = target;
+                setpointJointAngle = target;
                 speed = 0;
             } else {
-                if (setpoint > target) {
+                if (setpointJointAngle > target) {
                     // Need to swap comparisons if moving in reverse
-                    if (setpoint <= decelPoint) {
+                    if (setpointJointAngle <= decelPoint) {
                         accel = -acceleration;
                         speed -= acceleration;
-                    } else if (setpoint > stopAccelPoint) {
+                    } else if (setpointJointAngle > stopAccelPoint) {
                         accel = acceleration;
                         speed += acceleration;
                     }
                 } else {
-                    if (setpoint >= decelPoint) {
+                    if (setpointJointAngle >= decelPoint) {
                         accel = -acceleration;
                         speed -= acceleration;
-                    } else if (setpoint < stopAccelPoint) {
+                    } else if (setpointJointAngle < stopAccelPoint) {
                         accel = acceleration;
                         speed += acceleration;
                     }
@@ -259,22 +260,22 @@ public class ArmSegment extends SubsystemBase {
                     speed = maxSpeed * 0.05;
                 }
 
-                double nextSetpoint = setpoint;
-                if (setpoint > target) {
+                double nextSetpoint = setpointJointAngle;
+                if (setpointJointAngle > target) {
                     velo = -speed;
                     nextSetpoint -= speed;
                 } else {
                     velo = speed;
                     nextSetpoint += speed;
                 }
-                if (nextSetpoint >= target != setpoint >= target) {
-                    setpoint = target;
+                if (nextSetpoint >= target != setpointJointAngle >= target) {
+                    setpointJointAngle = target;
                 } else {
-                    setpoint = nextSetpoint;
+                    setpointJointAngle = nextSetpoint;
                 }
             }
 
-            setAngleOnMotor(setpoint, velo * CYCLES_PER_SECOND,
+            setJointAngleOnMotor(setpointJointAngle, velo * CYCLES_PER_SECOND,
                     accel * CYCLES_PER_SECOND * CYCLES_PER_SECOND);
         } else {
             motor.neutralOutput();
@@ -286,8 +287,8 @@ public class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
         SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
         SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
-        SmartDashboard.putNumber(name + " angle: ", getAngle());
-        SmartDashboard.putNumber(name + " setpoint: ", setpoint);
+        SmartDashboard.putNumber(name + " angle: ", getJointAngle());
+        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
         SmartDashboard.putNumber(name + " ff",
                 calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
