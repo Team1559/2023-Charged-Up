@@ -163,9 +163,9 @@ public final class Constants {
         public static final double kI_WRIST  = 0;
         public static final double kIZ_WRIST = 0;  // degrees
 
-        public static final double BASE_SEGMENT_EFFICIENCY  = 0.35;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 1;
-        public static final double WRIST_SEGMENT_EFFICIENCY = 0.7;
+        public static final double BASE_SEGMENT_EFFICIENCY  = 1.0; // 0.35;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 1.0; // 1.0;
+        public static final double WRIST_SEGMENT_EFFICIENCY = 1.0; // 0.7;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9);
         public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6);

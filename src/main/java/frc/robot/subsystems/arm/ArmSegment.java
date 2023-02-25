@@ -163,8 +163,6 @@ public class ArmSegment extends SubsystemBase {
         double kA = calculateKA(totalCenterOfMass);
         return kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
                                                                          .getCos();
-        // return kG * totalCenterOfMass.getAngle()
-        // .getCos();
     }
 
     public void setLowerSegment(ArmSegment lowerSegment) {
