@@ -35,6 +35,6 @@ public class ArmWristCommandsTeleop extends CommandBase {
         } else if (angle < -90) {
             angle = -90;
         }
-        wrist.setAngle(angle);
+        wrist.setDestinationAngle(angle);
     }
 }

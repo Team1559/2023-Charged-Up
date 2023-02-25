@@ -8,6 +8,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
@@ -24,14 +25,18 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = true;
+        public static final boolean CHASSIS_ENABLED = false;
         public static final boolean ARM_ENABLED     = true;
-        public static final boolean GRABBER_ENABLED = true;
-        public static final boolean VISION_ENABLED  = true;
+        public static final boolean GRABBER_ENABLED = false;
+        public static final boolean VISION_ENABLED  = false;
     }
 
     public static final double FALCON_TICKS_PER_REV = 2048;
     public static final double FALCON_MAX_RPM       = 6380;
+    public static final double FALCON_STALL_TORQUE  = 4.69;
+    public static final double GRAVITY_ACCELERATION = 9.8;
+    public static final double NOMINAL_VOLTAGE      = 12D;
+    public static final double CYCLES_PER_SECOND    = 50D;
 
     public static class Wiring {
         // Swerve drive
@@ -44,8 +49,8 @@ public final class Constants {
 
         // Arm wiring ports + ids
         public static final int ARM_MOTOR_ID_BASE         = 18;
-        public static final int ARM_MOTOR_ID_ELBOW        = 41;
-        public static final int ARM_MOTOR_ID_WRIST        = 42;
+        public static final int ARM_MOTOR_ID_ELBOW        = 17;
+        public static final int ARM_MOTOR_ID_WRIST        = 19;
         public static final int BASE_CANCODER_ID          = 2;
         public static final int ELBOW_CANCODER_ID         = 3;
         public static final int ARM_WRIST_CANCODER_ID     = 4;
@@ -114,39 +119,71 @@ public final class Constants {
     public static class Arm {
         public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (50 / 72.0);
         public static final double INV_GEAR_RATIO_BASE             = 1 / GEAR_RATIO_BASE;
-        public static final double ARM_WRIST_GEAR_RATIO            = 1;
+        public static final double ELBOW_GEAR_RATIO                = 1 / 64.0;
+        public static final double INV_ELBOW_GEAR_RATIO            = 1 / ELBOW_GEAR_RATIO;
+        public static final double ARM_WRIST_GEAR_RATIO            = 1 / 64.0;
+        public static final double INV_ARM_WRIST_GEAR_RATIO        = 1 / ARM_WRIST_GEAR_RATIO;
         public static final double TELEOP_ANGLE_VELOCITY           = 90D;
-        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY / 50.0;
-        public static final double ZERO_ANGLE                      = 0;
-        public static final double MAXIMUM_ANGLE_ERROR             = 2;
+        public static final double TELEOP_ANGLE_VELOCITY_PER_CYCLE = TELEOP_ANGLE_VELOCITY
+                / CYCLES_PER_SECOND;
+
+        public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
+        // public static final double ANGULAR_VELOCITY_UNIT_TICKS =
+        // ANGULAR_VELOCITY_UNIT_DPS / 50.0;
+        public static final double MAXIMUM_VELOCITY_WRIST  = 20D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW  = 60D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE   = 10D / CYCLES_PER_SECOND;
+        public static final double MINIMUM_TARGET_DISTANCE = 0.5;
+
+        public static final double ACCELERATION_TIME  = 0.5;
+        public static final double ACCELERATION_WRIST = MAXIMUM_VELOCITY_WRIST / CYCLES_PER_SECOND
+                / ACCELERATION_TIME;
+        public static final double ACCELERATION_ELBOW = MAXIMUM_VELOCITY_ELBOW / CYCLES_PER_SECOND
+                / ACCELERATION_TIME;
+        public static final double ACCELERATION_BASE  = MAXIMUM_VELOCITY_BASE / CYCLES_PER_SECOND
+                / ACCELERATION_TIME;
+
+        public static final double ZERO_ANGLE          = 0;
+        public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
         public static final double BASE_CC_OFFSET      = 0;
         public static final double ELBOW_CC_OFFSET     = 0;
         public static final double ARM_WRIST_CC_OFFSET = 0;
 
-        public static final double kP_BASE = 0.2;
-        public static final double kD_BASE = 0;
-        public static final double kI_BASE = 0;
-        public static final double kG_BASE = 1.36;
-        public static final double kV_BASE = 1.54;
-        public static final double kS_BASE = 0;
-        public static final double kA_BASE = 0.17;
+        public static final double kP_BASE  = 0.03;  // 0.07
+        public static final double kD_BASE  = 0;
+        public static final double kI_BASE  = 0.001; // kP_BASE / 5.0
+        public static final double kIZ_BASE = 0;     // 7
 
-        public static final double kP_ELBOW = 0.2;
-        public static final double kD_ELBOW = 0;
-        public static final double kI_ELBOW = 0;
-        public static final double kG_ELBOW = 0;
-        public static final double kV_ELBOW = 0;
-        public static final double kS_ELBOW = 0;
-        public static final double kA_ELBOW = 0;
+        public static final double kP_ELBOW  = 0.2; // 0.2
+        public static final double kD_ELBOW  = 0;
+        public static final double kI_ELBOW  = 0;
+        public static final double kIZ_ELBOW = 0;   // degrees
 
-        public static final double kP_WRIST = 0.2;
-        public static final double kD_WRIST = 0;
-        public static final double kI_WRIST = 0;
-        public static final double kG_WRIST = 0;
-        public static final double kV_WRIST = 0;
-        public static final double kS_WRIST = 0;
-        public static final double kA_WRIST = 0;
+        public static final double kP_WRIST  = 0.2;
+        public static final double kD_WRIST  = 0;
+        public static final double kI_WRIST  = 0;
+        public static final double kIZ_WRIST = 0;  // degrees
+
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.35;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 1;
+        public static final double WRIST_SEGMENT_EFFICIENCY = 0.7;
+
+        public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(17);
+        public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(7);
+        public static final double WRIST_SEGMENT_MASS = 0;
+
+        public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32.125);
+        public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28.125);
+        public static final double WRIST_SEGMENT_LENGTH = 0;
+
+        public static final Translation2d BASE_SEGMENT_CENTER_OF_MASS  = new Translation2d(
+                BASE_SEGMENT_LENGTH / 2, 0);
+        public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
+                ELBOW_SEGMENT_LENGTH / 2, 0);
+        public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
+                WRIST_SEGMENT_LENGTH / 2, 0);
+
     }
 
     public static class Grabber {
