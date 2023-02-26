@@ -36,9 +36,9 @@ public class Lighting {
     }
 
     public void setColor(Color color) {
-        redDO.updateDutyCycle(1.0 - color.red / 255.0);
-        greenDO.updateDutyCycle(1.0 - color.green / 255.0);
-        blueDO.updateDutyCycle(1.0 - color.blue / 255.0);
+        redDO.updateDutyCycle(1.0 - (color.red / 255.0));
+        greenDO.updateDutyCycle(1.0 - (color.green / 255.0));
+        blueDO.updateDutyCycle(1.0 - (color.blue / 255.0));
         // System.out.println(
         // "Color has been set to " + color.red + ", " + color.green + ", " +
         // color.blue);

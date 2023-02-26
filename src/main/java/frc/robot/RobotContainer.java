@@ -143,15 +143,16 @@ public class RobotContainer {
             controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
             controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
-        Command toPurple = new InstantCommand(() -> lighting.setColor(Color.purpleColor));
         Command toGreen = new InstantCommand(() -> lighting.setColor(Color.greenColor));
-        controller0.aButton.onTrue(toPurple);
-        controller0.bButton.onTrue(toGreen);
         Command toRed = new InstantCommand(() -> lighting.setColor(Color.redColor));
-        controller0.xButton.onTrue(toRed);
         Command toBlue = new InstantCommand(() -> lighting.setColor(Color.blueColor));
-        controller0.yButton.onTrue(toBlue);
-
+        // Command toPurple = new InstantCommand(() ->
+        // lighting.setColor(Color.purpleColor));
+        Command toOff = new InstantCommand(() -> lighting.setColor(Color.off));
+        controller0.aButton.onTrue(toGreen);
+        controller0.bButton.onTrue(toRed);
+        controller0.xButton.onTrue(toBlue);
+        controller0.yButton.onTrue(toOff);
     }
 
     /**
