@@ -60,9 +60,11 @@ public class RobotContainer {
         if (ARM_ENABLED) {
             base = new ArmBase();
             elbow = new ArmElbow();
+            armWrist = new ArmWrist();
             base.setHigherSegment(elbow);
             elbow.setLowerSegment(base);
-            armWrist = null;
+            elbow.setHigherSegment(armWrist);
+            armWrist.setLowerSegment(elbow);
             arm = new Arm(base, elbow, armWrist);
         } else {
             base = null;

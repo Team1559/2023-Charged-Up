@@ -91,15 +91,12 @@ public class ArmSegment extends SubsystemBase {
     }
 
     private void configCancoder(CANCoder canCoder) {
-        CANCoderConfiguration config = new CANCoderConfiguration();
-        config.absoluteSensorRange = AbsoluteSensorRange.Signed_PlusMinus180;
-        config.magnetOffsetDegrees = 0;
+        canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         // setting to true b/c CANcoders are on opposite side of robot
-        config.sensorDirection = true;
-        config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
-        canCoder.configAllSettings(config);
-        // canCoder.setPosition(canCoder.getAbsolutePosition() -
-        // cancoderOffset);
+        canCoder.configSensorDirection(true);
+        canCoder.configSensorInitializationStrategy(
+                SensorInitializationStrategy.BootToAbsolutePosition);
+        canCoder.setPosition(canCoder.getAbsolutePosition());
     }
 
     public double getJointAngle() {
@@ -286,6 +283,8 @@ public class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
         SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
+        SmartDashboard.putNumber(name + "CANCoder Angle: ", canCoder.getAbsolutePosition());
+        SmartDashboard.putNumber(name + "CANCoder Relative: ", canCoder.getPosition());
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
         SmartDashboard.putNumber(name + " ff",
                 calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
