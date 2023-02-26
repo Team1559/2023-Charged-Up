@@ -5,7 +5,7 @@ import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_WRIST;
 import static frc.robot.Constants.Wiring.ARM_WRIST_CANCODER_ID;
 
 public class ArmWrist extends ArmSegment {
-    private static final double[] wristPos = { -48, 45/*-93*/, -15, -33, 0, 0, 0, 0, 0, 0 };
+    private static final double[] wristPos = { -48, -93, -15, -33, 0, 0, 0, 0, 0, 0 };
 
     public ArmWrist() {
         super("Wrist", ARM_MOTOR_ID_WRIST, ARM_WRIST_CANCODER_ID, kP_WRIST, kI_WRIST, kD_WRIST,
