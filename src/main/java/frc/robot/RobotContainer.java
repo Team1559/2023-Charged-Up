@@ -112,17 +112,16 @@ public class RobotContainer {
      */
     private void configureBindings() {
         if (ARM_ENABLED) {
-            controller0.aButton.onTrue(arm.moveToLocations(0));
-            controller0.bButton.onTrue(arm.moveToLocations(1));
-            controller0.xButton.onTrue(arm.moveToLocations(2));
-            controller0.yButton.onTrue(arm.moveToLocations(3));
-            controller0.rightStickButton.onTrue(arm.moveToLocations(4));
+            // controller0.aButton.onTrue(arm.moveToLocations(0));
+            // controller0.bButton.onTrue(arm.moveToLocations(1));
+            // controller0.xButton.onTrue(arm.moveToLocations(2));
+            // controller0.yButton.onTrue(arm.moveToLocations(3));
+            // controller0.rightStickButton.onTrue(arm.moveToLocations(4));
 
-            // controller0.aButton.onTrue(Commands.parallel(
-            // elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
-            // controller0.bButton.onTrue(elbow.setAngleCommandPos(7));
-            // controller0.yButton.onTrue(elbow.setAngleCommandPos(0));
-            // controller0.leftBumper.onTrue(base.setAngleCommandPos(6));
+            controller0.aButton.onTrue(armWrist.setAngleCommandPos(0));
+            controller0.bButton.onTrue(armWrist.setAngleCommandPos(1));
+            controller0.xButton.onTrue(armWrist.setAngleCommandPos(2));
+            controller0.yButton.onTrue(armWrist.setAngleCommandPos(3));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);

@@ -132,7 +132,7 @@ public final class Constants {
                                 / CYCLES_PER_SECOND;
 
                 public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
-                public static final double MAXIMUM_VELOCITY_WRIST    = 20D / CYCLES_PER_SECOND;
+                public static final double MAXIMUM_VELOCITY_WRIST    = 60D / CYCLES_PER_SECOND;
                 public static final double MAXIMUM_VELOCITY_ELBOW    = 60D / CYCLES_PER_SECOND;
                 public static final double MAXIMUM_VELOCITY_BASE     = 10D / CYCLES_PER_SECOND;
                 public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
@@ -158,10 +158,10 @@ public final class Constants {
                 public static final double kI_ELBOW  = 0;
                 public static final double kIZ_ELBOW = 0;  // degrees
 
-                public static final double kP_WRIST  = 0.2;
+                public static final double kP_WRIST  = 1;
                 public static final double kD_WRIST  = 0;
                 public static final double kI_WRIST  = 0;
-                public static final double kIZ_WRIST = 0;  // degrees
+                public static final double kIZ_WRIST = 0; // degrees
 
                 public static final double BASE_SEGMENT_EFFICIENCY  = 1.0; // 0.35;
                 public static final double ELBOW_SEGMENT_EFFICIENCY = 1.0; // 1.0;
@@ -169,18 +169,18 @@ public final class Constants {
 
                 public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9);
                 public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6);
-                public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(2);
+                public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(2.5);
 
                 public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32);
                 public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28);
                 public static final double WRIST_SEGMENT_LENGTH = Units.inchesToMeters(21.75);
 
                 public static final Translation2d BASE_SEGMENT_CENTER_OF_MASS  = new Translation2d(
-                                BASE_SEGMENT_LENGTH / 2, 0);
+                                BASE_SEGMENT_LENGTH * 0.55, 0);
                 public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                                ELBOW_SEGMENT_LENGTH / 2, 0);
+                                ELBOW_SEGMENT_LENGTH * 0.55, 0);
                 public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                                WRIST_SEGMENT_LENGTH / 2, 0);
+                                WRIST_SEGMENT_LENGTH * .30, 0);
 
         }
 
