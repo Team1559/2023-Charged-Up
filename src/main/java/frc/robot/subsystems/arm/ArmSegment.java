@@ -50,7 +50,7 @@ public class ArmSegment extends SubsystemBase {
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
             double izone, double gearRatio, double[] positions, double efficiency,
             double maxVelocity, double acceleration, double mass, double length,
-            Translation2d centerOfMass, boolean isInverted) {
+            Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit) {
         this.name = name;
         this.gearRatio = gearRatio;
         this.positions = positions;
@@ -78,6 +78,8 @@ public class ArmSegment extends SubsystemBase {
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Coast);
         motor.configClosedLoopPeakOutput(0, 0.1);
+        motor.configForwardSoftLimitThreshold(upperLimit);
+        motor.configReverseSoftLimitThreshold(lowerLimit);
         canCoder = new CANCoder(cancoderID);
         configCancoder(canCoder);
         // Configure the CanCoder to be remote sensor 0,
@@ -191,6 +193,9 @@ public class ArmSegment extends SubsystemBase {
         double displacementToSetpoint = destinationJointAngle - setpointJointAngle;
         double accelerationDisplacement = Math.copySign(0.5 * maxSpeed * maxSpeed / acceleration,
                 displacementToSetpoint);
+        if (Math.abs(accelerationDisplacement) > Math.abs(displacementToSetpoint / 2)) {
+            accelerationDisplacement = displacementToSetpoint / 2;
+        }
         stopAccelPoint = setpointJointAngle + accelerationDisplacement;
         decelPoint = target - accelerationDisplacement;
     }
@@ -290,6 +295,7 @@ public class ArmSegment extends SubsystemBase {
                 calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
         SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        SmartDashboard.putNumber(name + " speed: ", speed);
     }
 
     private static String formatPolar(Translation2d t) {

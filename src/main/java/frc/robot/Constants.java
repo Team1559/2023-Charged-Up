@@ -160,8 +160,8 @@ public final class Constants {
 
                 public static final double kP_WRIST  = 1;
                 public static final double kD_WRIST  = 0;
-                public static final double kI_WRIST  = 0;
-                public static final double kIZ_WRIST = 0; // degrees
+                public static final double kI_WRIST  = 0.1;
+                public static final double kIZ_WRIST = 3;  // degrees
 
                 public static final double BASE_SEGMENT_EFFICIENCY  = 1.0; // 0.35;
                 public static final double ELBOW_SEGMENT_EFFICIENCY = 1.0; // 1.0;
@@ -181,6 +181,13 @@ public final class Constants {
                                 ELBOW_SEGMENT_LENGTH * 0.55, 0);
                 public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
                                 WRIST_SEGMENT_LENGTH * .30, 0);
+
+                public static final double LOWER_ARM_WRIST_LIMIT = -95.0;
+                public static final double UPPER_ARM_WRIST_LIMIT = 60.0;
+                public static final double LOWER_ELBOW_LIMIT     = 145.0;
+                public static final double UPPER_ELBOW_LIMIT     = 0.0;
+                public static final double LOWER_BASE_LIMIT      = 50.0;
+                public static final double UPPER_BASE_LIMIT      = 93.0;
 
         }
 
