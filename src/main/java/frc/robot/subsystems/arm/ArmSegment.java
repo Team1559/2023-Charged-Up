@@ -46,15 +46,17 @@ public class ArmSegment extends SubsystemBase {
     private double         speed;
     private double         stopAccelPoint;
     private double         decelPoint;
+    private boolean        isInverted;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
             double izone, double gearRatio, double[] positions, double efficiency,
             double maxVelocity, double acceleration, double mass, double length,
-            Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit) {
+            Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
+            double closedLoopErrorValue) {
         this.name = name;
         this.gearRatio = gearRatio;
         this.positions = positions;
-
+        this.isInverted = isInverted;
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
         this.efficiency = efficiency;
@@ -63,7 +65,11 @@ public class ArmSegment extends SubsystemBase {
         this.centerOfMass = centerOfMass;
 
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
-
+        if (isInverted) {
+            kd *= -1;
+            kp *= -1;
+            ki *= -1;
+        }
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
@@ -86,10 +92,15 @@ public class ArmSegment extends SubsystemBase {
         // then select remote sensor 0 as our PID input.
         motor.configRemoteFeedbackFilter(canCoder, 0);
         motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
-        if (isInverted) {
-            motor.configSelectedFeedbackCoefficient(-1);
-            // Motor is mounted in opposite orientation (inverted)
-        }
+
+        // motor.configAllowableClosedloopError(0, closedLoopErrorValue);
+
+        // if (isInverted) {
+        // motor.configSelectedFeedbackCoefficient(-1);
+        // Motor is mounted in opposite orientation (inverted)
+        // }
+        // motor.setInverted(isInverted);
+
     }
 
     private void configCancoder(CANCoder canCoder) {
@@ -158,12 +169,19 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double calculateFeedForward(double velocity, double acceleration) {
+        int inversionCoefficient = 0;
+        if (isInverted) {
+            inversionCoefficient = -1;
+        } else {
+            inversionCoefficient = 1;
+        }
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
-        return kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
-                                                                         .getCos();
+        return (kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
+                                                                          .getCos())
+                * inversionCoefficient;
     }
 
     public void setLowerSegment(ArmSegment lowerSegment) {

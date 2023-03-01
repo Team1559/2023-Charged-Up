@@ -118,10 +118,12 @@ public class RobotContainer {
             // controller0.yButton.onTrue(arm.moveToLocations(3));
             // controller0.rightStickButton.onTrue(arm.moveToLocations(4));
 
-            controller0.aButton.onTrue(armWrist.setAngleCommandPos(0));
-            controller0.bButton.onTrue(armWrist.setAngleCommandPos(1));
-            controller0.xButton.onTrue(armWrist.setAngleCommandPos(2));
-            controller0.yButton.onTrue(armWrist.setAngleCommandPos(3));
+            controller0.aButton.onTrue(elbow.setAngleCommandPos(0));
+            controller0.bButton.onTrue(elbow.setAngleCommandPos(1));
+            controller0.xButton.onTrue(elbow.setAngleCommandPos(2));
+            controller0.yButton.onTrue(elbow.setAngleCommandPos(3));
+            controller0.leftBumper.onTrue(armWrist.setAngleCommandPos(1));
+            controller0.rightBumper.onTrue(base.setAngleCommandPos(9));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);

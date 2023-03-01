@@ -12,7 +12,7 @@ public class ArmElbow extends ArmSegment {
                 kIZ_ELBOW, INV_ELBOW_GEAR_RATIO, elbowPos, ELBOW_SEGMENT_EFFICIENCY,
                 MAXIMUM_VELOCITY_ELBOW, ACCELERATION_ELBOW, ELBOW_SEGMENT_MASS,
                 ELBOW_SEGMENT_LENGTH, ELBOW_SEGMENT_CENTER_OF_MASS, true, LOWER_ELBOW_LIMIT,
-                UPPER_ELBOW_LIMIT);
+                UPPER_ELBOW_LIMIT, ELBOW_CLOSED_LOOP_ERROR);
     }
 }
 // -145 -> 0

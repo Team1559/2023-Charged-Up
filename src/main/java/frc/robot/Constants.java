@@ -148,15 +148,15 @@ public final class Constants {
                 public static final double ZERO_ANGLE          = 0;
                 public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
-                public static final double kP_BASE  = 0.03;
+                public static final double kP_BASE  = 0.00;
                 public static final double kD_BASE  = 0;
-                public static final double kI_BASE  = 0.001;
+                public static final double kI_BASE  = 0.000;
                 public static final double kIZ_BASE = 0;    // degrees
 
-                public static final double kP_ELBOW  = 0.2;
+                public static final double kP_ELBOW  = 0;
                 public static final double kD_ELBOW  = 0;
                 public static final double kI_ELBOW  = 0;
-                public static final double kIZ_ELBOW = 0;  // degrees
+                public static final double kIZ_ELBOW = 0; // degrees
 
                 public static final double kP_WRIST  = 1;
                 public static final double kD_WRIST  = 0;
@@ -167,20 +167,20 @@ public final class Constants {
                 public static final double ELBOW_SEGMENT_EFFICIENCY = 1.0; // 1.0;
                 public static final double WRIST_SEGMENT_EFFICIENCY = 1.0; // 0.7;
 
-                public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9);
-                public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6);
-                public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(2.5);
+                public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);
+                public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6.5);
+                public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(5.5);
 
                 public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32);
                 public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28);
                 public static final double WRIST_SEGMENT_LENGTH = Units.inchesToMeters(21.75);
 
                 public static final Translation2d BASE_SEGMENT_CENTER_OF_MASS  = new Translation2d(
-                                BASE_SEGMENT_LENGTH * 0.55, 0);
+                                Units.inchesToMeters(19), 0);
                 public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                                ELBOW_SEGMENT_LENGTH * 0.55, 0);
+                                Units.inchesToMeters(16), 0);
                 public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                                WRIST_SEGMENT_LENGTH * .30, 0);
+                                Units.inchesToMeters(9.5), 0);
 
                 public static final double LOWER_ARM_WRIST_LIMIT = -95.0;
                 public static final double UPPER_ARM_WRIST_LIMIT = 60.0;
@@ -189,6 +189,9 @@ public final class Constants {
                 public static final double LOWER_BASE_LIMIT      = 50.0;
                 public static final double UPPER_BASE_LIMIT      = 93.0;
 
+                public static final double BASE_CLOSED_LOOP_ERROR  = 1;
+                public static final double ELBOW_CLOSED_LOOP_ERROR = 1;
+                public static final double WRIST_CLOSED_LOOP_ERROR = 1;
         }
 
         public static class Grabber {
