@@ -99,9 +99,9 @@ public class RobotContainer {
             vision = null;
         }
 
-        lighting = new Lighting(PWM_RED_PORT, PWM_GREEN_PORT, PWM_BLUE_PORT);
-        lighting.setColor(Color.purpleColor);
-        configureBindings();
+        lighting = new Lighting(0, 8);
+        // lighting.setColor(Color.purpleColor);
+        // configureBindings();
     }
 
     /**
@@ -143,16 +143,20 @@ public class RobotContainer {
             controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
             controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
-        Command toGreen = new InstantCommand(() -> lighting.setColor(Color.greenColor));
-        Command toRed = new InstantCommand(() -> lighting.setColor(Color.redColor));
-        Command toBlue = new InstantCommand(() -> lighting.setColor(Color.blueColor));
+        // Command toGreen = new InstantCommand(() ->
+        // lighting.setColor(Color.greenColor));
+        // Command toRed = new InstantCommand(() ->
+        // lighting.setColor(Color.redColor));
+        // Command toBlue = new InstantCommand(() ->
+        // lighting.setColor(Color.blueColor));
         // Command toPurple = new InstantCommand(() ->
         // lighting.setColor(Color.purpleColor));
-        Command toOff = new InstantCommand(() -> lighting.setColor(Color.off));
-        controller0.aButton.onTrue(toGreen);
-        controller0.bButton.onTrue(toRed);
-        controller0.xButton.onTrue(toBlue);
-        controller0.yButton.onTrue(toOff);
+        // Command toOff = new InstantCommand(() ->
+        // lighting.setColor(Color.off));
+        // controller0.aButton.onTrue(toGreen);
+        // controller0.bButton.onTrue(toRed);
+        // controller0.xButton.onTrue(toBlue);
+        // controller0.yButton.onTrue(toOff);
     }
 
     /**

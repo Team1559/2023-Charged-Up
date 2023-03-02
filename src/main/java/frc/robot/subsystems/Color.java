@@ -16,9 +16,9 @@ public class Color {
     public static final Color redColor    = new Color(255, 0, 0);
     public static final Color greenColor  = new Color(0, 255, 0);
     public static final Color blueColor   = new Color(0, 0, 255);
-    public static final Color yellowColor = new Color(255, 255, 0);
+    public static final Color yellowColor = new Color(255, 128, 0);
     public static final Color cyanColor   = new Color(0, 255, 255);
-    public static final Color purpleColor = new Color(155, 0, 255);
+    public static final Color purpleColor = new Color(64, 0, 255);
     public static final Color off         = new Color(0, 0, 0);
 
 }
