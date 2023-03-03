@@ -5,7 +5,7 @@ import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_ELBOW;
 import static frc.robot.Constants.Wiring.ELBOW_CANCODER_ID;
 
 public class ArmElbow extends ArmSegment {
-    private static final double[] elbowPos = { -140, -113, -50, -88, -30, 30, 45, 60, 75, 90 };
+    private static final double[] elbowPos = { -140, -113, -50, -88, -52, 30, 45, 60, 75, 90 };
 
     public ArmElbow() {
         super("Elbow", ARM_MOTOR_ID_ELBOW, ELBOW_CANCODER_ID, kP_ELBOW, kI_ELBOW, kD_ELBOW,

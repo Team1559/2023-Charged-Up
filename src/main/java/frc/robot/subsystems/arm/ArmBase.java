@@ -5,7 +5,7 @@ import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_BASE;
 import static frc.robot.Constants.Wiring.BASE_CANCODER_ID;
 
 public class ArmBase extends ArmSegment {
-    private static final double[] basePos = { 91, 90, 63, 83, 30, 50, 60, 70, 80, 90 };
+    private static final double[] basePos = { 91, 90, 63, 83, 53, 50, 60, 70, 80, 90 };
 
     public ArmBase() {
         super("Base", ARM_MOTOR_ID_BASE, BASE_CANCODER_ID, kP_BASE, kI_BASE, kD_BASE, kIZ_BASE,
