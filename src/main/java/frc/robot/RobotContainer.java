@@ -8,7 +8,6 @@ import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
 import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
-import static frc.robot.Constants.Wiring.*;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,8 +24,6 @@ import frc.robot.commands.SwerveTeleopDriveCommand;
 import frc.robot.commands.SwerveTeleopSnapRotateCommand;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
-import frc.robot.subsystems.Color;
-import frc.robot.subsystems.Lighting;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
 import frc.robot.subsystems.arm.ArmElbow;
@@ -53,7 +50,6 @@ public class RobotContainer {
     private final ArmBase          base;
     private final ArmElbow         elbow;
     private final ArmWrist         armWrist;
-    private final Lighting         lighting;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and
@@ -98,10 +94,7 @@ public class RobotContainer {
         } else {
             vision = null;
         }
-
-        lighting = new Lighting(0, 8);
-        // lighting.setColor(Color.purpleColor);
-        // configureBindings();
+        configureBindings();
     }
 
     /**
@@ -123,7 +116,6 @@ public class RobotContainer {
             controller0.xButton.onTrue(arm.moveToLocations(2));
             controller0.yButton.onTrue(arm.moveToLocations(3));
             controller0.rightStickButton.onTrue(arm.moveToLocations(4));
-
             // controller0.aButton.onTrue(Commands.parallel(
             // elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
             // controller0.bButton.onTrue(elbow.setAngleCommandPos(7));
@@ -143,20 +135,6 @@ public class RobotContainer {
             controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
             controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
-        // Command toGreen = new InstantCommand(() ->
-        // lighting.setColor(Color.greenColor));
-        // Command toRed = new InstantCommand(() ->
-        // lighting.setColor(Color.redColor));
-        // Command toBlue = new InstantCommand(() ->
-        // lighting.setColor(Color.blueColor));
-        // Command toPurple = new InstantCommand(() ->
-        // lighting.setColor(Color.purpleColor));
-        // Command toOff = new InstantCommand(() ->
-        // lighting.setColor(Color.off));
-        // controller0.aButton.onTrue(toGreen);
-        // controller0.bButton.onTrue(toRed);
-        // controller0.xButton.onTrue(toBlue);
-        // controller0.yButton.onTrue(toOff);
     }
 
     /**
