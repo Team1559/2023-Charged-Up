@@ -9,11 +9,15 @@ import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
+import java.util.Map;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
@@ -110,6 +114,18 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
+    private enum CommandSelector {
+        CONE,
+        CUBE
+    }
+
+    private CommandSelector selectModifier() {
+        if (controller1.getLeftBumper()) {
+            return CommandSelector.CUBE;
+        }
+        return CommandSelector.CONE;
+    }
+
     private void configureBindings() {
         if (ARM_ENABLED) {
             // controller1.aButton.onTrue(elbow.setAngleCommandPos(0));
@@ -119,18 +135,29 @@ public class RobotContainer {
             // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
             // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
             // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
-
-            controller1.aButton.onTrue(arm.moveArmToPosition(0)); // cone 3
-            controller1.yButton.onTrue(arm.moveArmToPosition(1)); // cone 2
-            controller1.xButton.onTrue(arm.moveArmToPosition(2)); // cone 1
-            controller1.bButton.onTrue(arm.moveArmToPosition(7)); // travel
-
+            controller1.yButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(CommandSelector.CONE, arm.moveToLocations(6, 0)),
+                            Map.entry(CommandSelector.CUBE, arm.moveToLocations(6, 5))),
+                    this::selectModifier));
+            controller1.xButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(CommandSelector.CONE, arm.moveToLocations(6, 1)),
+                            Map.entry(CommandSelector.CUBE, arm.moveToLocations(6, 4))),
+                    this::selectModifier));
+            controller1.bButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(CommandSelector.CONE, arm.moveToLocations(2)),
+                            Map.entry(CommandSelector.CUBE, arm.moveToLocations(3))),
+                    this::selectModifier));
+            controller1.aButton.onTrue(arm.moveToLocations(7));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
-            controller1.startButton.onTrue(claw.closeClawCommand());
-            controller1.leftStickButton.onTrue(claw.openClawCommand());
+            controller1.leftStickButton.onTrue(claw.closeClawCommand());
+            controller1.rightStickButton.onTrue(claw.openClawCommand());
+        }
+        if (GRABBER_ENABLED && ARM_ENABLED) {
+            controller1.rightBumper.onTrue(new SequentialCommandGroup(claw.openClawCommand(),
+                    arm.moveToLocations(9, 10), claw.closeClawCommand(), arm.moveToLocations(7)));
         }
         if (CHASSIS_ENABLED) {
             swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
