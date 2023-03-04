@@ -4,15 +4,30 @@
 
 package frc.robot;
 
-import static frc.robot.Constants.FeatureFlags.*;
+import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
+import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
+import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
+import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
-
-import frc.robot.subsystems.arm.*;
+import frc.lib.SwerveTrajectory;
+import frc.lib.SwerveTrajectoryGenerator;
+import frc.robot.commands.SwerveTeleopDriveCommand;
+import frc.robot.commands.SwerveTeleopSnapRotateCommand;
+import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.ArmBase;
+import frc.robot.subsystems.arm.ArmElbow;
+import frc.robot.subsystems.arm.ArmWrist;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -32,7 +47,7 @@ public class RobotContainer {
     private final GrabberWrist     wrist;
     private final GrabberClaw      claw;
     private final Vision           vision;
-    private final FullArmCommands  arm;
+    private final Arm              arm;
     private final ArmBase          base;
     private final ArmElbow         elbow;
     private final ArmWrist         armWrist;
@@ -45,13 +60,21 @@ public class RobotContainer {
         autoRouteChooser = new AutoRouteChooser();
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
-        base = new ArmBase();
-        elbow = new ArmElbow();
-        armWrist = new ArmWrist();
-        arm = new FullArmCommands(base, elbow, armWrist);
-
+        if (ARM_ENABLED) {
+            base = new ArmBase();
+            elbow = new ArmElbow();
+            base.setHigherSegment(elbow);
+            elbow.setLowerSegment(base);
+            armWrist = null;
+            arm = new Arm(base, elbow, armWrist);
+        } else {
+            base = null;
+            elbow = null;
+            armWrist = null;
+            arm = null;
+        }
         if (CHASSIS_ENABLED) {
-            swerve = new SwerveDrive(controller0);
+            swerve = new SwerveDrive();
         } else {
             swerve = null;
         }
@@ -89,21 +112,30 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        controller0.aButton.onTrue(base.setBaseAngleCommandPos(0));
-        controller0.bButton.onTrue(base.setBaseAngleCommandPos(1));
-        controller0.yButton.onTrue(base.setBaseAngleCommandPos(2));
+        if (ARM_ENABLED) {
+            controller0.aButton.onTrue(arm.moveToLocations(0));
+            controller0.bButton.onTrue(arm.moveToLocations(1));
+            controller0.xButton.onTrue(arm.moveToLocations(2));
+            controller0.yButton.onTrue(arm.moveToLocations(3));
+            controller0.rightStickButton.onTrue(arm.moveToLocations(4));
+            // controller0.aButton.onTrue(Commands.parallel(
+            // elbow.setAngleCommandPos(9), base.setAngleCommandPos(9)));
+            // controller0.bButton.onTrue(elbow.setAngleCommandPos(7));
+            // controller0.yButton.onTrue(elbow.setAngleCommandPos(0));
+            // controller0.leftBumper.onTrue(base.setAngleCommandPos(6));
+            controller0.leftStickButton.onTrue(Commands.parallel(base.resetEncoderForTesting(90),
+                    elbow.resetEncoderForTesting(90)));
+        }
         if (GRABBER_ENABLED) {
-            Command teleopWristCommand = new TeleopWristAngleCommand(wrist,
-                    controller1);
+            Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
-
-            /**
-             * Delete these 3 commands later, these are only for testing We will
-             * create sequence commands later
-             */
-            controller1.aButton.onTrue(claw.closeClawCONECommand());
-            controller1.bButton.onTrue(claw.closeClawCUBECommand());
+            controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
+        }
+        if (CHASSIS_ENABLED) {
+            swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
+            controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
+            controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
         }
     }
 
@@ -114,6 +146,5 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return autoRouteChooser.getSelectedCommand();
-
     }
 }

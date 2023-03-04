@@ -17,8 +17,7 @@ public class SwerveTrajectory {
         public final double acceleration;
 
         public Point(Pose2d pose, double curvature, double commandedVelocity,
-                double predictedVelocity, double distance, double time,
-                double acceleration) {
+                double predictedVelocity, double distance, double time, double acceleration) {
             this.pose = pose;
             this.curvature = curvature;
             this.commandedVelocity = commandedVelocity;
@@ -52,8 +51,8 @@ public class SwerveTrajectory {
         List<Trajectory.State> states = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             Point p = points[i];
-            states.add(new Trajectory.State(p.time, p.predictedVelocity,
-                    p.acceleration, p.pose, p.curvature));
+            states.add(new Trajectory.State(p.time, p.predictedVelocity, p.acceleration, p.pose,
+                    p.curvature));
         }
         return new Trajectory(states);
     }
