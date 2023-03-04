@@ -154,6 +154,7 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
+
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SequentialCommandGroup(claw.openClawCommand(),

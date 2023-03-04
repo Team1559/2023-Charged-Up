@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,7 +33,6 @@ public class ArmSegment extends SubsystemBase {
     private final double        mass;
     private final double        length;
     private final double        stallTorque;
-    private final double        gearRatio;
     private final double        efficiency;
     private final double        maxSpeed;
     private final double        acceleration;
@@ -51,7 +49,6 @@ public class ArmSegment extends SubsystemBase {
             double acceleration, double mass, double length, Translation2d centerOfMass,
             boolean isInverted, double lowerLimit, double upperLimit, double closedLoopErrorValue) {
         this.name = name;
-        this.gearRatio = gearRatio;
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
         this.efficiency = efficiency;
