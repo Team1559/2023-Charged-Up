@@ -98,10 +98,10 @@ public class ArmSegment extends SubsystemBase {
         // }
         // motor.setInverted(isInverted);
 
-        motor.configForwardSoftLimitEnable(false); // will eventually enable
-        motor.configReverseSoftLimitEnable(false);
-        motor.configForwardSoftLimitThreshold(upperLimit);
-        motor.configReverseSoftLimitThreshold(lowerLimit);
+        motor.configForwardSoftLimitEnable(true); // will eventually enable
+        motor.configReverseSoftLimitEnable(true);
+        motor.configForwardSoftLimitThreshold(angleToTick(upperLimit));
+        motor.configReverseSoftLimitThreshold(angleToTick(lowerLimit));
     }
 
     private void configCancoder(CANCoder canCoder) {
