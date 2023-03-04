@@ -39,22 +39,19 @@ public class ArmSegment extends SubsystemBase {
     private final double        maxSpeed;
     private final double        acceleration;
 
-    private final double[] positions;
-    private double         target;
-    private boolean        isSetPointCommanded = false;
-    private double         setpointJointAngle;
-    private double         speed;
-    private double         stopAccelPoint;
-    private double         decelPoint;
+    private double  target;
+    private boolean isSetPointCommanded = false;
+    private double  setpointJointAngle;
+    private double  speed;
+    private double  stopAccelPoint;
+    private double  decelPoint;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
-            double izone, double gearRatio, double[] positions, double efficiency,
-            double maxVelocity, double acceleration, double mass, double length,
-            Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
-            double closedLoopErrorValue) {
+            double izone, double gearRatio, double efficiency, double maxVelocity,
+            double acceleration, double mass, double length, Translation2d centerOfMass,
+            boolean isInverted, double lowerLimit, double upperLimit, double closedLoopErrorValue) {
         this.name = name;
         this.gearRatio = gearRatio;
-        this.positions = positions;
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
         this.efficiency = efficiency;
@@ -81,6 +78,7 @@ public class ArmSegment extends SubsystemBase {
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Brake);
+        // motor.setNeutralMode(NeutralMode.Coast);
         motor.configClosedLoopPeakOutput(0, 0.2);
         canCoder = new CANCoder(cancoderID);
         configCancoder(canCoder);
@@ -223,8 +221,7 @@ public class ArmSegment extends SubsystemBase {
                 FF);
     }
 
-    public Command setAngleCommandPos(int angleIndex) {
-        double angle = positions[angleIndex];
+    public Command setAngleCommandPos(double angle) {
         return new FunctionalCommand(() -> {
             setDestinationJointAngle(angle);
         }, () -> {

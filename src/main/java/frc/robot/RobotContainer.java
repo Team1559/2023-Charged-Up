@@ -112,19 +112,19 @@ public class RobotContainer {
      */
     private void configureBindings() {
         if (ARM_ENABLED) {
-            // controller0.aButton.onTrue(arm.moveToLocations(0));
-            // controller0.bButton.onTrue(arm.moveToLocations(1));
-            // controller0.xButton.onTrue(arm.moveToLocations(2));
-            // controller0.yButton.onTrue(arm.moveToLocations(3));
-            // controller0.rightStickButton.onTrue(arm.moveToLocations(4));
+            // controller1.aButton.onTrue(elbow.setAngleCommandPos(0));
+            // controller1.bButton.onTrue(base.setAngleCommandPos(1));
+            // controller1.xButton.onTrue(elbow.setAngleCommandPos(1));
+            // controller1.yButton.onTrue(base.setAngleCommandPos(4));
+            // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
+            // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
+            // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
 
-            controller1.aButton.onTrue(elbow.setAngleCommandPos(0));
-            controller1.bButton.onTrue(base.setAngleCommandPos(1));
-            controller1.xButton.onTrue(elbow.setAngleCommandPos(1));
-            controller1.yButton.onTrue(base.setAngleCommandPos(4));
-            controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
-            controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
-            controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
+            controller1.aButton.onTrue(arm.moveArmToPosition(0)); // cone 3
+            controller1.yButton.onTrue(arm.moveArmToPosition(1)); // cone 2
+            controller1.xButton.onTrue(arm.moveArmToPosition(2)); // cone 1
+            controller1.bButton.onTrue(arm.moveArmToPosition(7)); // travel
+
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
