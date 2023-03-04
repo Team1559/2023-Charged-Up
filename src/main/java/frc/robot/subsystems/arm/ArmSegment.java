@@ -80,8 +80,8 @@ public class ArmSegment extends SubsystemBase {
         motor.config_IntegralZone(0, izone);
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
-        motor.setNeutralMode(NeutralMode.Coast);
-        motor.configClosedLoopPeakOutput(0, 0.1);
+        motor.setNeutralMode(NeutralMode.Brake);
+        motor.configClosedLoopPeakOutput(0, 0.2);
         canCoder = new CANCoder(cancoderID);
         configCancoder(canCoder);
         // Configure the CanCoder to be remote sensor 0,

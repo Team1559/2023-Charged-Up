@@ -25,7 +25,7 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = false;
+        public static final boolean CHASSIS_ENABLED = true;
         public static final boolean ARM_ENABLED     = true;
         public static final boolean GRABBER_ENABLED = true;
         public static final boolean VISION_ENABLED  = false;
@@ -153,13 +153,13 @@ public final class Constants {
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
-        public static final double kP_BASE  = 1;
-        public static final double kD_BASE  = 0;
-        public static final double kI_BASE  = 0.000;
-        public static final double kIZ_BASE = 0;    // degrees
+        public static final double kP_BASE  = 1.5;   // 1.25;
+        public static final double kD_BASE  = 1.0;   // 0.0;
+        public static final double kI_BASE  = 0.0015;
+        public static final double kIZ_BASE = 20;    // degrees?
 
         public static final double kP_ELBOW  = 0.8;
-        public static final double kD_ELBOW  = 0;
+        public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
         public static final double kIZ_ELBOW = 5;     // degrees
 
