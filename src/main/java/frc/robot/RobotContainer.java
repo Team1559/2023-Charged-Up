@@ -25,6 +25,7 @@ import frc.robot.subsystems.swerve.SwerveDrive;
  * commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
+    private final AutoRouteChooser autoRouteChooser;
     private final DTXboxController controller0;
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
@@ -41,6 +42,7 @@ public class RobotContainer {
      * commands.
      */
     public RobotContainer() {
+        autoRouteChooser = new AutoRouteChooser();
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         base = new ArmBase();
@@ -111,7 +113,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // TODO: implement autonomous command
-        return null;
+        return autoRouteChooser.getSelectedCommand();
+
     }
 }
