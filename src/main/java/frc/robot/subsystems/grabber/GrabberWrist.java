@@ -45,7 +45,7 @@ public class GrabberWrist extends SubsystemBase {
     }
 
     public double getAngle() {
-        return wristServo.getAngle();
+        return wristServo.getAngle() - ZERO_ANGLE;
         // return canCoder.getAbsolutePosition();
         // returns from -180 to +180 ^
     }

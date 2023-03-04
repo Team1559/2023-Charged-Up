@@ -2,7 +2,7 @@ package frc.robot.subsystems.grabber;
 
 import static frc.robot.Constants.Grabber.CLAW_PNEUMATIC_WAIT_TIME;
 import static frc.robot.Constants.Wiring.CLAW_SOLENOID_ID;
-import static frc.robot.Constants.Wiring.PDH_ID;
+import static frc.robot.Constants.Wiring.PNEUMATICS_HUB_ID;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -17,7 +17,8 @@ public class GrabberClaw extends SubsystemBase {
     private Solenoid clawSolenoid;
 
     public GrabberClaw() {
-        clawSolenoid = new Solenoid(PDH_ID, PneumaticsModuleType.REVPH, CLAW_SOLENOID_ID);
+        clawSolenoid = new Solenoid(PNEUMATICS_HUB_ID, PneumaticsModuleType.REVPH,
+                CLAW_SOLENOID_ID);
     }
 
     public void openClaw() {
