@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
@@ -24,10 +23,10 @@ import frc.robot.commands.SwerveTeleopDriveCommand;
 import frc.robot.commands.SwerveTeleopSnapRotateCommand;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
+import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
 import frc.robot.subsystems.arm.ArmElbow;
 import frc.robot.subsystems.arm.ArmWrist;
-import frc.robot.subsystems.arm.FullArmCommands;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -46,7 +45,7 @@ public class RobotContainer {
     private final GrabberWrist     wrist;
     private final GrabberClaw      claw;
     private final Vision           vision;
-    private final FullArmCommands  arm;
+    private final Arm              arm;
     private final ArmBase          base;
     private final ArmElbow         elbow;
     private final ArmWrist         armWrist;
@@ -62,7 +61,11 @@ public class RobotContainer {
             base = new ArmBase();
             elbow = new ArmElbow();
             armWrist = new ArmWrist();
-            arm = new FullArmCommands(base, elbow, armWrist);
+            base.setHigherSegment(elbow);
+            elbow.setLowerSegment(base);
+            elbow.setHigherSegment(armWrist);
+            armWrist.setLowerSegment(elbow);
+            arm = new Arm(base, elbow, armWrist);
         } else {
             base = null;
             elbow = null;
@@ -108,22 +111,23 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        /**
-         * Delete these commands after initial testing!!!
-         */
         if (ARM_ENABLED) {
-            controller0.aButton.onTrue(base.setBaseAngleCommandPos(9));
-            controller0.bButton.onTrue(base.setBaseAngleCommandPos(8));
-            controller0.yButton.onTrue(base.setBaseAngleCommandPos(7));
+            // controller0.aButton.onTrue(arm.moveToLocations(0));
+            // controller0.bButton.onTrue(arm.moveToLocations(1));
+            // controller0.xButton.onTrue(arm.moveToLocations(2));
+            // controller0.yButton.onTrue(arm.moveToLocations(3));
+            // controller0.rightStickButton.onTrue(arm.moveToLocations(4));
+
+            controller0.aButton.onTrue(elbow.setAngleCommandPos(0));
+            controller0.bButton.onTrue(base.setAngleCommandPos(1));
+            controller0.xButton.onTrue(elbow.setAngleCommandPos(1));
+            controller0.yButton.onTrue(base.setAngleCommandPos(2));
+            controller0.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
+
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
-
-            /**
-             * Delete these 3 commands later, these are only for testing We will
-             * create sequence commands later
-             */
             controller1.aButton.onTrue(claw.closeClawCommand());
             controller1.yButton.onTrue(claw.openClawCommand());
         }
