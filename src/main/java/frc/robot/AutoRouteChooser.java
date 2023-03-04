@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class AutoRouteChooser extends SubsystemBase {
     // public enum AutoRoute {
     // NULL,
-    // LEAVE,
+    // LEAVE_1,
     // LEAVE_2,
     // LEAVE_3,
     // DOCK,
@@ -34,7 +34,7 @@ public class AutoRouteChooser extends SubsystemBase {
     private void addOptions() {
 
         positionChooser.setDefaultOption("Do Nothing (1)", AutoRoute.NULL);
-        positionChooser.addOption("Leave community (1)", AutoRoute.LEAVE);
+        positionChooser.addOption("Leave community (1)", AutoRoute.LEAVE_1);
         positionChooser.addOption("Score, leave community, grab a piece (1)",
                 AutoRoute.SCORE_LEAVE_GRAB);
         positionChooser.addOption("Score, leave community, grab a piece, score (1)",

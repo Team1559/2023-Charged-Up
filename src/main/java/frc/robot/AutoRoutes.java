@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
+import frc.robot.commands.SwerveTrajectoryCommand;
 
 public class AutoRoutes {
     public static final double FIELD_LENGTH = 16.54;
@@ -25,14 +26,14 @@ public class AutoRoutes {
     private static final Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
 
     // Define common positions
-    public static final Pose2d START_POINT_3 = new Pose2d(2.2, 4.7, DEGREES_180);
+    public static final Pose2d START_POINT_1 = new Pose2d(1.49, 1.07, DEGREES_0);
     public static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75, DEGREES_180);
-    public static final Pose2d START_POINT_1 = new Pose2d(2.2, 0.75, DEGREES_180);
+    public static final Pose2d START_POINT_3 = new Pose2d(2.2, 0.75, DEGREES_180);
 
-    public static final Pose2d GAME_PIECE_4 = new Pose2d(6.8, 4.6, DEGREES_0);
+    public static final Pose2d GAME_PIECE_4 = new Pose2d(6.82, 4.58, DEGREES_180)
     public static final Pose2d GAME_PIECE_3 = new Pose2d(6.8, 3.35, DEGREES_0);
     public static final Pose2d GAME_PIECE_2 = new Pose2d(6.8, 2.15, DEGREES_0);
-    public static final Pose2d GAME_PIECE_1 = new Pose2d(6.8, 0.9, DEGREES_0);
+    public static final Pose2d GAME_PIECE_1 = new Pose2d(6.82, 0.92, DEGREES_180);
 
     // Define charge station points, counter-clockwise, starting from bottom
     // left of blue
@@ -48,22 +49,21 @@ public class AutoRoutes {
      */
 
     // Start 1 Piece 1 Drive to piece
-    private static final Pose2d S1_P1_A = new Pose2d(1.49, 1.07, DEGREES_0);
+
     private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
     private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
     private static final Pose2d S1_P1_D = new Pose2d(6.5, 0.92, DEGREES_180);
-    private static final Pose2d S1_P1_E = new Pose2d(6.82, 0.92, DEGREES_180);
 
-    public static final Pose2d[] START_1_TO_PIECE_1 = { S1_P1_A, S1_P1_B, S1_P1_C, S1_P1_D,
-            S1_P1_E };
+    public static final Pose2d[] START_1_TO_PIECE_1 = { START_POINT_1, S1_P1_B, S1_P1_C, S1_P1_D,
+            GAME_PIECE_1 };
 
     // Piece 1 Start 1 Drive back to start
-    private static final Pose2d P1_S1_A = new Pose2d(6.82, 0.92, DEGREES_180);
     private static final Pose2d P1_S1_B = new Pose2d(4.83, 0.92, DEGREES_0);
     private static final Pose2d P1_S1_C = new Pose2d(2.94, 0.92, DEGREES_0);
     private static final Pose2d P1_S1_D = new Pose2d(1.49, 0.92, DEGREES_0);
 
-    public static final Pose2d[] PIECE_1_TO_START_1 = { P1_S1_A, P1_S1_B, P1_S1_C, P1_S1_D };
+    public static final Pose2d[] PIECE_1_TO_START_1 = { GAME_PIECE_1, P1_S1_B, P1_S1_C,
+            START_POINT_1 };
 
     // Position 1 Exit Community
     private static final Pose2d S1_COM_A = new Pose2d(1.49, 1.07, DEGREES_0);
@@ -73,6 +73,8 @@ public class AutoRoutes {
 
     public static final Pose2d[] START_1_EXIT_COMMUNITY = { S1_COM_A, S1_COM_B, S1_COM_C,
             S1_COM_D };
+
+    public Command LEAVE_1 = new SwerveTrajectoryCommand(null, null)
 
     // Start 3 Piece 4 Drive to piece
     private static final Pose2d S3_P4_A = new Pose2d(1.49, 4.42, DEGREES_0);
