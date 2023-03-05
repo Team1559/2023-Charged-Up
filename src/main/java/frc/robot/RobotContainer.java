@@ -135,19 +135,31 @@ public class RobotContainer {
             // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
             // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
             // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
-            controller1.yButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(CommandSelector.CONE, arm.moveToLocations(6, 0)),
-                            Map.entry(CommandSelector.CUBE, arm.moveToLocations(6, 5))),
+            controller1.yButton.onTrue(
+                    new SelectCommand(
+                            Map.ofEntries(
+                                    Map.entry(CommandSelector.CONE,
+                                            arm.moveToLocations(Arm.Position.WAYPOINT,
+                                                    Arm.Position.UPPER_CONE)),
+                                    Map.entry(CommandSelector.CUBE,
+                                            arm.moveToLocations(Arm.Position.WAYPOINT,
+                                                    Arm.Position.UPPER_CUBE))),
+                            this::selectModifier));
+            controller1.xButton.onTrue(
+                    new SelectCommand(
+                            Map.ofEntries(
+                                    Map.entry(CommandSelector.CONE,
+                                            arm.moveToLocations(Arm.Position.WAYPOINT,
+                                                    Arm.Position.MIDDLE_CONE)),
+                                    Map.entry(CommandSelector.CUBE,
+                                            arm.moveToLocations(Arm.Position.WAYPOINT,
+                                                    Arm.Position.MIDDLE_CUBE))),
+                            this::selectModifier));
+            controller1.bButton.onTrue(new SelectCommand(Map.ofEntries(
+                    Map.entry(CommandSelector.CONE, arm.moveToLocations(Arm.Position.LOWER_CONE)),
+                    Map.entry(CommandSelector.CUBE, arm.moveToLocations(Arm.Position.LOWER_CUBE))),
                     this::selectModifier));
-            controller1.xButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(CommandSelector.CONE, arm.moveToLocations(6, 1)),
-                            Map.entry(CommandSelector.CUBE, arm.moveToLocations(6, 4))),
-                    this::selectModifier));
-            controller1.bButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(CommandSelector.CONE, arm.moveToLocations(2)),
-                            Map.entry(CommandSelector.CUBE, arm.moveToLocations(3))),
-                    this::selectModifier));
-            controller1.aButton.onTrue(arm.moveToLocations(7));
+            controller1.aButton.onTrue(arm.moveToLocations(Arm.Position.TRAVEL));
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
@@ -158,7 +170,8 @@ public class RobotContainer {
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SequentialCommandGroup(claw.openClawCommand(),
-                    arm.moveToLocations(9, 10), claw.closeClawCommand(), arm.moveToLocations(7)));
+                    arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.PICKUP),
+                    claw.closeClawCommand(), arm.moveToLocations(Arm.Position.TRAVEL)));
         }
         if (CHASSIS_ENABLED) {
             swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));

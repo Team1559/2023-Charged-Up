@@ -4,6 +4,8 @@ import static frc.robot.Constants.Arm.*;
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_ELBOW;
 import static frc.robot.Constants.Wiring.ELBOW_CANCODER_ID;
 
+import frc.robot.subsystems.arm.Arm.Position;
+
 public class ArmElbow extends ArmSegment {
 
     public ArmElbow() {
@@ -13,5 +15,9 @@ public class ArmElbow extends ArmSegment {
                 ELBOW_SEGMENT_CENTER_OF_MASS, true, LOWER_ELBOW_LIMIT, UPPER_ELBOW_LIMIT,
                 ELBOW_CLOSED_LOOP_ERROR);
     }
+
+    @Override
+    protected double getTargetAngle(Position position) {
+        return position.elbow;
+    }
 }
-// -145 -> 0

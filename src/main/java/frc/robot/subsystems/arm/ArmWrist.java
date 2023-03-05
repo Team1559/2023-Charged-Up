@@ -4,6 +4,8 @@ import static frc.robot.Constants.Arm.*;
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_WRIST;
 import static frc.robot.Constants.Wiring.ARM_WRIST_CANCODER_ID;
 
+import frc.robot.subsystems.arm.Arm.Position;
+
 public class ArmWrist extends ArmSegment {
 
     public ArmWrist() {
@@ -12,5 +14,10 @@ public class ArmWrist extends ArmSegment {
                 MAXIMUM_VELOCITY_WRIST, ACCELERATION_WRIST, WRIST_SEGMENT_MASS,
                 WRIST_SEGMENT_LENGTH, WRIST_SEGMENT_CENTER_OF_MASS, false, LOWER_ARM_WRIST_LIMIT,
                 UPPER_ARM_WRIST_LIMIT, WRIST_CLOSED_LOOP_ERROR);
+    }
+
+    @Override
+    protected double getTargetAngle(Position position) {
+        return position.wrist;
     }
 }

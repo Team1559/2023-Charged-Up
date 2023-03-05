@@ -18,10 +18,11 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ArmSegment extends SubsystemBase {
+public abstract class ArmSegment extends SubsystemBase {
     private final String name;
     private ArmSegment   lowerSegment;
     private ArmSegment   higherSegment;
@@ -37,12 +38,14 @@ public class ArmSegment extends SubsystemBase {
     private final double        maxSpeed;
     private final double        acceleration;
 
-    private double  target;
-    private boolean isSetPointCommanded = false;
-    private double  setpointJointAngle;
-    private double  speed;
-    private double  stopAccelPoint;
-    private double  decelPoint;
+    private Arm.Position targetPosition;
+    private Arm.Position lastPosition;
+    private double       target;
+    private boolean      isSetPointCommanded = false;
+    private double       setpointJointAngle;
+    private double       speed;
+    private double       stopAccelPoint;
+    private double       decelPoint;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
             double izone, double gearRatio, double efficiency, double maxVelocity,
@@ -178,6 +181,18 @@ public class ArmSegment extends SubsystemBase {
         // * inversionCoefficient;
     }
 
+    public Arm.Position getTargetPosition() {
+        return targetPosition;
+    }
+
+    public Arm.Position getLastPosition() {
+        return lastPosition;
+    }
+
+    public boolean lastPosEqualsTarget() {
+        return targetPosition == lastPosition && targetPosition != null;
+    }
+
     public void setLowerSegment(ArmSegment lowerSegment) {
         this.lowerSegment = lowerSegment;
     }
@@ -197,7 +212,8 @@ public class ArmSegment extends SubsystemBase {
         return angle;
     }
 
-    public void setDestinationJointAngle(double destinationJointAngle) {
+    public void setDestinationJointAngle(Arm.Position position) {
+        double destinationJointAngle = getTargetAngle(position);
         target = destinationJointAngle;
         setpointJointAngle = getJointAngle();
         isSetPointCommanded = true;
@@ -218,19 +234,20 @@ public class ArmSegment extends SubsystemBase {
                 FF);
     }
 
-    public Command setAngleCommandPos(double angle) {
-        return new FunctionalCommand(() -> {
-            setDestinationJointAngle(angle);
-        }, () -> {
-        }, (a) -> {
-        }, () -> {
-            return IsAtPosition(angle);
-        }, this);
+    protected abstract double getTargetAngle(Arm.Position position);
+
+    public Command setAngleCommandPos(Arm.Position position) {
+        return new ArmSegmentPositionCommand(position);
     }
 
-    public boolean IsAtPosition(double jointAngle) {
+    public boolean isAtPosition(Arm.Position position) {
+        double jointAngle = getTargetAngle(position);
         double angleError = Math.abs(jointAngle - getJointAngle());
-        return angleError < MAXIMUM_ANGLE_ERROR;
+        boolean isAtPosition = angleError < MAXIMUM_ANGLE_ERROR;
+        if (isAtPosition) {
+            lastPosition = targetPosition;
+        }
+        return isAtPosition;
     }
 
     @Override
@@ -292,26 +309,50 @@ public class ArmSegment extends SubsystemBase {
             motor.neutralOutput();
         }
 
-        Translation2d centerOfMass = getRelativeCenterOfMass();
-        SmartDashboard.putString(name + " Center of mass: ",
-                String.format(formatPolar(centerOfMass)));
-        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
-        SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        SmartDashboard.putNumber(name + "CANCoder Angle: ", canCoder.getAbsolutePosition());
-        SmartDashboard.putNumber(name + "CANCoder Relative: ", canCoder.getPosition());
-        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
-        SmartDashboard.putNumber(name + " ff",
-                calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
-        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
-        SmartDashboard.putNumber(name + " speed: ", speed);
+        // Translation2d centerOfMass = getRelativeCenterOfMass();
+        // SmartDashboard.putString(name + " Center of mass: ",
+        // String.format(formatPolar(centerOfMass)));
+        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
+        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
+        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        // SmartDashboard.putNumber(name + " angle: ", getJointAngle());
+        // SmartDashboard.putNumber(name + "CANCoder Angle: ",
+        // canCoder.getAbsolutePosition());
+        // SmartDashboard.putNumber(name + "CANCoder Relative: ",
+        // canCoder.getPosition());
+        // SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
+        // SmartDashboard.putNumber(name + " ff",
+        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
+        // CYCLES_PER_SECOND));
+        // SmartDashboard.putNumber(name + " current draw:",
+        // motor.getSupplyCurrent());
+        // SmartDashboard.putNumber(name + " error: ",
+        // motor.getClosedLoopError());
+        // SmartDashboard.putNumber(name + " speed: ", speed);
     }
 
     private static String formatPolar(Translation2d t) {
         return String.format("ø=%4.1f, m=%4.2f", t.getAngle()
                                                   .getDegrees(),
                 t.getNorm());
+    }
+
+    private class ArmSegmentPositionCommand extends CommandBase {
+        private final Arm.Position destinationPos;
+
+        ArmSegmentPositionCommand(Arm.Position position) {
+            destinationPos = position;
+            addRequirements(ArmSegment.this);
+        }
+
+        @Override
+        public void initialize() {
+            setDestinationJointAngle(destinationPos);
+        }
+
+        @Override
+        public boolean isFinished() {
+            return isAtPosition(destinationPos);
+        }
     }
 }
