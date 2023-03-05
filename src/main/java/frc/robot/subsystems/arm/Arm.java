@@ -1,11 +1,14 @@
 package frc.robot.subsystems.arm;
 
+import java.util.Map;
 import java.util.Objects;
+import java.util.Map.Entry;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.NullCommand;
 
@@ -19,7 +22,9 @@ public class Arm {
         MIDDLE_CUBE(70, -59, -71, true),
         UPPER_CUBE(49, -17, -62, true),
 
-        WAYPOINT(94, -58, -89, false),
+        WAYPOINT(94, -68, -52, false),
+
+        // WAYPOINT(94, -58, -89, false),
 
         TRAVEL(94, -118, -87, false),
         GAME_START(94, -33, -68, false),
@@ -46,17 +51,49 @@ public class Arm {
     private final ArmElbow elbow;
     private final ArmWrist wrist;
 
-    private Position targetPosition;
     private Position lastPosition;
+    private Position targetPosition;
+    private Position destinationPosition;
 
     public Arm(ArmBase base, ArmElbow elbow, ArmWrist wrist) {
         this.base = base;
         this.elbow = elbow;
         this.wrist = wrist;
+
+        this.lastPosition = Position.GAME_START;
+        this.targetPosition = Position.GAME_START;
+        this.destinationPosition = Position.GAME_START;
+    }
+
+    public boolean needWaypoint() {
+        boolean isUpper;
+        if (lastPosition == targetPosition || lastPosition == Arm.Position.WAYPOINT) {
+            // Not moving or moving away from WAYPOINT
+            isUpper = targetPosition.isUpper;
+        } else {
+            // Moving towards WAYPOINT or within a group (upper/lower)
+            isUpper = lastPosition.isUpper;
+        }
+
+        System.out.println("lastPos: " + lastPosition);
+        System.out.println("targetPos: " + targetPosition);
+        System.out.println("destPos: " + destinationPosition);
+        System.out.println("isUpper: " + isUpper);
+        System.out.println("Waypoint: " + (isUpper != destinationPosition.isUpper));
+        System.out.println();
+
+        return isUpper != destinationPosition.isUpper;
     }
 
     public Command moveArmToPosition(Position position) {
-        return new SetPositionCommand(position);
+        return new ParallelCommandGroup(
+                base.setAngleCommandPos(position), elbow.setAngleCommandPos(position),
+                wrist.setAngleCommandPos(position)).beforeStarting(() -> targetPosition = position)
+                                                   .finallyDo(i -> {
+                                                       if (!i) {
+                                                           lastPosition = targetPosition;
+                                                       }
+                                                   });
     }
 
     public Command moveToLocations(Position... positions) {
@@ -68,83 +105,9 @@ public class Arm {
     }
 
     public Command moveSequentially(Position position) {
-        return new SequentialArmCommand(position);
-    }
-
-    private class SetPositionCommand extends CommandBase {
-        private final Arm.Position         position;
-        private final ParallelCommandGroup commandGroup;
-
-        SetPositionCommand(Arm.Position position) {
-            this.position = position;
-            this.commandGroup = new ParallelCommandGroup(base.setAngleCommandPos(position),
-                    elbow.setAngleCommandPos(position), wrist.setAngleCommandPos(position));
-        }
-
-        @Override
-        public void initialize() {
-            targetPosition = position;
-            CommandScheduler.getInstance()
-                            .schedule(commandGroup);
-        }
-
-        @Override
-        public boolean isFinished() {
-            return commandGroup.isFinished();
-        }
-
-        @Override
-        public void end(boolean interrupted) {
-            if (!interrupted) {
-                lastPosition = targetPosition;
-            }
-        }
-    }
-
-    private class SequentialArmCommand extends CommandBase {
-        private final Arm.Position destination;
-        private Command            commandToExecute;
-
-        public SequentialArmCommand(Arm.Position destPos) {
-            if (destPos == Position.WAYPOINT) {
-                throw new IllegalArgumentException("WAYPOINT is invalid for a sequence command");
-            }
-            destination = Objects.requireNonNull(destPos);
-        }
-
-        @Override
-        public void initialize() {
-            if (destination == targetPosition) {
-                // Command will be canceled by this one; need to restart it
-                commandToExecute = moveArmToPosition(destination);
-                CommandScheduler.getInstance()
-                                .schedule(commandToExecute);
-                return;
-            }
-
-            // Logic to determine if arm is currently in the upper or lower range
-            boolean isUpper;
-            if (lastPosition == targetPosition || lastPosition == Arm.Position.WAYPOINT) {
-                // Not moving or moving away from WAYPOINT
-                isUpper = targetPosition.isUpper;
-            } else {
-                // Moving towards WAYPOINT or within a group (upper/lower)
-                isUpper = lastPosition.isUpper;
-            }
-
-            if (isUpper != destination.isUpper) {
-                commandToExecute = moveToLocations(Arm.Position.WAYPOINT, destination);
-            } else {
-                commandToExecute = moveArmToPosition(destination);
-            }
-
-            CommandScheduler.getInstance()
-                            .schedule(commandToExecute);
-        }
-
-        @Override
-        public boolean isFinished() {
-            return commandToExecute.isFinished();
-        }
+        return new SelectCommand(
+                Map.ofEntries(Map.entry(true, moveToLocations(Position.WAYPOINT, position)),
+                        Map.entry(false, moveArmToPosition(position))),
+                this::needWaypoint).beforeStarting(() -> destinationPosition = position);
     }
 }
