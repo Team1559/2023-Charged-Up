@@ -24,7 +24,7 @@ public class Arm {
 
     private double[][] positions = {
             /** cone 3 */
-            { 51, -26, -8 },
+            { 51, -24, -8 },                     // { 51, -26, -8 },
             /** cone 2 */
             { 76, -46, -66 },
             /** cone 1 */
@@ -38,13 +38,13 @@ public class Arm {
             /** waypoint */
             { 94, -58, -89 },
             /** travel */
-            { 94, -118, -87 },
+            { 95, -118, -87 },
             /** game start */
             { 94, -33, -68 },
             /** pre-pickup */
-            { 94, -117, -90 },
+            { 95, -117, -90 },
             /** pickup */
-            { 94, -140, -45 } };
+            { 95, -140, -45 } };
     private ArmBase    base;
     private ArmElbow   elbow;
     private ArmWrist   wrist;
