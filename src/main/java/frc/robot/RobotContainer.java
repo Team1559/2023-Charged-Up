@@ -11,6 +11,8 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -41,6 +43,7 @@ import frc.robot.subsystems.swerve.SwerveDrive;
  */
 public class RobotContainer {
     private final AutoRouteChooser autoRouteChooser;
+    private final AutoRoutes       autoRoutes;
     private final DTXboxController controller0;
     private final DTXboxController controller1;
     private final SwerveDrive      swerve;
@@ -57,7 +60,6 @@ public class RobotContainer {
      * commands.
      */
     public RobotContainer() {
-        autoRouteChooser = new AutoRouteChooser();
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
         if (ARM_ENABLED) {
@@ -96,6 +98,11 @@ public class RobotContainer {
         } else {
             vision = null;
         }
+
+        boolean isBlue = DriverStation.getAlliance() == Alliance.Blue;
+        autoRoutes = new AutoRoutes(swerve, arm, isBlue);
+        autoRouteChooser = new AutoRouteChooser(autoRoutes);
+
         configureBindings();
     }
 

@@ -7,13 +7,16 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
 import frc.robot.commands.SwerveTrajectoryCommand;
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class AutoRoutes {
-    public static final double FIELD_LENGTH = 16.54;
-    public static final double FIELD_WIDTH  = 8.02;
+    private static final double FIELD_LENGTH = 16.54;
+    private static final double FIELD_WIDTH  = 8.02;
 
     private static final Rotation2d DEGREES_0   = new Rotation2d();
     private static final Rotation2d DEGREES_30  = Rotation2d.fromDegrees(30);
@@ -26,64 +29,82 @@ public class AutoRoutes {
     private static final Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
 
     // Define common positions
-    public static final Pose2d START_POINT_1 = new Pose2d(1.49, 1.07, DEGREES_0);
-    public static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75, DEGREES_180);
-    public static final Pose2d START_POINT_3 = new Pose2d(2.2, 0.75, DEGREES_180);
+    private static final Pose2d START_POINT_1 = new Pose2d(1.49, 1.07, DEGREES_0);
+    private static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75, DEGREES_180);
+    private static final Pose2d START_POINT_3 = new Pose2d(1.49, 4.42, DEGREES_0);
 
-    public static final Pose2d GAME_PIECE_4 = new Pose2d(6.82, 4.58, DEGREES_180)
-    public static final Pose2d GAME_PIECE_3 = new Pose2d(6.8, 3.35, DEGREES_0);
-    public static final Pose2d GAME_PIECE_2 = new Pose2d(6.8, 2.15, DEGREES_0);
-    public static final Pose2d GAME_PIECE_1 = new Pose2d(6.82, 0.92, DEGREES_180);
-
+    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.82, 4.58, DEGREES_180);
+    private static final Pose2d GAME_PIECE_3 = new Pose2d(6.8, 3.35, DEGREES_0);
+    private static final Pose2d GAME_PIECE_2 = new Pose2d(6.8, 2.15, DEGREES_0);
+    private static final Pose2d GAME_PIECE_1 = new Pose2d(6.82, 0.92, DEGREES_180);
     // Define charge station points, counter-clockwise, starting from bottom
     // left of blue
-    public static final Pose2d CS_EDGE_1 = new Pose2d(2.9, 1.5, DEGREES_0);
-    public static final Pose2d CS_EDGE_2 = new Pose2d(4.8, 4.0, DEGREES_0);
-    public static final Pose2d CS_EDGE_3 = new Pose2d(4.8, 1.5, DEGREES_0);
-    public static final Pose2d CS_EDGE_4 = new Pose2d(2.9, 4.0, DEGREES_0);
-    public static final Pose2d CS_CENTER = new Pose2d(3.9, 2.75, DEGREES_0);
+    private static final Pose2d CS_EDGE_1 = new Pose2d(2.9, 1.5, DEGREES_0);
+    private static final Pose2d CS_EDGE_2 = new Pose2d(4.8, 4.0, DEGREES_0);
+    private static final Pose2d CS_EDGE_3 = new Pose2d(4.8, 1.5, DEGREES_0);
+    private static final Pose2d CS_EDGE_4 = new Pose2d(2.9, 4.0, DEGREES_0);
+    private static final Pose2d CS_CENTER = new Pose2d(3.9, 2.75, DEGREES_0);
 
     /*
      * Define specific routes Eventually maybe add mid points to have not a
      * sharp rotation We do not want to have each one rotating
      */
 
-    // Start 1 Piece 1 Drive to piece
-
     private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
     private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
     private static final Pose2d S1_P1_D = new Pose2d(6.5, 0.92, DEGREES_180);
 
-    public static final Pose2d[] START_1_TO_PIECE_1 = { START_POINT_1, S1_P1_B, S1_P1_C, S1_P1_D,
-            GAME_PIECE_1 };
+    private static final Pose2d S1_EXIT_POINT = new Pose2d(5.52, 0.92, DEGREES_180);
+
+    // Temporarily turn off the formatter so we can have nice route lists.
+    // @format:off
+
+    // Start 1 Piece 1 Drive to piece
+    private static final Pose2d[] START_1_TO_PIECE_1 = {
+        START_POINT_1, 
+        S1_P1_B, 
+        S1_P1_C, 
+        S1_P1_D,
+        GAME_PIECE_1 
+    };
 
     // Piece 1 Start 1 Drive back to start
-    private static final Pose2d P1_S1_B = new Pose2d(4.83, 0.92, DEGREES_0);
-    private static final Pose2d P1_S1_C = new Pose2d(2.94, 0.92, DEGREES_0);
-    private static final Pose2d P1_S1_D = new Pose2d(1.49, 0.92, DEGREES_0);
-
-    public static final Pose2d[] PIECE_1_TO_START_1 = { GAME_PIECE_1, P1_S1_B, P1_S1_C,
-            START_POINT_1 };
+    private static final Pose2d[] PIECE_1_TO_START_1 = {
+        GAME_PIECE_1, 
+        S1_P1_C, 
+        S1_P1_B,
+        START_POINT_1 
+    };
 
     // Position 1 Exit Community
-    private static final Pose2d S1_COM_A = new Pose2d(1.49, 1.07, DEGREES_0);
-    private static final Pose2d S1_COM_B = new Pose2d(2.94, 0.92, DEGREES_0);
-    private static final Pose2d S1_COM_C = new Pose2d(4.83, 0.92, DEGREES_0);
-    private static final Pose2d S1_COM_D = new Pose2d(5.52, 0.92, DEGREES_180);
+    private static final Pose2d[] START_1_EXIT_COMMUNITY = {
+        START_POINT_1,
+        S1_P1_B,
+        S1_P1_C,
+        S1_EXIT_POINT
+    };
 
-    public static final Pose2d[] START_1_EXIT_COMMUNITY = { S1_COM_A, S1_COM_B, S1_COM_C,
-            S1_COM_D };
+    // Position 3 Exit Community
+    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.58, DEGREES_0);
+    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.58, DEGREES_0);
+    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.58, DEGREES_180);
 
-    public Command LEAVE_1 = new SwerveTrajectoryCommand(null, null)
+    private static final Pose2d[] START_3_EXIT_COMMUNITY = {
+        START_POINT_3,
+        S3_COM_B,
+        S3_COM_C,
+        S3_COM_D
+    };
+    
+    // @format:on
 
     // Start 3 Piece 4 Drive to piece
-    private static final Pose2d S3_P4_A = new Pose2d(1.49, 4.42, DEGREES_0);
     private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_0);
     private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_0);
     private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
     private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58, DEGREES_180);
 
-    public static final Pose2d[] START_3_TO_PIECE_4 = { S3_P4_A, S3_P4_B, S3_P4_C, S3_P4_D,
+    private static final Pose2d[] START_3_TO_PIECE_4 = { START_POINT_3, S3_P4_B, S3_P4_C, S3_P4_D,
             S3_P4_E };
 
     // Piece 4 Start 3 Drive back to start
@@ -92,23 +113,14 @@ public class AutoRoutes {
     private static final Pose2d P4_S3_C = new Pose2d(2.94, 4.58, DEGREES_0);
     private static final Pose2d P4_S3_D = new Pose2d(1.49, 4.42, DEGREES_0);
 
-    public static final Pose2d[] PIECE_4_TO_START_3 = { P4_S3_A, P4_S3_B, P4_S3_C, P4_S3_D };
-
-    // Position 3 Exit Community
-    private static final Pose2d S3_COM_A = new Pose2d(1.49, 4.42, DEGREES_0);
-    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.58, DEGREES_0);
-    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.58, DEGREES_0);
-    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.58, DEGREES_180);
-
-    public static final Pose2d[] START_3_EXIT_COMMUNITY = { S3_COM_A, S3_COM_B, S3_COM_C,
-            S3_COM_D };
+    private static final Pose2d[] PIECE_4_TO_START_3 = { P4_S3_A, P4_S3_B, P4_S3_C, P4_S3_D };
 
     // Center of Charge Station From Start 2
     private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
     private static final Pose2d S2_CS_B = new Pose2d(2.94, 2.75, DEGREES_0);
     private static final Pose2d S2_CS_C = new Pose2d(3.88, 2.75, DEGREES_0);
 
-    public static final Pose2d[] START_2_TO_CHARGE_STATION = { S2_CS_A, S2_CS_B, S2_CS_C };
+    private static final Pose2d[] START_2_TO_CHARGE_STATION = { S2_CS_A, S2_CS_B, S2_CS_C };
 
     // Go over charge station from start 2
     private static final Pose2d S2_OCS_A = new Pose2d(1.49, 2.75, DEGREES_0);
@@ -117,7 +129,7 @@ public class AutoRoutes {
     private static final Pose2d S2_OCS_D = new Pose2d(5.52, 2.75, DEGREES_0);
     private static final Pose2d S2_OCS_E = new Pose2d(5.52, 2.75, DEGREES_180);
 
-    public static final Pose2d[] START_2_OVER_CHARGE_STATION = { S2_OCS_A, S2_OCS_B, S2_OCS_C,
+    private static final Pose2d[] START_2_OVER_CHARGE_STATION = { S2_OCS_A, S2_OCS_B, S2_OCS_C,
             S2_OCS_D, S2_OCS_E };
 
     static {
@@ -126,9 +138,35 @@ public class AutoRoutes {
         }
     }
 
-    private AutoRoutes() {}
+    private SwerveDrive swerveDrive;
+    private Arm         arm;
+    private boolean     isBlueAlliance;
 
-    public static Pose2d[] mirror(Pose2d[] path) {
+    public Command LEAVE_1;
+    public Command LEAVE_3;
+
+    public AutoRoutes(SwerveDrive swerveDrive, Arm arm, boolean isBlueAlliance) {
+        this.swerveDrive = swerveDrive;
+        this.arm = arm;
+        this.isBlueAlliance = isBlueAlliance;
+
+        LEAVE_1 = this.makeTrajectoryCommand(START_1_EXIT_COMMUNITY);
+        LEAVE_3 = this.makeTrajectoryCommand(START_3_EXIT_COMMUNITY);
+    }
+
+    private SwerveTrajectory makeTrajectory(Pose2d[] poses) {
+        if (this.isBlueAlliance) {
+            poses = mirror(poses);
+        }
+        return SwerveTrajectoryGenerator.calculateTrajectory(poses);
+    }
+
+    private Command makeTrajectoryCommand(Pose2d[] poses) {
+        SwerveTrajectory trajectory = this.makeTrajectory(poses);
+        return new SwerveTrajectoryCommand(this.swerveDrive, trajectory);
+    }
+
+    private static Pose2d[] mirror(Pose2d[] path) {
         Pose2d[] mirrored = new Pose2d[path.length];
         for (int i = 0; i < path.length; i++) {
             mirrored[i] = new Pose2d(FIELD_LENGTH - path[i].getX(), path[i].getY(),
