@@ -24,7 +24,9 @@ public class Arm {
         TRAVEL(94, -118, -87, false),
         GAME_START(94, -33, -68, false),
         PRE_PICKUP(94, -117, -90, false),
-        PICKUP(94, -140, -45, false);
+        PICKUP_CONE(94, -142, -33, false),
+        PICKUP_CUBE(94,-132,-52,false);
+       
 
         public final double base;
         public final double elbow;
@@ -122,7 +124,8 @@ public class Arm {
                 return;
             }
 
-            // Logic to determine if arm is currently in the upper or lower range
+            // Logic to determine if arm is currently in the upper or lower
+            // range
             boolean isUpper;
             if (lastPosition == targetPosition || lastPosition == Arm.Position.WAYPOINT) {
                 // Not moving or moving away from WAYPOINT

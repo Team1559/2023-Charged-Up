@@ -309,26 +309,26 @@ public abstract class ArmSegment extends SubsystemBase {
             motor.neutralOutput();
         }
 
-        // Translation2d centerOfMass = getRelativeCenterOfMass();
-        // SmartDashboard.putString(name + " Center of mass: ",
-        // String.format(formatPolar(centerOfMass)));
-        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
-        // SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        // SmartDashboard.putNumber(name + "CANCoder Angle: ",
-        // canCoder.getAbsolutePosition());
-        // SmartDashboard.putNumber(name + "CANCoder Relative: ",
-        // canCoder.getPosition());
-        // SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
-        // SmartDashboard.putNumber(name + " ff",
-        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
-        // CYCLES_PER_SECOND));
-        // SmartDashboard.putNumber(name + " current draw:",
-        // motor.getSupplyCurrent());
-        // SmartDashboard.putNumber(name + " error: ",
-        // motor.getClosedLoopError());
-        // SmartDashboard.putNumber(name + " speed: ", speed);
+        Translation2d centerOfMass = getRelativeCenterOfMass();
+        SmartDashboard.putString(name + " Center of mass: ",
+        String.format(formatPolar(centerOfMass)));
+        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
+        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
+        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        SmartDashboard.putNumber(name + " angle: ", getJointAngle());
+        SmartDashboard.putNumber(name + "CANCoder Angle: ",
+        canCoder.getAbsolutePosition());
+        SmartDashboard.putNumber(name + "CANCoder Relative: ",
+        canCoder.getPosition());
+        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
+        SmartDashboard.putNumber(name + " ff",
+        calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
+        CYCLES_PER_SECOND));
+        SmartDashboard.putNumber(name + " current draw:",
+        motor.getSupplyCurrent());
+        SmartDashboard.putNumber(name + " error: ",
+        motor.getClosedLoopError());
+        SmartDashboard.putNumber(name + " speed: ", speed);
     }
 
     private static String formatPolar(Translation2d t) {

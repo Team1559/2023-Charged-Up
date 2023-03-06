@@ -166,11 +166,19 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
-
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SequentialCommandGroup(claw.openClawCommand(),
-                    arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.PICKUP),
+                    new SelectCommand(
+                            Map.ofEntries(
+                                    Map.entry(CommandSelector.CONE,
+                                            arm.moveToLocations(Arm.Position.PRE_PICKUP,
+                                                    Arm.Position.PICKUP_CONE)),
+                                    Map.entry(CommandSelector.CUBE,
+                                            arm.moveToLocations(Arm.Position.PRE_PICKUP,
+                                                    Arm.Position.PICKUP_CUBE))),
+                            this::selectModifier),
+
                     claw.closeClawCommand(), arm.moveToLocations(Arm.Position.TRAVEL)));
         }
         if (CHASSIS_ENABLED) {

@@ -158,7 +158,7 @@ public final class Constants {
         public static final double kI_BASE  = 0.0015;
         public static final double kIZ_BASE = 20;    // deg * 11
 
-        public static final double kP_ELBOW  = 2.0;
+        public static final double kP_ELBOW  = 1.0;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
         public static final double kIZ_ELBOW = 50;    // deg * 11
