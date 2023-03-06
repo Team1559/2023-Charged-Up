@@ -143,9 +143,8 @@ public class SwerveDrive extends SubsystemBase {
             // rPIDSetpoint = Double.NaN;
         }
 
-        // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy,
-        // vr, getRobotAngle());
-        ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
+        // ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
         SmartDashboard.putBoolean("Rotating", rotating);
         SmartDashboard.putBoolean("Setpoint", setpointSet);
         SmartDashboard.putBoolean("vControl", vControl);
