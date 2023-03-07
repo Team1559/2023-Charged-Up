@@ -71,13 +71,11 @@ public final class Constants {
 
     public static class Swerve {
         // SDS MK4 L2 Falcons
-        public static final double DRIVE_GEAR_RATIO             = (14D / 50D) * (27D / 17D)
-                * (15D / 45D);
-        public static final double STEER_GEAR_RATIO             = (15D / 32D) * (10D / 60D);
-        public static final double DRIVE_GEAR_RATIO_INV         = 1D / DRIVE_GEAR_RATIO;
-        public static final double STEER_GEAR_RATIO_INV         = 1D / STEER_GEAR_RATIO;
-        public static final double STEER_DRIVE_BACKLASH         = STEER_GEAR_RATIO * (50D / 14D);
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 1.0;
+        public static final double DRIVE_GEAR_RATIO     = (14D / 50D) * (27D / 17D) * (15D / 45D);
+        public static final double STEER_GEAR_RATIO     = (15D / 32D) * (10D / 60D);
+        public static final double DRIVE_GEAR_RATIO_INV = 1D / DRIVE_GEAR_RATIO;
+        public static final double STEER_GEAR_RATIO_INV = 1D / STEER_GEAR_RATIO;
+        public static final double STEER_DRIVE_BACKLASH = STEER_GEAR_RATIO * (50D / 14D);
 
         public static final double WHEELBASE_WIDTH     = Units.inchesToMeters(24);
         public static final double WHEELBASE_LENGTH    = Units.inchesToMeters(24);
@@ -88,6 +86,10 @@ public final class Constants {
         public static final double MAXIMUM_LINEAR_VELOCITY  = Units.feetToMeters(16.3);
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
+
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 1.0;
+        public static final double MAX_ACCEL_PER_CYCLE          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED / CYCLES_PER_SECOND;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;

@@ -9,7 +9,6 @@ import static frc.robot.Constants.Swerve.MODULE_STEER_KP;
 import static frc.robot.Constants.Swerve.STEER_DRIVE_BACKLASH;
 import static frc.robot.Constants.Swerve.TICKS_TO_DEGREES;
 import static frc.robot.Constants.Swerve.TICKS_TO_METERS;
-import static frc.robot.Constants.Swerve.SWERVE_SECONDS_TO_FULL_SPEED;
 import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
 import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
 import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
@@ -61,7 +60,7 @@ public class SwerveModule {
             driveMotor.setInverted(true);
             driveMotor.setSelectedSensorPosition(0D);
             driveMotor.config_kP(0, MODULE_DRIVE_KP);
-            driveMotor.configClosedloopRamp(SWERVE_SECONDS_TO_FULL_SPEED);
+            // driveMotor.configClosedloopRamp(SWERVE_SECONDS_TO_FULL_SPEED);
             steerMotor.configFactoryDefault();
             steerMotor.setNeutralMode(NeutralMode.Brake);
             steerMotor.config_kP(0, MODULE_STEER_KP);
