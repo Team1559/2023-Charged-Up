@@ -31,6 +31,7 @@ import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
 import frc.robot.subsystems.arm.ArmElbow;
 import frc.robot.subsystems.arm.ArmWrist;
+import frc.robot.subsystems.arm.Arm.Position;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -135,31 +136,21 @@ public class RobotContainer {
             // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
             // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
             // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
-            controller1.yButton.onTrue(
-                    new SelectCommand(
-                            Map.ofEntries(
-                                    Map.entry(CommandSelector.CONE,
-                                            arm.moveToLocations(Arm.Position.WAYPOINT,
-                                                    Arm.Position.UPPER_CONE)),
-                                    Map.entry(CommandSelector.CUBE,
-                                            arm.moveToLocations(Arm.Position.WAYPOINT,
-                                                    Arm.Position.UPPER_CUBE))),
-                            this::selectModifier));
-            controller1.xButton.onTrue(
-                    new SelectCommand(
-                            Map.ofEntries(
-                                    Map.entry(CommandSelector.CONE,
-                                            arm.moveToLocations(Arm.Position.WAYPOINT,
-                                                    Arm.Position.MIDDLE_CONE)),
-                                    Map.entry(CommandSelector.CUBE,
-                                            arm.moveToLocations(Arm.Position.WAYPOINT,
-                                                    Arm.Position.MIDDLE_CUBE))),
-                            this::selectModifier));
-            controller1.bButton.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, arm.moveToLocations(Arm.Position.LOWER_CONE)),
-                    Map.entry(CommandSelector.CUBE, arm.moveToLocations(Arm.Position.LOWER_CUBE))),
+            controller1.yButton.onTrue(new SelectCommand(Map.ofEntries(
+                    Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.UPPER_CONE)),
+                    Map.entry(CommandSelector.CUBE, arm.moveSequentially(Arm.Position.UPPER_CUBE))),
                     this::selectModifier));
-            controller1.aButton.onTrue(arm.moveToLocations(Arm.Position.TRAVEL));
+            controller1.xButton.onTrue(new SelectCommand(Map.ofEntries(
+                    Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.MIDDLE_CONE)),
+                    Map.entry(CommandSelector.CUBE,
+                            arm.moveSequentially(Arm.Position.MIDDLE_CUBE))),
+                    this::selectModifier));
+            controller1.bButton.onTrue(new SelectCommand(Map.ofEntries(
+                    Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.LOWER_CONE)),
+                    Map.entry(CommandSelector.CUBE, arm.moveSequentially(Arm.Position.LOWER_CUBE))),
+                    this::selectModifier));
+            controller1.aButton.onTrue(arm.moveSequentially(Arm.Position.TRAVEL));
+            controller1.startButton.onTrue(arm.armPanicCommand());
         }
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
@@ -179,7 +170,8 @@ public class RobotContainer {
                                                     Arm.Position.PICKUP_CUBE))),
                             this::selectModifier),
 
-                    claw.closeClawCommand(), arm.moveToLocations(Arm.Position.TRAVEL)));
+                    claw.closeClawCommand(),
+                    arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.TRAVEL)));
         }
         if (CHASSIS_ENABLED) {
             swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class ArmSegment extends SubsystemBase {
@@ -234,6 +235,13 @@ public abstract class ArmSegment extends SubsystemBase {
                 FF);
     }
 
+    public void armPanic() {
+        motor.neutralOutput();
+        isSetPointCommanded = false;
+        setpointJointAngle = getJointAngle();
+        target = setpointJointAngle;
+    }
+
     protected abstract double getTargetAngle(Arm.Position position);
 
     public Command setAngleCommandPos(Arm.Position position) {
@@ -241,9 +249,13 @@ public abstract class ArmSegment extends SubsystemBase {
     }
 
     public boolean isAtPosition(Arm.Position position) {
+        double maxError = MAXIMUM_ANGLE_ERROR;
+        if (tickToAngle(motor.getSelectedSensorVelocity()) * 10 < 1) {
+            maxError *= 10;
+        }
         double jointAngle = getTargetAngle(position);
         double angleError = Math.abs(jointAngle - getJointAngle());
-        boolean isAtPosition = angleError < MAXIMUM_ANGLE_ERROR;
+        boolean isAtPosition = angleError < maxError;
         if (isAtPosition) {
             lastPosition = targetPosition;
         }
@@ -309,26 +321,24 @@ public abstract class ArmSegment extends SubsystemBase {
             motor.neutralOutput();
         }
 
-        Translation2d centerOfMass = getRelativeCenterOfMass();
-        SmartDashboard.putString(name + " Center of mass: ",
-        String.format(formatPolar(centerOfMass)));
-        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        // Translation2d centerOfMass = getRelativeCenterOfMass();
+        // SmartDashboard.putString(name + " Center of mass: ",
+        // String.format(formatPolar(centerOfMass)));
+        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
+        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
+        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        SmartDashboard.putNumber(name + "CANCoder Angle: ",
-        canCoder.getAbsolutePosition());
-        SmartDashboard.putNumber(name + "CANCoder Relative: ",
-        canCoder.getPosition());
+        // SmartDashboard.putNumber(name + "CANCoder Angle: ",
+        // canCoder.getAbsolutePosition());
+        // SmartDashboard.putNumber(name + "CANCoder Relative: ",
+        // canCoder.getPosition());
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
-        SmartDashboard.putNumber(name + " ff",
-        calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
-        CYCLES_PER_SECOND));
-        SmartDashboard.putNumber(name + " current draw:",
-        motor.getSupplyCurrent());
-        SmartDashboard.putNumber(name + " error: ",
-        motor.getClosedLoopError());
-        SmartDashboard.putNumber(name + " speed: ", speed);
+        // SmartDashboard.putNumber(name + " ff",
+        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
+        // CYCLES_PER_SECOND));
+        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
+        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        // SmartDashboard.putNumber(name + " speed: ", speed);
     }
 
     private static String formatPolar(Translation2d t) {

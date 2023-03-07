@@ -135,12 +135,12 @@ public final class Constants {
                 / CYCLES_PER_SECOND;
 
         public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
-        public static final double MAXIMUM_VELOCITY_WRIST    = 60D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_ELBOW    = 20D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_BASE     = 10D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_WRIST    = 30D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW    = 30D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE     = 20D / CYCLES_PER_SECOND;
         public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
 
-        public static final double BASE_ACCELERATION_TIME  = 0.5;
+        public static final double BASE_ACCELERATION_TIME  = 0.7;
         public static final double ELBOW_ACCELERATION_TIME = 1;
         public static final double WRIST_ACCELERATION_TIME = 0.5;
         public static final double ACCELERATION_WRIST      = MAXIMUM_VELOCITY_WRIST
@@ -158,10 +158,10 @@ public final class Constants {
         public static final double kI_BASE  = 0.0015;
         public static final double kIZ_BASE = 20;    // deg * 11
 
-        public static final double kP_ELBOW  = 1.0;
+        public static final double kP_ELBOW  = 0.8;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
-        public static final double kIZ_ELBOW = 50;    // deg * 11
+        public static final double kIZ_ELBOW = 30;    // deg * 11
 
         public static final double kP_WRIST  = 1;
         public static final double kD_WRIST  = 0;
