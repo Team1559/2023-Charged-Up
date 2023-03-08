@@ -20,7 +20,7 @@ public class TeleopWristAngleCommand extends CommandBase {
     public void execute() {
         // If negative, rotate the wrist left by a set amount.
         // If positive, rotate the wrist right.
-        double x = controller.getDpad();
+        int x = controller.getDpad();
         if (x == 90) {
             x = 1;
         } else if (x == 270) {
