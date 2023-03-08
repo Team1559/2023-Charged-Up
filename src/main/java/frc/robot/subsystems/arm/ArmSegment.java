@@ -34,7 +34,7 @@ public class ArmSegment extends SubsystemBase {
     private final double        mass;
     private final double        length;
     private final double        stallTorque;
-    private final double        gearRatio;
+    private final double        gearRatio;   // remove
     private final double        efficiency;
     private final double        maxSpeed;
     private final double        acceleration;
@@ -53,7 +53,7 @@ public class ArmSegment extends SubsystemBase {
             Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
             double closedLoopErrorValue) {
         this.name = name;
-        this.gearRatio = gearRatio;
+        this.gearRatio = gearRatio; // remove
         this.positions = positions;
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
@@ -63,11 +63,13 @@ public class ArmSegment extends SubsystemBase {
         this.centerOfMass = centerOfMass;
 
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
+        // remove
         // if (isInverted) {
         // kd *= -1;
         // kp *= -1;
         // ki *= -1;
         // }
+        // remove
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
@@ -92,11 +94,13 @@ public class ArmSegment extends SubsystemBase {
         motor.setInverted(isInverted);
         // motor.configAllowableClosedloopError(0, closedLoopErrorValue);
 
+        // remove
         // if (isInverted) {
         // motor.configSelectedFeedbackCoefficient(-1);
         // Motor is mounted in opposite orientation (inverted)
         // }
         // motor.setInverted(isInverted);
+        // remove
 
         motor.configForwardSoftLimitEnable(false); // will eventually enable
         motor.configReverseSoftLimitEnable(false);
@@ -170,17 +174,19 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double calculateFeedForward(double velocity, double acceleration) {
+        // remove
         /**
          * int inversionCoefficient = 0; if (isInverted) { inversionCoefficient
          * = -1; } else { inversionCoefficient = 1; }
          */
+        // remove
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
         return (kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
                                                                           .getCos());
-        // * inversionCoefficient;
+        // * inversionCoefficient; // remove
     }
 
     public void setLowerSegment(ArmSegment lowerSegment) {
@@ -300,7 +306,7 @@ public class ArmSegment extends SubsystemBase {
 
         Translation2d centerOfMass = getRelativeCenterOfMass();
         SmartDashboard.putString(name + " Center of mass: ",
-                String.format(formatPolar(centerOfMass)));
+                String.format(formatPolar(centerOfMass))); // remove
         SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass)); // remove
         SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass)); // remove
         SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass)); // remove

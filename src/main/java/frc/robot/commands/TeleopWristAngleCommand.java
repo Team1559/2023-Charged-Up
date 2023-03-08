@@ -23,7 +23,7 @@ public class TeleopWristAngleCommand extends CommandBase {
         // If negative, rotate the wrist left by a set amount.
         // If positive, rotate the wrist right.
         double x = controller.getRightStickX();
-        // double angle = wrist.getAngle();
+        // double angle = wrist.getAngle(); // remove
 
         if (Math.abs(x) < deadband) {
             x = 0;
@@ -37,6 +37,7 @@ public class TeleopWristAngleCommand extends CommandBase {
         wrist.setAngle(newAngle);
         System.out.println(wrist.getAngle());
 
+        // remove
         // if (Math.abs(x) > deadband) {
         // if (x < 0) {
         // angle -= TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
@@ -51,5 +52,6 @@ public class TeleopWristAngleCommand extends CommandBase {
         // }
         // wrist.setAngle(angle);
         // }
+        // remove
     }
 }

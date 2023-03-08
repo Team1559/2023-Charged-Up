@@ -29,7 +29,7 @@ public class GrabberClaw extends SubsystemBase {
         clawSolenoid.set(false);
     }
 
-    public Command openClawCommand() { // bound to a button in robotContainer
+    public Command openClawCommand() {
         return Commands.sequence(new InstantCommand(this::openClaw, this),
                 new WaitCommand(CLAW_PNEUMATIC_WAIT_TIME));
     }

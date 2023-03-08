@@ -80,7 +80,7 @@ public class Vision extends SubsystemBase {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(0, 0, 0));
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                            pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
+                            pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev)); // remove
                     poseSet = true;
                 }
             } catch (ConcurrentModificationException e) {

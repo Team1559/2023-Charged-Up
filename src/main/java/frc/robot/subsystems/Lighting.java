@@ -5,7 +5,8 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Lighting extends SubsystemBase {
-    private static final Color[] colors = { Color.purpleColor, Color.yellowColor, Color.blueColor, Color.redColor};
+    private static final Color[] colors = { Color.purpleColor, Color.yellowColor, Color.blueColor,
+            Color.redColor };
 
     private final int length;
     private int       clock;
@@ -21,7 +22,6 @@ public class Lighting extends SubsystemBase {
         ledStrip.setLength(length);
         ledStrip.start();
 
-        
     }
 
     public void setColor(Color color) {
@@ -34,10 +34,13 @@ public class Lighting extends SubsystemBase {
         buffer.setRGB(index, color.red, color.green, color.blue);
     }
 
+    // remove
     // private DigitalOutput greenDO;
     // private DigitalOutput blueDO;
     // private final double PULSE_LENGTH_MS = 5.005;
+    // remove
 
+    // remove
     // public Lighting(int pwmRed, int pwmGreen, int pwmBlue) {
     // redPWM = new PWM(pwmRed);
     // greenPWM = new PWM(pwmGreen);
@@ -48,21 +51,27 @@ public class Lighting extends SubsystemBase {
     // greenDO.enablePWM(0);
     // blueDO = new DigitalOutput(pwmBlue);
     // blueDO.enablePWM(0);
+    // remove
 
+    // remove
     // redPWM.setBounds(PULSE_LENGTH_MS, 0, PULSE_LENGTH_MS / 2, 0, 0);
     // redPWM.enableDeadbandElimination(true);
     // greenPWM.setBounds(PULSE_LENGTH_MS, 0, PULSE_LENGTH_MS / 2, 0, 0);
     // greenPWM.enableDeadbandElimination(true);
     // bluePWM.setBounds(PULSE_LENGTH_MS, 0, PULSE_LENGTH_MS / 2, 0, 0);
     // bluePWM.enableDeadbandElimination(true);
+    // remove
 
+    // remove
     // DigitalOutput redDio=new DigitalOutput(redPWM.getChannel());
     // redDO.updateDutyCycle();
     // SmartDashboard.putData("redPVM", redPWM);
     // SmartDashboard.putData("greenPVM", greenPWM);
     // SmartDashboard.putData("bluePVM", bluePWM);
     // }
+    // remove
 
+    // remove
     // public void setColor(Color color) {
     // redDO.updateDutyCycle(1.0 - (color.red / 255.0));
     // greenDO.updateDutyCycle(1.0 - (color.green / 255.0));
@@ -73,6 +82,7 @@ public class Lighting extends SubsystemBase {
     // System.out.println(redPWM.getRaw() + ", " + greenPWM.getRaw() + ", "
     // + bluePWM.getRaw());
     // }
+    // remove
     @Override
     public void periodic() {
         clock = (clock + 1) & 255;
@@ -81,6 +91,7 @@ public class Lighting extends SubsystemBase {
     }
 }
 
+// remove
 // public static final Color whiteColor = new Color(255, 255, 255);
 // public static final Color redColor = new Color(255, 0, 0);
 // public static final Color greenColor = new Color(0, 255, 0);
@@ -90,3 +101,4 @@ public class Lighting extends SubsystemBase {
 // public static final Color magentaColor= new Color(255, 0, 255);
 // public static final Color purpleColor = new Color(96, 0, 224);
 // public static final Color off = new Color(0, 0, 0);
+// remove

@@ -27,8 +27,6 @@ public class ArmWristCommandsTeleop extends CommandBase {
             } else {
                 angle += angleVelPerCycle;
             }
-        } else {
-
         }
         if (Math.abs(angle) > 90) {
             angle = 90;
