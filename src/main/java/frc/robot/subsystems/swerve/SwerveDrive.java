@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.FeatureFlags.*;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MODULE_X;
@@ -128,7 +129,7 @@ public class SwerveDrive extends SubsystemBase {
         boolean vControl = Math.abs(vr) > 1e-3;
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;
-        if (vControl) {
+        if (vControl || !VISION_ENABLED) {
             rPIDSetpoint = Double.NaN;
             // vr = vr;
         } else if (setpointSet || !rotating) {
@@ -145,6 +146,7 @@ public class SwerveDrive extends SubsystemBase {
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
 
+        // ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
         SmartDashboard.putBoolean("Rotating", rotating); // remove
         SmartDashboard.putBoolean("Setpoint", setpointSet); // remove
         SmartDashboard.putBoolean("vControl", vControl); // remove

@@ -37,7 +37,15 @@ public class DTXboxController {
         }
     }
 
-    private static final Timer RUMBLE_TIMER = new Timer("Xbox_Rumble");
+    private static final Timer  RUMBLE_TIMER   = new Timer("Xbox_Rumble");
+    private static final double AXIS_THRESHOLD = 0.5;
+
+    private long   leftTimeout;
+    private long   rightTimeout;
+    private double leftPower;
+    private double rightPower;
+    private double deadBand;
+    private double axisThreshold;
 
     public final Trigger aButton          = new Trigger(this::getAButton);
     public final Trigger bButton          = new Trigger(this::getBButton);
@@ -50,17 +58,23 @@ public class DTXboxController {
     public final Trigger leftBumper       = new Trigger(this::getLeftBumper);
     public final Trigger rightBumper      = new Trigger(this::getRightBumper);
 
-    private final XboxController controller;
+    public final Trigger leftTrigger    = new Trigger(() -> getLeftTrigger() >= axisThreshold);
+    public final Trigger rightTrigger   = new Trigger(() -> getRightTrigger() >= axisThreshold);
+    public final Trigger leftStickXPos  = new Trigger(() -> getLeftStickX() >= axisThreshold);
+    public final Trigger leftStickYPos  = new Trigger(() -> getLeftStickY() >= axisThreshold);
+    public final Trigger rightStickXPos = new Trigger(() -> getRightStickX() >= axisThreshold);
+    public final Trigger rightStickYPos = new Trigger(() -> getRightStickY() >= axisThreshold);
+    public final Trigger leftStickXNeg  = new Trigger(() -> getLeftStickX() <= -axisThreshold);
+    public final Trigger leftStickYNeg  = new Trigger(() -> getLeftStickY() <= -axisThreshold);
+    public final Trigger rightStickXNeg = new Trigger(() -> getRightStickX() <= -axisThreshold);
+    public final Trigger rightStickYNeg = new Trigger(() -> getRightStickY() <= -axisThreshold);
 
-    private long   leftTimeout;
-    private long   rightTimeout;
-    private double leftPower;
-    private double rightPower;
-    private double deadBand;
+    private final XboxController controller;
 
     public DTXboxController(int port) {
         this.controller = new XboxController(port);
         this.deadBand = 0D;
+        this.axisThreshold = AXIS_THRESHOLD;
         RUMBLE_TIMER.scheduleAtFixedRate(new RumbleTask(), 10, 20);
     }
 
@@ -319,6 +333,10 @@ public class DTXboxController {
 
     public void setDeadBand(double deadBand) {
         this.deadBand = deadBand;
+    }
+
+    public void setAxisThreshold(double threshold) {
+        this.axisThreshold = threshold;
     }
 
     private double deadBand(double d) {

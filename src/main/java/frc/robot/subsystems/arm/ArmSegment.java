@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,10 +18,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ArmSegment extends SubsystemBase {
+public abstract class ArmSegment extends SubsystemBase {
     private final String name;
     private ArmSegment   lowerSegment;
     private ArmSegment   higherSegment;
@@ -34,27 +33,24 @@ public class ArmSegment extends SubsystemBase {
     private final double        mass;
     private final double        length;
     private final double        stallTorque;
-    private final double        gearRatio;   // remove
     private final double        efficiency;
     private final double        maxSpeed;
     private final double        acceleration;
 
-    private final double[] positions;
-    private double         target;
-    private boolean        isSetPointCommanded = false;
-    private double         setpointJointAngle;
-    private double         speed;
-    private double         stopAccelPoint;
-    private double         decelPoint;
+    private Arm.Position targetPosition;
+    private Arm.Position lastPosition;
+    private double       target;
+    private boolean      isSetPointCommanded = false;
+    private double       setpointJointAngle;
+    private double       speed;
+    private double       stopAccelPoint;
+    private double       decelPoint;
 
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
-            double izone, double gearRatio, double[] positions, double efficiency,
-            double maxVelocity, double acceleration, double mass, double length,
-            Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
-            double closedLoopErrorValue) {
+            double izone, double gearRatio, double efficiency, double maxVelocity,
+            double acceleration, double mass, double length, Translation2d centerOfMass,
+            boolean isInverted, double lowerLimit, double upperLimit, double closedLoopErrorValue) {
         this.name = name;
-        this.gearRatio = gearRatio; // remove
-        this.positions = positions;
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
         this.efficiency = efficiency;
@@ -82,8 +78,9 @@ public class ArmSegment extends SubsystemBase {
         motor.config_IntegralZone(0, izone);
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
-        motor.setNeutralMode(NeutralMode.Coast);
-        motor.configClosedLoopPeakOutput(0, 0.1);
+        motor.setNeutralMode(NeutralMode.Brake);
+        // motor.setNeutralMode(NeutralMode.Coast);
+        motor.configClosedLoopPeakOutput(0, 0.2);
         canCoder = new CANCoder(cancoderID);
         configCancoder(canCoder);
         // Configure the CanCoder to be remote sensor 0,
@@ -102,10 +99,10 @@ public class ArmSegment extends SubsystemBase {
         // motor.setInverted(isInverted);
         // remove
 
-        motor.configForwardSoftLimitEnable(false); // will eventually enable
-        motor.configReverseSoftLimitEnable(false);
-        motor.configForwardSoftLimitThreshold(upperLimit);
-        motor.configReverseSoftLimitThreshold(lowerLimit);
+        motor.configForwardSoftLimitEnable(true); // will eventually enable
+        motor.configReverseSoftLimitEnable(true);
+        motor.configForwardSoftLimitThreshold(angleToTick(upperLimit));
+        motor.configReverseSoftLimitThreshold(angleToTick(lowerLimit));
     }
 
     private void configCancoder(CANCoder canCoder) {
@@ -189,6 +186,18 @@ public class ArmSegment extends SubsystemBase {
         // * inversionCoefficient; // remove
     }
 
+    public Arm.Position getTargetPosition() {
+        return targetPosition;
+    }
+
+    public Arm.Position getLastPosition() {
+        return lastPosition;
+    }
+
+    public boolean lastPosEqualsTarget() {
+        return targetPosition == lastPosition && targetPosition != null;
+    }
+
     public void setLowerSegment(ArmSegment lowerSegment) {
         this.lowerSegment = lowerSegment;
     }
@@ -208,7 +217,8 @@ public class ArmSegment extends SubsystemBase {
         return angle;
     }
 
-    public void setDestinationJointAngle(double destinationJointAngle) {
+    public void setDestinationJointAngle(Arm.Position position) {
+        double destinationJointAngle = getTargetAngle(position);
         target = destinationJointAngle;
         setpointJointAngle = getJointAngle();
         isSetPointCommanded = true;
@@ -229,20 +239,31 @@ public class ArmSegment extends SubsystemBase {
                 FF);
     }
 
-    public Command setAngleCommandPos(int angleIndex) {
-        double angle = positions[angleIndex];
-        return new FunctionalCommand(() -> {
-            setDestinationJointAngle(angle);
-        }, () -> {
-        }, (a) -> {
-        }, () -> {
-            return IsAtPosition(angle);
-        }, this);
+    public void armPanic() {
+        motor.neutralOutput();
+        isSetPointCommanded = false;
+        setpointJointAngle = getJointAngle();
+        target = setpointJointAngle;
     }
 
-    public boolean IsAtPosition(double jointAngle) {
+    protected abstract double getTargetAngle(Arm.Position position);
+
+    public Command setAngleCommandPos(Arm.Position position) {
+        return new ArmSegmentPositionCommand(position);
+    }
+
+    public boolean isAtPosition(Arm.Position position) {
+        double maxError = MAXIMUM_ANGLE_ERROR;
+        if (tickToAngle(motor.getSelectedSensorVelocity()) * 10 < 1) {
+            maxError *= 10;
+        }
+        double jointAngle = getTargetAngle(position);
         double angleError = Math.abs(jointAngle - getJointAngle());
-        return angleError < MAXIMUM_ANGLE_ERROR;
+        boolean isAtPosition = angleError < maxError;
+        if (isAtPosition) {
+            lastPosition = targetPosition;
+        }
+        return isAtPosition;
     }
 
     @Override
@@ -304,26 +325,56 @@ public class ArmSegment extends SubsystemBase {
             motor.neutralOutput();
         }
 
-        Translation2d centerOfMass = getRelativeCenterOfMass();
-        SmartDashboard.putString(name + " Center of mass: ",
-                String.format(formatPolar(centerOfMass))); // remove
-        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass)); // remove
-        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass)); // remove
-        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass)); // remove
+        // remove
+        // Translation2d centerOfMass = getRelativeCenterOfMass();
+        // SmartDashboard.putString(name + " Center of mass: ",
+        // String.format(formatPolar(centerOfMass)));
+        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
+        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
+        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        // remove
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        SmartDashboard.putNumber(name + "CANCoder Angle: ", canCoder.getAbsolutePosition()); // remove
-        SmartDashboard.putNumber(name + "CANCoder Relative: ", canCoder.getPosition()); // remove
-        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle); // remove
-        SmartDashboard.putNumber(name + " ff",
-                calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND)); // remove
-        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent()); // remove
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError()); // remove
-        SmartDashboard.putNumber(name + " speed: ", speed); // remove
+        // remove
+        // SmartDashboard.putNumber(name + "CANCoder Angle: ",
+        // canCoder.getAbsolutePosition());
+        // SmartDashboard.putNumber(name + "CANCoder Relative: ",
+        // canCoder.getPosition());
+        // remove
+        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
+        // remove
+        // SmartDashboard.putNumber(name + " ff",
+        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
+        // CYCLES_PER_SECOND));
+        // remove
+        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
+        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        // SmartDashboard.putNumber(name + " speed: ", speed); // remove
     }
 
+    // remove
     private static String formatPolar(Translation2d t) {
         return String.format("ø=%4.1f, m=%4.2f", t.getAngle()
                                                   .getDegrees(),
                 t.getNorm());
+    }
+    // remove
+
+    private class ArmSegmentPositionCommand extends CommandBase {
+        private final Arm.Position destinationPos;
+
+        ArmSegmentPositionCommand(Arm.Position position) {
+            destinationPos = position;
+            addRequirements(ArmSegment.this);
+        }
+
+        @Override
+        public void initialize() {
+            setDestinationJointAngle(destinationPos);
+        }
+
+        @Override
+        public boolean isFinished() {
+            return isAtPosition(destinationPos);
+        }
     }
 }
