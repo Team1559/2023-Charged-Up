@@ -9,6 +9,8 @@ import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
+import static frc.robot.Constants.Grabber.RESET_WRIST_ANGLE;
+
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -159,6 +161,9 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
+
+            // controller1.yButton.onTrue(wrist.setWristAngleCommand(0));
+            // controller1.xButton.onTrue(wrist.setWristAngleCommand(0));
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SelectCommand(Map.ofEntries(
