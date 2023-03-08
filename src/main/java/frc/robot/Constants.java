@@ -87,6 +87,8 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
+        public static final double SLOW_MODE_RATIO              = 0.2;
+
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
 
