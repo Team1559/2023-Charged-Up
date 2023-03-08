@@ -99,7 +99,7 @@ public class Arm {
                                                    });
     }
 
-    public Command moveToLocations(Position... positions) {
+    public Command moveSequentially(Position... positions) {
         Command[] groupOfCommands = new Command[positions.length];
         for (int i = 0; i < groupOfCommands.length; i++) {
             groupOfCommands[i] = moveArmToPosition(positions[i]);
@@ -109,7 +109,7 @@ public class Arm {
 
     public Command moveSequentially(Position position) {
         return new SelectCommand(
-                Map.ofEntries(Map.entry(true, moveToLocations(Position.WAYPOINT, position)),
+                Map.ofEntries(Map.entry(true, moveSequentially(Position.WAYPOINT, position)),
                         Map.entry(false, moveArmToPosition(position))),
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position);
     }

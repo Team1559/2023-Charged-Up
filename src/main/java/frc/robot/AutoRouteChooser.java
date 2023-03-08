@@ -17,7 +17,7 @@ public class AutoRouteChooser {
 
     private void addOptions() {
         positionChooser.setDefaultOption("Do Nothing (1)", null);
-        positionChooser.addOption("Leave community (1)", routes.LEAVE_1);
+        positionChooser.addOption("Leave community (1)", routes.BLUE_LEAVE_1);
         // positionChooser.addOption("Score, leave community, grab a piece (1)",
         // AutoRoute.SCORE_LEAVE_GRAB);
         // positionChooser.addOption("Score, leave community, grab a piece,
@@ -38,7 +38,7 @@ public class AutoRouteChooser {
         // positionChooser.addOption("Score, leave the community, grab a piece,
         // dock (2)",
         // AutoRoute.SCORE_LEAVE_GRAB_DOCK);
-        positionChooser.addOption("Leave community (3)", routes.LEAVE_3);
+        positionChooser.addOption("Leave community (3)", routes.BLUE_LEAVE_3);
         // positionChooser.addOption("Score, leave community, grab a piece (3)",
         // AutoRoute.SCORE_LEAVE_GRAB_3);
         // positionChooser.addOption("Score, leave community, grab a piece,

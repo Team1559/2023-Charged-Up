@@ -8,10 +8,13 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.grabber.GrabberClaw;
+import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class AutoRoutes {
@@ -140,18 +143,46 @@ public class AutoRoutes {
 
     private SwerveDrive swerveDrive;
     private Arm         arm;
+    private GrabberClaw grabberClaw;
     private boolean     isBlueAlliance;
 
-    public Command LEAVE_1;
-    public Command LEAVE_3;
+    public Command BLUE_LEAVE_1;
+    public Command BLUE_LEAVE_3;
+
+    public Command BLUE_START_1_PIECE_1;
+    public Command BLUE_PIECE_1_START_1;
+
+    public Command BLUE_SCORE_CUBE_LEAVE_1;
+    public Command BLUE_SCORE_CUBE_PICKUP_CUBE_RETURN_TO_1;
+    public Command BLUE_SCORE_CUBE_LEAVE_3;
 
     public AutoRoutes(SwerveDrive swerveDrive, Arm arm, boolean isBlueAlliance) {
         this.swerveDrive = swerveDrive;
         this.arm = arm;
         this.isBlueAlliance = isBlueAlliance;
 
-        LEAVE_1 = this.makeTrajectoryCommand(START_1_EXIT_COMMUNITY);
-        LEAVE_3 = this.makeTrajectoryCommand(START_3_EXIT_COMMUNITY);
+        BLUE_LEAVE_1 = this.makeTrajectoryCommand(START_1_EXIT_COMMUNITY);
+        BLUE_LEAVE_3 = this.makeTrajectoryCommand(START_3_EXIT_COMMUNITY);
+
+        BLUE_PIECE_1_START_1 = this.makeTrajectoryCommand(PIECE_1_TO_START_1);
+        BLUE_START_1_PIECE_1 = this.makeTrajectoryCommand(START_1_TO_PIECE_1);
+
+        BLUE_SCORE_CUBE_LEAVE_1 = new SequentialCommandGroup(
+                arm.moveSequentially(Arm.Position.UPPER_CUBE), grabberClaw.openClawCommand(),
+                arm.moveSequentially(Arm.Position.TRAVEL), BLUE_LEAVE_1);
+
+        BLUE_SCORE_CUBE_LEAVE_3 = new SequentialCommandGroup(
+                arm.moveSequentially(Arm.Position.UPPER_CUBE), grabberClaw.openClawCommand(),
+                arm.moveSequentially(Arm.Position.TRAVEL), BLUE_LEAVE_3);
+
+        // I'm not sure if this is possible. Leaving it here anyways.
+        BLUE_SCORE_CUBE_PICKUP_CUBE_RETURN_TO_1 = new SequentialCommandGroup(
+                arm.moveSequentially(Arm.Position.UPPER_CUBE), grabberClaw.openClawCommand(),
+                arm.moveSequentially(Arm.Position.TRAVEL), BLUE_START_1_PIECE_1,
+                arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.PICKUP_CUBE),
+                grabberClaw.closeClawCommand(), arm.moveToLocations(Arm.Position.TRAVEL),
+                BLUE_PIECE_1_START_1);
+
     }
 
     private SwerveTrajectory makeTrajectory(Pose2d[] poses) {
