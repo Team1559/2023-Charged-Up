@@ -25,7 +25,7 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = false;
+        public static final boolean CHASSIS_ENABLED = true;
         public static final boolean ARM_ENABLED     = true;
         public static final boolean GRABBER_ENABLED = true;
         public static final boolean VISION_ENABLED  = false;
@@ -139,12 +139,12 @@ public final class Constants {
                 / CYCLES_PER_SECOND;
 
         public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
-        public static final double MAXIMUM_VELOCITY_WRIST    = 60D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_ELBOW    = 20D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_BASE     = 10D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_WRIST    = 30D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW    = 30D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE     = 20D / CYCLES_PER_SECOND;
         public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
 
-        public static final double BASE_ACCELERATION_TIME  = 0.5;
+        public static final double BASE_ACCELERATION_TIME  = 0.7;
         public static final double ELBOW_ACCELERATION_TIME = 1;
         public static final double WRIST_ACCELERATION_TIME = 0.5;
         public static final double ACCELERATION_WRIST      = MAXIMUM_VELOCITY_WRIST
@@ -157,20 +157,20 @@ public final class Constants {
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
-        public static final double kP_BASE  = 1;
-        public static final double kD_BASE  = 0;
-        public static final double kI_BASE  = 0.000;
-        public static final double kIZ_BASE = 0;    // degrees
+        public static final double kP_BASE  = 1.5;   // 1.25;
+        public static final double kD_BASE  = 1.0;   // 0.0;
+        public static final double kI_BASE  = 0.0015;
+        public static final double kIZ_BASE = 20;    // deg * 11
 
         public static final double kP_ELBOW  = 0.8;
-        public static final double kD_ELBOW  = 0;
+        public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
-        public static final double kIZ_ELBOW = 5;     // degrees
+        public static final double kIZ_ELBOW = 30;    // deg * 11
 
         public static final double kP_WRIST  = 1;
         public static final double kD_WRIST  = 0;
         public static final double kI_WRIST  = 0.1;
-        public static final double kIZ_WRIST = 3;  // degrees
+        public static final double kIZ_WRIST = 3;  // deg * 11
 
         public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.35;
         public static final double ELBOW_SEGMENT_EFFICIENCY = 0.8; // 0.85;
@@ -193,10 +193,10 @@ public final class Constants {
 
         public static final double LOWER_ARM_WRIST_LIMIT = -95.0;
         public static final double UPPER_ARM_WRIST_LIMIT = 60.0;
-        public static final double LOWER_ELBOW_LIMIT     = 145.0;
+        public static final double LOWER_ELBOW_LIMIT     = -154.0;
         public static final double UPPER_ELBOW_LIMIT     = 0.0;
         public static final double LOWER_BASE_LIMIT      = 50.0;
-        public static final double UPPER_BASE_LIMIT      = 93.0;
+        public static final double UPPER_BASE_LIMIT      = 94.0;
 
         public static final double BASE_CLOSED_LOOP_ERROR  = 1;
         public static final double ELBOW_CLOSED_LOOP_ERROR = 1;

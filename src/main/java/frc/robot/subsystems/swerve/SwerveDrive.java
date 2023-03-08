@@ -1,5 +1,6 @@
 package frc.robot.subsystems.swerve;
 
+import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 import static frc.robot.Constants.Swerve.ENCODER_STDDEV;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
@@ -130,7 +131,7 @@ public class SwerveDrive extends SubsystemBase {
         boolean vControl = Math.abs(vr) > 1e-3;
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;
-        if (vControl) {
+        if (vControl || !VISION_ENABLED) {
             rPIDSetpoint = Double.NaN;
             // vr = vr;
         } else if (setpointSet || !rotating) {
