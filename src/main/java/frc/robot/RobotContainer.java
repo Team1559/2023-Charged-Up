@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -65,9 +64,11 @@ public class RobotContainer {
         if (ARM_ENABLED) {
             base = new ArmBase();
             elbow = new ArmElbow();
+            armWrist = new ArmWrist();
             base.setHigherSegment(elbow);
             elbow.setLowerSegment(base);
-            armWrist = null;
+            elbow.setHigherSegment(armWrist);
+            armWrist.setLowerSegment(elbow);
             arm = new Arm(base, elbow, armWrist);
         } else {
             base = null;
@@ -152,6 +153,15 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return autoRouteChooser.getSelectedCommand();
+        Rotation2d degrees180 = Rotation2d.fromDegrees(180);
+        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180), new Pose2d(11, 2.75, degrees180),
+                new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
+                new Pose2d(13, 2.75, degrees180) };
+        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
+        SmartDashboard.putNumber("Trajectory time", trajectory.time);
+        swerve.displayTrajectory(trajectory);
+        return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
+                true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
+                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false));
     }
 }

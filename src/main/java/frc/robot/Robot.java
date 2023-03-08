@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -16,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
+    public Compressor      airCompressor;
+    public PneumaticHub    hub;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -24,6 +29,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         robotContainer = new RobotContainer();
+        hub = new PneumaticHub(31);// constant
+        airCompressor = new Compressor(31, PneumaticsModuleType.REVPH);
     }
 
     /**
@@ -44,7 +51,9 @@ public class Robot extends TimedRobot {
      * This function is called once each time the robot enters Disabled mode.
      */
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        airCompressor.disable();
+    }
 
     /** This function is called periodically while the robot is disabled.. */
     @Override
@@ -65,14 +74,18 @@ public class Robot extends TimedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void teleopInit() {}
+    public void teleopInit() {
+        airCompressor.enableDigital();
+    }
 
     /** This function is called periodically during operator control. */
     @Override
     public void teleopPeriodic() {}
 
     @Override
-    public void testInit() {}
+    public void testInit() {
+        airCompressor.enableDigital();
+    }
 
     /** This function is called periodically during test mode. */
     @Override

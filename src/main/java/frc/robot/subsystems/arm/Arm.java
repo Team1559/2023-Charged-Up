@@ -12,13 +12,12 @@ public class Arm {
     public Arm(ArmBase base, ArmElbow elbow, ArmWrist wrist) {
         this.base = base;
         this.elbow = elbow;
-        // this.wrist = wrist;
+        this.wrist = wrist;
     }
 
     private Command moveArmToPosition(int index) {
         return new ParallelCommandGroup(base.setAngleCommandPos(index),
-                elbow.setAngleCommandPos(index));
-        // , wrist.setAngleCommandPos(index));
+                elbow.setAngleCommandPos(index), wrist.setAngleCommandPos(index));
     }
 
     public SequentialCommandGroup moveToLocations(int... positions) {

@@ -1,25 +1,25 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.Constants.CYCLES_PER_SECOND;
-import static frc.robot.Constants.FALCON_MAX_RPM;
-import static frc.robot.Constants.FALCON_STALL_TORQUE;
-import static frc.robot.Constants.FALCON_TICKS_PER_REV;
-import static frc.robot.Constants.GRAVITY_ACCELERATION;
-import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
-import static frc.robot.Constants.Arm.MINIMUM_TARGET_DISTANCE;
+import static frc.robot.Constants.Arm.*;
+import static frc.robot.Constants.*;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSegment extends SubsystemBase {
@@ -27,8 +27,8 @@ public class ArmSegment extends SubsystemBase {
     private ArmSegment   lowerSegment;
     private ArmSegment   higherSegment;
 
-    private final TalonFX motor;
-    // private final CANCoder canCoder;
+    private final TalonFX  motor;
+    private final CANCoder canCoder;
 
     private final Translation2d centerOfMass;
     private final double        mass;
@@ -42,7 +42,7 @@ public class ArmSegment extends SubsystemBase {
     private final double[] positions;
     private double         target;
     private boolean        isSetPointCommanded = false;
-    private double         setpoint;
+    private double         setpointJointAngle;
     private double         speed;
     private double         stopAccelPoint;
     private double         decelPoint;
@@ -50,11 +50,11 @@ public class ArmSegment extends SubsystemBase {
     public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
             double izone, double gearRatio, double[] positions, double efficiency,
             double maxVelocity, double acceleration, double mass, double length,
-            Translation2d centerOfMass) {
+            Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
+            double closedLoopErrorValue) {
         this.name = name;
         this.gearRatio = gearRatio;
         this.positions = positions;
-
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
         this.efficiency = efficiency;
@@ -63,8 +63,11 @@ public class ArmSegment extends SubsystemBase {
         this.centerOfMass = centerOfMass;
 
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
-
-        // canCoder = new CANCoder(cancoderID);
+        // if (isInverted) {
+        // kd *= -1;
+        // kp *= -1;
+        // ki *= -1;
+        // }
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
@@ -78,29 +81,49 @@ public class ArmSegment extends SubsystemBase {
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Coast);
+        motor.configClosedLoopPeakOutput(0, 0.1);
+        canCoder = new CANCoder(cancoderID);
+        configCancoder(canCoder);
+        // Configure the CanCoder to be remote sensor 0,
+        // then select remote sensor 0 as our PID input.
+        motor.configRemoteFeedbackFilter(canCoder, 0);
+        motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+        motor.setSensorPhase(isInverted);
+        motor.setInverted(isInverted);
+        // motor.configAllowableClosedloopError(0, closedLoopErrorValue);
+
+        // if (isInverted) {
+        // motor.configSelectedFeedbackCoefficient(-1);
+        // Motor is mounted in opposite orientation (inverted)
+        // }
+        // motor.setInverted(isInverted);
+
+        motor.configForwardSoftLimitEnable(false); // will eventually enable
+        motor.configReverseSoftLimitEnable(false);
+        motor.configForwardSoftLimitThreshold(upperLimit);
+        motor.configReverseSoftLimitThreshold(lowerLimit);
     }
 
-    // private void configCancoder() {
-    // CANCoderConfiguration config = new CANCoderConfiguration();
-    // config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-    // config.magnetOffsetDegrees = 0;
-    // config.sensorDirection = false;
-    // config.initializationStrategy =
-    // SensorInitializationStrategy.BootToAbsolutePosition;
-    // canCoder.configAllSettings(config);
-    // canCoder.setPosition(canCoder.getAbsolutePosition() - BASE_CC_OFFSET);
-    // }
-
-    public Command resetEncoderForTesting(double angle) {
-        return new InstantCommand(() -> motor.setSelectedSensorPosition(angleToTick(angle)));
+    private void configCancoder(CANCoder canCoder) {
+        canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+        // setting to true b/c CANcoders are on opposite side of robot
+        canCoder.configSensorDirection(true);
+        canCoder.configSensorInitializationStrategy(
+                SensorInitializationStrategy.BootToAbsolutePosition);
+        canCoder.setPosition(canCoder.getAbsolutePosition());
     }
 
-    public double getAngle() {
+    public double getJointAngle() {
         return tickToAngle(motor.getSelectedSensorPosition());
     }
 
-    public double getGroundAngle() {
-        return setpoint;
+    public double getSetpointGroundAngle() {
+        if (lowerSegment == null) {
+            return setpointJointAngle;
+        }
+        // A ground angle is the angle of the previous segment, added to the
+        // angle of the current segment.
+        return setpointJointAngle + lowerSegment.getSetpointGroundAngle();
     }
 
     public double getMass() {
@@ -112,11 +135,11 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public Translation2d getRelativeEndpoint() {
-        return new Translation2d(length, Rotation2d.fromDegrees(setpoint));
+        return new Translation2d(length, Rotation2d.fromDegrees(getSetpointGroundAngle()));
     }
 
     public Translation2d getRelativeCenterOfMass() {
-        Rotation2d pivotPosition = Rotation2d.fromDegrees(setpoint);
+        Rotation2d pivotPosition = Rotation2d.fromDegrees(getSetpointGroundAngle());
         if (higherSegment == null) {
             return centerOfMass.rotateBy(pivotPosition);
         }
@@ -147,14 +170,17 @@ public class ArmSegment extends SubsystemBase {
     }
 
     public double calculateFeedForward(double velocity, double acceleration) {
+        /**
+         * int inversionCoefficient = 0; if (isInverted) { inversionCoefficient
+         * = -1; } else { inversionCoefficient = 1; }
+         */
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
-        return kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
-                                                                         .getCos();
-        // return kG * totalCenterOfMass.getAngle()
-        // .getCos();
+        return (kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
+                                                                          .getCos());
+        // * inversionCoefficient;
     }
 
     public void setLowerSegment(ArmSegment lowerSegment) {
@@ -167,31 +193,31 @@ public class ArmSegment extends SubsystemBase {
 
     public double angleToTick(double angle) {
         double revolutionsOfArm = angle / 360.0;
-        double motorRevolutions = revolutionsOfArm * gearRatio;
-        double angleTicks = motorRevolutions * FALCON_TICKS_PER_REV;
-        return angleTicks;
+        return revolutionsOfArm * CANCODER_TICKS_PER_REV;
     }
 
     public double tickToAngle(double ticks) {
-        double motorRevolutions = ticks / FALCON_TICKS_PER_REV;
-        double revolutionsOfArm = motorRevolutions / gearRatio;
+        double revolutionsOfArm = ticks / CANCODER_TICKS_PER_REV;
         double angle = revolutionsOfArm * 360;
         return angle;
     }
 
-    public void setDestinationAngle(double angle) {
-        target = angle;
-        setpoint = getAngle();
+    public void setDestinationJointAngle(double destinationJointAngle) {
+        target = destinationJointAngle;
+        setpointJointAngle = getJointAngle();
         isSetPointCommanded = true;
 
-        double displacementToSetpoint = angle - setpoint;
+        double displacementToSetpoint = destinationJointAngle - setpointJointAngle;
         double accelerationDisplacement = Math.copySign(0.5 * maxSpeed * maxSpeed / acceleration,
                 displacementToSetpoint);
-        stopAccelPoint = setpoint + accelerationDisplacement;
+        if (Math.abs(accelerationDisplacement) > Math.abs(displacementToSetpoint / 2)) {
+            accelerationDisplacement = displacementToSetpoint / 2;
+        }
+        stopAccelPoint = setpointJointAngle + accelerationDisplacement;
         decelPoint = target - accelerationDisplacement;
     }
 
-    private void setAngleOnMotor(double angle, double velocity, double acceleration) {
+    private void setJointAngleOnMotor(double angle, double velocity, double acceleration) {
         double FF = calculateFeedForward(velocity, acceleration);
         motor.set(TalonFXControlMode.Position, angleToTick(angle), DemandType.ArbitraryFeedForward,
                 FF);
@@ -200,7 +226,7 @@ public class ArmSegment extends SubsystemBase {
     public Command setAngleCommandPos(int angleIndex) {
         double angle = positions[angleIndex];
         return new FunctionalCommand(() -> {
-            setDestinationAngle(angle);
+            setDestinationJointAngle(angle);
         }, () -> {
         }, (a) -> {
         }, () -> {
@@ -208,8 +234,8 @@ public class ArmSegment extends SubsystemBase {
         }, this);
     }
 
-    public boolean IsAtPosition(double angle) {
-        double angleError = Math.abs(angle - getAngle());
+    public boolean IsAtPosition(double jointAngle) {
+        double angleError = Math.abs(jointAngle - getJointAngle());
         return angleError < MAXIMUM_ANGLE_ERROR;
     }
 
@@ -217,31 +243,31 @@ public class ArmSegment extends SubsystemBase {
     public void periodic() {
         if (!DriverStation.isTeleopEnabled()) {
             isSetPointCommanded = false;
-            setpoint = getAngle();
-            target = getAngle();
+            setpointJointAngle = getJointAngle();
+            target = setpointJointAngle;
         }
         double accel = 0;
         double velo = 0;
         if (isSetPointCommanded) {
-            double distanceToTarget = Math.abs(setpoint - target);
+            double distanceToTarget = Math.abs(setpointJointAngle - target);
             if (distanceToTarget <= Math.max(speed, MINIMUM_TARGET_DISTANCE)) {
-                setpoint = target;
+                setpointJointAngle = target;
                 speed = 0;
             } else {
-                if (setpoint > target) {
+                if (setpointJointAngle > target) {
                     // Need to swap comparisons if moving in reverse
-                    if (setpoint <= decelPoint) {
+                    if (setpointJointAngle <= decelPoint) {
                         accel = -acceleration;
                         speed -= acceleration;
-                    } else if (setpoint > stopAccelPoint) {
+                    } else if (setpointJointAngle > stopAccelPoint) {
                         accel = acceleration;
                         speed += acceleration;
                     }
                 } else {
-                    if (setpoint >= decelPoint) {
+                    if (setpointJointAngle >= decelPoint) {
                         accel = -acceleration;
                         speed -= acceleration;
-                    } else if (setpoint < stopAccelPoint) {
+                    } else if (setpointJointAngle < stopAccelPoint) {
                         accel = acceleration;
                         speed += acceleration;
                     }
@@ -251,43 +277,42 @@ public class ArmSegment extends SubsystemBase {
                     speed = maxSpeed * 0.05;
                 }
 
-                double nextSetpoint = setpoint;
-                if (setpoint > target) {
+                double nextSetpoint = setpointJointAngle;
+                if (setpointJointAngle > target) {
                     velo = -speed;
                     nextSetpoint -= speed;
                 } else {
                     velo = speed;
                     nextSetpoint += speed;
                 }
-                if (nextSetpoint >= target != setpoint >= target) {
-                    setpoint = target;
+                if (nextSetpoint >= target != setpointJointAngle >= target) {
+                    setpointJointAngle = target;
                 } else {
-                    setpoint = nextSetpoint;
+                    setpointJointAngle = nextSetpoint;
                 }
             }
 
-            setAngleOnMotor(setpoint, velo * CYCLES_PER_SECOND,
+            setJointAngleOnMotor(setpointJointAngle, velo * CYCLES_PER_SECOND,
                     accel * CYCLES_PER_SECOND * CYCLES_PER_SECOND);
         } else {
             motor.neutralOutput();
         }
 
-        // Translation2d centerOfMass = getRelativeCenterOfMass();
-        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
-        // SmartDashboard.putNumber(name + " angle: ", getAngle());
-        // SmartDashboard.putNumber(name + " setpoint: ", setpoint);
-        // SmartDashboard.putNumber(name + " ff",
-        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
-        // CYCLES_PER_SECOND));
-        // SmartDashboard.putNumber(name + " current draw:",
-        // motor.getSupplyCurrent());
-        // SmartDashboard.putNumber(name + " error: ",
-        // motor.getClosedLoopError());
-        // Translation2d com = getRelativeCenterOfMass();
-        // SmartDashboard.putString(name + " Center of mass: ",
-        // String.format(formatPolar(com)));
+        Translation2d centerOfMass = getRelativeCenterOfMass();
+        SmartDashboard.putString(name + " Center of mass: ",
+                String.format(formatPolar(centerOfMass)));
+        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
+        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
+        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        SmartDashboard.putNumber(name + " angle: ", getJointAngle());
+        SmartDashboard.putNumber(name + "CANCoder Angle: ", canCoder.getAbsolutePosition());
+        SmartDashboard.putNumber(name + "CANCoder Relative: ", canCoder.getPosition());
+        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
+        SmartDashboard.putNumber(name + " ff",
+                calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
+        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
+        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        SmartDashboard.putNumber(name + " speed: ", speed);
     }
 
     private static String formatPolar(Translation2d t) {
