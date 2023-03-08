@@ -213,6 +213,7 @@ public final class Constants {
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
         public static final double MINIMUM_WRIST_ANGLE               = -90D;
         public static final double MAXIMUN_WRIST_ANGLE               = 90D;
+        public static final double RESET_WRIST_ANGLE                 = 0;
 
     }
 
