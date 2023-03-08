@@ -58,12 +58,12 @@ public class Vision extends SubsystemBase {
 
         EstimatedRobotPose pose = result.get();
         SmartDashboard.putNumber("Vision Pose X", pose.estimatedPose.toPose2d()
-                                                                    .getX());
+                                                                    .getX()); // remove
         SmartDashboard.putNumber("Vision Pose Y", pose.estimatedPose.toPose2d()
-                                                                    .getY());
+                                                                    .getY()); // remove
         SmartDashboard.putNumber("Vision Pose R", pose.estimatedPose.toPose2d()
                                                                     .getRotation()
-                                                                    .getDegrees());
+                                                                    .getDegrees()); // remove
         if (Constants.FeatureFlags.CHASSIS_ENABLED) {
             try {
                 double stdDev = 0.5 * camera.getLatestResult()
@@ -72,7 +72,7 @@ public class Vision extends SubsystemBase {
                                             .getTranslation()
                                             .toTranslation2d()
                                             .getNorm();
-                SmartDashboard.putNumber("Vision StdDev", stdDev);
+                SmartDashboard.putNumber("Vision StdDev", stdDev); // remove
                 if (poseSet) {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
@@ -84,7 +84,7 @@ public class Vision extends SubsystemBase {
                     poseSet = true;
                 }
             } catch (ConcurrentModificationException e) {
-                SmartDashboard.putString("Error", e.toString());
+                SmartDashboard.putString("Error", e.toString()); // remove
             }
         }
     }

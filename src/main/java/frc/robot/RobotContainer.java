@@ -149,10 +149,10 @@ public class RobotContainer {
                 new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
                 new Pose2d(13, 2.75, degrees180) };
         SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
-        SmartDashboard.putNumber("Trajectory time", trajectory.time);
+        SmartDashboard.putNumber("Trajectory time", trajectory.time); // remove
         swerve.displayTrajectory(trajectory);
         return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
                 true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
-                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false));
+                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false)); // remove
     }
 }

@@ -301,18 +301,18 @@ public class ArmSegment extends SubsystemBase {
         Translation2d centerOfMass = getRelativeCenterOfMass();
         SmartDashboard.putString(name + " Center of mass: ",
                 String.format(formatPolar(centerOfMass)));
-        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
+        SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass)); // remove
+        SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass)); // remove
+        SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass)); // remove
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        SmartDashboard.putNumber(name + "CANCoder Angle: ", canCoder.getAbsolutePosition());
-        SmartDashboard.putNumber(name + "CANCoder Relative: ", canCoder.getPosition());
-        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
+        SmartDashboard.putNumber(name + "CANCoder Angle: ", canCoder.getAbsolutePosition()); // remove
+        SmartDashboard.putNumber(name + "CANCoder Relative: ", canCoder.getPosition()); // remove
+        SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle); // remove
         SmartDashboard.putNumber(name + " ff",
-                calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND));
-        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
-        SmartDashboard.putNumber(name + " speed: ", speed);
+                calculateFeedForward(velo * CYCLES_PER_SECOND, accel * CYCLES_PER_SECOND)); // remove
+        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent()); // remove
+        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError()); // remove
+        SmartDashboard.putNumber(name + " speed: ", speed); // remove
     }
 
     private static String formatPolar(Translation2d t) {
