@@ -146,15 +146,6 @@ public class SwerveDrive extends SubsystemBase {
 
         ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
 
-        // ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
-        SmartDashboard.putBoolean("Rotating", rotating); // remove
-        SmartDashboard.putBoolean("Setpoint", setpointSet); // remove
-        SmartDashboard.putBoolean("vControl", vControl); // remove
-        SmartDashboard.putNumber("Vx", vx); // remove
-        SmartDashboard.putNumber("Vy", vy); // remove
-        SmartDashboard.putNumber("Vr", vr); // remove
-        SmartDashboard.putNumber("rPIDSetpoint", Math.toDegrees(rPIDSetpoint)); // remove
-
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(newStates, speeds, MAXIMUM_LINEAR_VELOCITY,
                 MAXIMUM_LINEAR_VELOCITY, MAXIMUM_ANGULAR_VELOCITY);
@@ -215,11 +206,6 @@ public class SwerveDrive extends SubsystemBase {
 
         Pose2d currentPose = poseEstimator.getEstimatedPosition();
         field2d.setRobotPose(currentPose);
-        SmartDashboard.putNumber("Pos X", currentPose.getX()); // remove
-        SmartDashboard.putNumber("Pos Y", currentPose.getY()); // remove
-        SmartDashboard.putNumber("Pos Rot", currentPose.getRotation()
-                                                       .getDegrees()); // remove
-        SmartDashboard.putNumber("Yaw", gyro.getYaw()); // remove
     }
 
     /**

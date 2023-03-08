@@ -30,7 +30,7 @@ public class TeleopWristAngleCommand extends CommandBase {
         } else {
             return;
         }
-        // double angle = wrist.getAngle();
+
         double newAngle = wrist.getAngle() + x;
         if (newAngle > SERVO_RANGE / 2 - 2) {
             newAngle = SERVO_RANGE / 2 - 2;
@@ -38,23 +38,5 @@ public class TeleopWristAngleCommand extends CommandBase {
             newAngle = -SERVO_RANGE / 2 + 2;
         }
         wrist.setAngle(newAngle);
-        // System.out.println(wrist.getAngle());
-
-        // remove
-        // if (Math.abs(x) > deadband) {
-        // if (x < 0) {
-        // angle -= TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
-        // } else {
-        // angle += TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
-        // }
-        // if (angle > MAXIMUN_WRIST_ANGLE) {
-        // angle = 90;
-        // }
-        // if (angle < -MINIMUM_WRIST_ANGLE) {
-        // angle = -90;
-        // }
-        // wrist.setAngle(angle);
-        // }
-        // remove
     }
 }

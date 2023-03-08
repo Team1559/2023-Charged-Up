@@ -57,15 +57,8 @@ public abstract class ArmSegment extends SubsystemBase {
         this.mass = mass;
         this.length = length;
         this.centerOfMass = centerOfMass;
-
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
-        // remove
-        // if (isInverted) {
-        // kd *= -1;
-        // kp *= -1;
-        // ki *= -1;
-        // }
-        // remove
+
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
@@ -91,15 +84,7 @@ public abstract class ArmSegment extends SubsystemBase {
         motor.setInverted(isInverted);
         // motor.configAllowableClosedloopError(0, closedLoopErrorValue);
 
-        // remove
-        // if (isInverted) {
-        // motor.configSelectedFeedbackCoefficient(-1);
-        // Motor is mounted in opposite orientation (inverted)
-        // }
-        // motor.setInverted(isInverted);
-        // remove
-
-        motor.configForwardSoftLimitEnable(true); // will eventually enable
+        motor.configForwardSoftLimitEnable(true);
         motor.configReverseSoftLimitEnable(true);
         motor.configForwardSoftLimitThreshold(angleToTick(upperLimit));
         motor.configReverseSoftLimitThreshold(angleToTick(lowerLimit));
@@ -171,19 +156,12 @@ public abstract class ArmSegment extends SubsystemBase {
     }
 
     public double calculateFeedForward(double velocity, double acceleration) {
-        // remove
-        /**
-         * int inversionCoefficient = 0; if (isInverted) { inversionCoefficient
-         * = -1; } else { inversionCoefficient = 1; }
-         */
-        // remove
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
         return (kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
                                                                           .getCos());
-        // * inversionCoefficient; // remove
     }
 
     public Arm.Position getTargetPosition() {
@@ -325,39 +303,11 @@ public abstract class ArmSegment extends SubsystemBase {
             motor.neutralOutput();
         }
 
-        // remove
-        // Translation2d centerOfMass = getRelativeCenterOfMass();
-        // SmartDashboard.putString(name + " Center of mass: ",
-        // String.format(formatPolar(centerOfMass)));
-        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
-        // remove
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        // remove
-        // SmartDashboard.putNumber(name + "CANCoder Angle: ",
-        // canCoder.getAbsolutePosition());
-        // SmartDashboard.putNumber(name + "CANCoder Relative: ",
-        // canCoder.getPosition());
-        // remove
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
-        // remove
-        // SmartDashboard.putNumber(name + " ff",
-        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
-        // CYCLES_PER_SECOND));
-        // remove
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
         SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
-        // SmartDashboard.putNumber(name + " speed: ", speed); // remove
     }
-
-    // remove
-    private static String formatPolar(Translation2d t) {
-        return String.format("ø=%4.1f, m=%4.2f", t.getAngle()
-                                                  .getDegrees(),
-                t.getNorm());
-    }
-    // remove
 
     private class ArmSegmentPositionCommand extends CommandBase {
         private final Arm.Position destinationPos;

@@ -58,7 +58,6 @@ public final class Constants {
         public static final int PDH_ID                = 34;
         public static final int CLAW_SOLENOID_ID      = 7;
         public static final int PNEUMATICS_HUB_ID     = 31;
-        // public static final int CLAW_PRESSURE_SOLENOID_ID = 5678; // remove
 
         public static final int WRIST_SERVO_PORT = 2;
 
@@ -202,7 +201,6 @@ public final class Constants {
     }
 
     public static class Grabber {
-        // public static final double GRABBER_WRIST_GEAR_RATIO=1D; // remove
         public static final double ZERO_ANGLE                        = 90D;
         public static final int    SERVO_RANGE                       = 180;
         public static final double TELEOP_ANGULAR_VELOCITY           = 90D;

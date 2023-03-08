@@ -129,15 +129,6 @@ public class RobotContainer {
 
     private void configureBindings() {
         if (ARM_ENABLED) {
-            // remove
-            // controller1.aButton.onTrue(elbow.setAngleCommandPos(0));
-            // controller1.bButton.onTrue(base.setAngleCommandPos(1));
-            // controller1.xButton.onTrue(elbow.setAngleCommandPos(1));
-            // controller1.yButton.onTrue(base.setAngleCommandPos(4));
-            // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
-            // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
-            // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
-            // remove
             controller1.yButton.onTrue(new SelectCommand(Map.ofEntries(
                     Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.UPPER_CONE)),
                     Map.entry(CommandSelector.CUBE, arm.moveSequentially(Arm.Position.UPPER_CUBE))),
@@ -193,10 +184,8 @@ public class RobotContainer {
                 new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
                 new Pose2d(13, 2.75, degrees180) };
         SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
-        SmartDashboard.putNumber("Trajectory time", trajectory.time); // remove
         swerve.displayTrajectory(trajectory);
         return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
-                true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
-                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false)); // remove
+                true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory));
     }
 }

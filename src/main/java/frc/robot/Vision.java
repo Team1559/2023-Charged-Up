@@ -57,13 +57,6 @@ public class Vision extends SubsystemBase {
         }
 
         EstimatedRobotPose pose = result.get();
-        SmartDashboard.putNumber("Vision Pose X", pose.estimatedPose.toPose2d()
-                                                                    .getX()); // remove
-        SmartDashboard.putNumber("Vision Pose Y", pose.estimatedPose.toPose2d()
-                                                                    .getY()); // remove
-        SmartDashboard.putNumber("Vision Pose R", pose.estimatedPose.toPose2d()
-                                                                    .getRotation()
-                                                                    .getDegrees()); // remove
         if (Constants.FeatureFlags.CHASSIS_ENABLED) {
             try {
                 double stdDev = 0.5 * camera.getLatestResult()
@@ -72,19 +65,16 @@ public class Vision extends SubsystemBase {
                                             .getTranslation()
                                             .toTranslation2d()
                                             .getNorm();
-                SmartDashboard.putNumber("Vision StdDev", stdDev); // remove
                 if (poseSet) {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
                 } else {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(0, 0, 0));
-                    swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                            pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev)); // remove
                     poseSet = true;
                 }
             } catch (ConcurrentModificationException e) {
-                SmartDashboard.putString("Error", e.toString()); // remove
+                // ignore
             }
         }
     }
