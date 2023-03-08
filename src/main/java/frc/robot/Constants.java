@@ -25,7 +25,7 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = true;
+        public static final boolean CHASSIS_ENABLED = false;
         public static final boolean ARM_ENABLED     = true;
         public static final boolean GRABBER_ENABLED = true;
         public static final boolean VISION_ENABLED  = false;
@@ -170,9 +170,9 @@ public final class Constants {
         public static final double kI_WRIST  = 0.1;
         public static final double kIZ_WRIST = 3;  // deg * 11
 
-        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.35;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.8; // 0.85;
-        public static final double WRIST_SEGMENT_EFFICIENCY = 1.0; // 0.7;
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3;  // 0.35;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.85; // 0.85;
+        public static final double WRIST_SEGMENT_EFFICIENCY = 1.0;  // 0.7;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);
         public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6.5);
