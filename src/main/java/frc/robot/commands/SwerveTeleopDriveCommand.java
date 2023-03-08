@@ -35,7 +35,7 @@ public class SwerveTeleopDriveCommand extends CommandBase {
             vx = -vx;
             vy = -vy;
         }
-        if (controller.getAButton()) {
+        if (controller.getLeftTrigger() >= 0.5) {
             vx *= SLOW_MODE_RATIO;
             vy *= SLOW_MODE_RATIO;
             vr *= SLOW_MODE_RATIO;
