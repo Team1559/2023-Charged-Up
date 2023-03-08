@@ -11,25 +11,18 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import java.util.Map;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.lib.DTXboxController;
-import frc.lib.SwerveTrajectory;
-import frc.lib.SwerveTrajectoryGenerator;
 
 import frc.robot.commands.ScoreCommands;
 import frc.robot.commands.SwerveTeleopDriveCommand;
 import frc.robot.commands.SwerveTeleopSnapRotateCommand;
-import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
@@ -186,15 +179,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        Rotation2d degrees180 = Rotation2d.fromDegrees(180);
-        Pose2d[] waypoints = { new Pose2d(13, 2.75, degrees180), new Pose2d(11, 2.75, degrees180),
-                new Pose2d(11, 4.75, degrees180), new Pose2d(13, 4.75, degrees180),
-                new Pose2d(13, 2.75, degrees180) };
-        SwerveTrajectory trajectory = SwerveTrajectoryGenerator.calculateTrajectory(waypoints);
-        SmartDashboard.putNumber("Trajectory time", trajectory.time);
-        swerve.displayTrajectory(trajectory);
-        return new InstantCommand(() -> SmartDashboard.putBoolean("Auto active",
-                true)).andThen(new SwerveTrajectoryCommand(swerve, trajectory))
-                      .andThen(() -> SmartDashboard.putBoolean("Auto active", false));
+        return autoRouteChooser.getSelectedCommand();
     }
 }
