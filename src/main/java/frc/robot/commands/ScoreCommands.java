@@ -1,0 +1,101 @@
+package frc.robot.commands;
+
+import edu.wpi.first.wpilibj2.command.Command;
+
+import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.grabber.GrabberClaw;
+import frc.robot.subsystems.grabber.GrabberWrist;
+
+public class ScoreCommands {
+    private ScoreCommands() {}
+
+    public static Command zeroWrist(GrabberWrist wrist) {
+        return wrist.setWristAngleCommand(0);
+    }
+
+    public static Command moveToTravel(Arm arm) {
+        return arm.moveSequentially(Arm.Position.TRAVEL);
+    }
+
+    public static Command moveToConeHigh(Arm arm, GrabberWrist wrist) {
+        return arm.moveSequentially(Arm.Position.UPPER_CONE)
+                  .alongWith(zeroWrist(wrist));
+    }
+
+    public static Command moveToConeMid(Arm arm, GrabberWrist wrist) {
+        return arm.moveSequentially(Arm.Position.MIDDLE_CONE)
+                  .alongWith(zeroWrist(wrist));
+    }
+
+    public static Command moveToConeLow(Arm arm, GrabberWrist wrist) {
+        return arm.moveSequentially(Arm.Position.LOWER_CONE)
+                  .alongWith(zeroWrist(wrist));
+    }
+
+    public static Command moveToCubeHigh(Arm arm, GrabberWrist wrist) {
+        return arm.moveSequentially(Arm.Position.UPPER_CUBE)
+                  .alongWith(zeroWrist(wrist));
+    }
+
+    public static Command moveToCubeMid(Arm arm, GrabberWrist wrist) {
+        return arm.moveSequentially(Arm.Position.MIDDLE_CUBE)
+                  .alongWith(zeroWrist(wrist));
+    }
+
+    public static Command moveToCubeLow(Arm arm, GrabberWrist wrist) {
+        return arm.moveSequentially(Arm.Position.LOWER_CUBE)
+                  .alongWith(zeroWrist(wrist));
+    }
+
+    public static Command scoreConeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        return ScoreCommands.moveToConeHigh(arm, wrist)
+                            .andThen(claw.openClawCommand())
+                            .andThen(moveToTravel(arm));
+    }
+
+    public static Command scoreConeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        return ScoreCommands.moveToConeMid(arm, wrist)
+                            .andThen(claw.openClawCommand())
+                            .andThen(moveToTravel(arm));
+    }
+
+    public static Command scoreConeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        return ScoreCommands.moveToConeLow(arm, wrist)
+                            .andThen(claw.openClawCommand())
+                            .andThen(moveToTravel(arm));
+    }
+
+    public static Command scoreCubeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        return ScoreCommands.moveToCubeHigh(arm, wrist)
+                            .andThen(claw.openClawCommand())
+                            .andThen(moveToTravel(arm));
+    }
+
+    public static Command scoreCubeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        return ScoreCommands.moveToCubeMid(arm, wrist)
+                            .andThen(claw.openClawCommand())
+                            .andThen(moveToTravel(arm));
+    }
+
+    public static Command scoreCubeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        return ScoreCommands.moveToCubeLow(arm, wrist)
+                            .andThen(claw.openClawCommand())
+                            .andThen(moveToTravel(arm));
+    }
+
+    public static Command pickupConeCommand(Arm arm, GrabberClaw claw) {
+        return arm.moveSequentially(Arm.Position.PRE_PICKUP)
+                  .andThen(claw.openClawCommand())
+                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE))
+                  .andThen(claw.closeClawCommand())
+                  .andThen(arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.TRAVEL));
+    }
+
+    public static Command pickupCubeCommand(Arm arm, GrabberClaw claw) {
+        return arm.moveSequentially(Arm.Position.PRE_PICKUP)
+                  .andThen(claw.openClawCommand())
+                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CUBE))
+                  .andThen(claw.closeClawCommand())
+                  .andThen(arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.TRAVEL));
+    }
+}

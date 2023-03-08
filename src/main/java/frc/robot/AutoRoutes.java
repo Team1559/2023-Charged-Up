@@ -4,13 +4,17 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
+
+import frc.robot.commands.ScoreCommands;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.grabber.GrabberClaw;
@@ -64,19 +68,19 @@ public class AutoRoutes {
 
     // Start 1 Piece 1 Drive to piece
     private static final Pose2d[] START_1_TO_PIECE_1 = {
-        START_POINT_1, 
-        S1_P1_B, 
-        S1_P1_C, 
+        START_POINT_1,
+        S1_P1_B,
+        S1_P1_C,
         S1_P1_D,
-        GAME_PIECE_1 
+        GAME_PIECE_1
     };
 
     // Piece 1 Start 1 Drive back to start
     private static final Pose2d[] PIECE_1_TO_START_1 = {
-        GAME_PIECE_1, 
-        S1_P1_C, 
+        GAME_PIECE_1,
+        S1_P1_C,
         S1_P1_B,
-        START_POINT_1 
+        START_POINT_1
     };
 
     // Position 1 Exit Community
@@ -98,7 +102,7 @@ public class AutoRoutes {
         S3_COM_C,
         S3_COM_D
     };
-    
+
     // @format:on
 
     // Start 3 Piece 4 Drive to piece
@@ -141,60 +145,81 @@ public class AutoRoutes {
         }
     }
 
-    private SwerveDrive swerveDrive;
-    private Arm         arm;
-    private GrabberClaw grabberClaw;
-    private boolean     isBlueAlliance;
+    private final SwerveDrive  swerve;
+    private final Arm          arm;
+    private final GrabberWrist wrist;
+    private final GrabberClaw  claw;
 
-    public Command BLUE_LEAVE_1;
-    public Command BLUE_LEAVE_3;
+    // Index 0 is blue, index 1 is red (mirrored)
+    private final SwerveTrajectory[] leave1Traj;
+    private final SwerveTrajectory[] leave3Traj;
+    private final SwerveTrajectory[] start1ToPiece1Traj;
+    private final SwerveTrajectory[] piece1ToStart1Traj;
 
-    public Command BLUE_START_1_PIECE_1;
-    public Command BLUE_PIECE_1_START_1;
-
-    public Command BLUE_SCORE_CUBE_LEAVE_1;
-    public Command BLUE_SCORE_CUBE_PICKUP_CUBE_RETURN_TO_1;
-    public Command BLUE_SCORE_CUBE_LEAVE_3;
-
-    public AutoRoutes(SwerveDrive swerveDrive, Arm arm, boolean isBlueAlliance) {
-        this.swerveDrive = swerveDrive;
+    public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+        this.swerve = swerve;
         this.arm = arm;
-        this.isBlueAlliance = isBlueAlliance;
+        this.wrist = wrist;
+        this.claw = claw;
 
-        BLUE_LEAVE_1 = this.makeTrajectoryCommand(START_1_EXIT_COMMUNITY);
-        BLUE_LEAVE_3 = this.makeTrajectoryCommand(START_3_EXIT_COMMUNITY);
-
-        BLUE_PIECE_1_START_1 = this.makeTrajectoryCommand(PIECE_1_TO_START_1);
-        BLUE_START_1_PIECE_1 = this.makeTrajectoryCommand(START_1_TO_PIECE_1);
-
-        BLUE_SCORE_CUBE_LEAVE_1 = new SequentialCommandGroup(
-                arm.moveSequentially(Arm.Position.UPPER_CUBE), grabberClaw.openClawCommand(),
-                arm.moveSequentially(Arm.Position.TRAVEL), BLUE_LEAVE_1);
-
-        BLUE_SCORE_CUBE_LEAVE_3 = new SequentialCommandGroup(
-                arm.moveSequentially(Arm.Position.UPPER_CUBE), grabberClaw.openClawCommand(),
-                arm.moveSequentially(Arm.Position.TRAVEL), BLUE_LEAVE_3);
-
-        // I'm not sure if this is possible. Leaving it here anyways.
-        BLUE_SCORE_CUBE_PICKUP_CUBE_RETURN_TO_1 = new SequentialCommandGroup(
-                arm.moveSequentially(Arm.Position.UPPER_CUBE), grabberClaw.openClawCommand(),
-                arm.moveSequentially(Arm.Position.TRAVEL), BLUE_START_1_PIECE_1,
-                arm.moveToLocations(Arm.Position.PRE_PICKUP, Arm.Position.PICKUP_CUBE),
-                grabberClaw.closeClawCommand(), arm.moveToLocations(Arm.Position.TRAVEL),
-                BLUE_PIECE_1_START_1);
-
+        leave1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_EXIT_COMMUNITY),
+                makeTrajectory(mirror(START_1_EXIT_COMMUNITY)) };
+        leave3Traj = new SwerveTrajectory[] { makeTrajectory(START_3_EXIT_COMMUNITY),
+                makeTrajectory(mirror(START_3_EXIT_COMMUNITY)) };
+        start1ToPiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_PIECE_1),
+                makeTrajectory(mirror(START_1_TO_PIECE_1)) };
+        piece1ToStart1Traj = new SwerveTrajectory[] { makeTrajectory(PIECE_1_TO_START_1),
+                makeTrajectory(mirror(PIECE_1_TO_START_1)) };
     }
 
-    private SwerveTrajectory makeTrajectory(Pose2d[] poses) {
-        if (this.isBlueAlliance) {
-            poses = mirror(poses);
-        }
+    public Command leave1() {
+        return makeTrajectoryCommand(leave1Traj[trajectoryIndex()]);
+    }
+
+    public Command leave3() {
+        return makeTrajectoryCommand(leave3Traj[trajectoryIndex()]);
+    }
+
+    public Command start1Piece1() {
+        return makeTrajectoryCommand(start1ToPiece1Traj[trajectoryIndex()]);
+    }
+
+    public Command piece1Start1() {
+        return makeTrajectoryCommand(piece1ToStart1Traj[trajectoryIndex()]);
+    }
+
+    public Command scoreCubeHigh() {
+        return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
+    }
+
+    public Command pickupCube() {
+        return ScoreCommands.pickupCubeCommand(arm, claw);
+    }
+
+    public Command scoreCubeLeave1() {
+        return scoreCubeHigh().andThen(leave1());
+    }
+
+    public Command scoreCubeLeave3() {
+        return scoreCubeHigh().andThen(leave3());
+    }
+
+    public Command scoreCubePickupCubeReturn1() {
+        return scoreCubeHigh().andThen(start1Piece1())
+                              .andThen(pickupCube())
+                              .andThen(piece1Start1());
+    }
+
+    private Command makeTrajectoryCommand(SwerveTrajectory trajectory) {
+        return new SwerveTrajectoryCommand(swerve, trajectory);
+    }
+
+    private static int trajectoryIndex() {
+        return DriverStation.getAlliance() == Alliance.Red ? 1 : 0;
+    }
+
+    private static SwerveTrajectory makeTrajectory(Pose2d[] poses) {
         return SwerveTrajectoryGenerator.calculateTrajectory(poses);
-    }
-
-    private Command makeTrajectoryCommand(Pose2d[] poses) {
-        SwerveTrajectory trajectory = this.makeTrajectory(poses);
-        return new SwerveTrajectoryCommand(this.swerveDrive, trajectory);
     }
 
     private static Pose2d[] mirror(Pose2d[] path) {
@@ -208,8 +233,8 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { START_1_TO_PIECE_1, PIECE_1_TO_START_1, START_3_TO_PIECE_4,
-                PIECE_4_TO_START_3 };
+        Pose2d[][] paths = { START_1_EXIT_COMMUNITY, START_3_EXIT_COMMUNITY, START_1_TO_PIECE_1,
+                PIECE_1_TO_START_1 };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);
@@ -234,12 +259,11 @@ public class AutoRoutes {
              .setTrajectory(trajectory.toTrajectory());
         field.setRobotPose(trajectory.points[0].pose);
         sleep(1000);
-        for (int i = 0; i < trajectory.length; i++) {
+        for (int i = 0; i < trajectory.length - 1; i++) {
             field.setRobotPose(trajectory.points[i].pose);
-            if (i < trajectory.length - 1) {
-                sleep((int) ((trajectory.points[i + 1].time - trajectory.points[i].time) * 1000));
-            }
+            sleep((int) ((trajectory.points[i + 1].time - trajectory.points[i].time) * 1000));
         }
+        field.setRobotPose(trajectory.points[trajectory.length - 1].pose);
         sleep(1000);
     }
 
