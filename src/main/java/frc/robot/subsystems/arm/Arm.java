@@ -21,13 +21,12 @@ public class Arm {
 
         WAYPOINT(94, -68, -52, false),
 
-        // WAYPOINT(94, -58, -89, false),
-
-        TRAVEL(94, -118, -87, false),
-        GAME_START(94, -33, -68, false),
-        PRE_PICKUP(94, -117, -80, false),
-        PICKUP_CONE(94, -143, -39, false),
-        PICKUP_CUBE(94, -140, -52, false);
+        TRAVEL(99.5, -122.5, -78, false),
+        PRE_PICKUP(99.5, -122.5, -78, false),
+        GAME_START(99.5, -149, -27, false),
+        // PRE_PICKUP(99.5, -117, -80, false),
+        PICKUP_CONE(99.5, -144, -39, false),
+        PICKUP_CUBE(99.5, -140, -52, false);
 
         public final double base;
         public final double elbow;
