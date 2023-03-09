@@ -1,12 +1,13 @@
 package frc.robot.subsystems.swerve;
 
-import static frc.robot.Constants.FeatureFlags.*;
+import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
+import static frc.robot.Constants.Swerve.ENCODER_STDDEV;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
 import static frc.robot.Constants.Swerve.ROTATION_KP;
-import static frc.robot.Constants.Swerve.ENCODER_STDDEV;
 import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
 import static frc.robot.Constants.Wiring.PIGEON_IMU;
 
@@ -38,8 +39,15 @@ public class SwerveDrive extends SubsystemBase {
     private final double[]                 gyroDataArray;
     private Field2d                        field2d;
     private double                         rPIDSetpoint;
+    private double                         lastVX;
 
     public SwerveDrive() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
@@ -147,6 +155,15 @@ public class SwerveDrive extends SubsystemBase {
         // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy,
         // vr, getRobotAngle());
         ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
+
+        // Accel limit on VX only
+        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE) {
+            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE;
+        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE) {
+            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE;
+        }
+        lastVX = speeds.vxMetersPerSecond;
+
         SmartDashboard.putBoolean("Rotating", rotating);
         SmartDashboard.putBoolean("Setpoint", setpointSet);
         SmartDashboard.putBoolean("vControl", vControl);
