@@ -14,6 +14,7 @@ import static frc.robot.Constants.Wiring.MODULE_CANCODER_IDS;
 import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
 import static frc.robot.Constants.Wiring.MODULE_STEER_MOTOR_IDS;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -25,6 +26,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+
 import frc.robot.Constants;
 
 public class SwerveModule {
@@ -45,28 +47,23 @@ public class SwerveModule {
         steerMotor = new TalonFX(MODULE_STEER_MOTOR_IDS[id], CANIVORE_BUS_ID);
         cancoder = new CANCoder(MODULE_CANCODER_IDS[id], CANIVORE_BUS_ID);
 
-        new Thread(() -> {
-            // Delay to ensure the Canivore has enough time to boot up
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        configCancoder();
 
-            configCancoder();
+        driveMotor.configFactoryDefault();
+        driveMotor.setNeutralMode(NeutralMode.Brake);
+        driveMotor.setInverted(true);
+        driveMotor.setSelectedSensorPosition(0D);
+        driveMotor.config_kP(0, MODULE_DRIVE_KP);
 
-            driveMotor.configFactoryDefault();
-            driveMotor.setNeutralMode(NeutralMode.Brake);
-            driveMotor.setInverted(true);
-            driveMotor.setSelectedSensorPosition(0D);
-            driveMotor.config_kP(0, MODULE_DRIVE_KP);
-            // driveMotor.configClosedloopRamp(SWERVE_SECONDS_TO_FULL_SPEED);
-            steerMotor.configFactoryDefault();
-            steerMotor.setNeutralMode(NeutralMode.Brake);
-            steerMotor.config_kP(0, MODULE_STEER_KP);
-            steerMotor.config_kD(0, MODULE_STEER_KD);
-            steerMotor.setSelectedSensorPosition(degreesToTicks(cancoder.getPosition() % 360));
-        }).start();
+        steerMotor.configFactoryDefault();
+        steerMotor.setNeutralMode(NeutralMode.Brake);
+        steerMotor.config_kP(0, MODULE_STEER_KP);
+        steerMotor.config_kD(0, MODULE_STEER_KD);
+        ErrorCode error = steerMotor.setSelectedSensorPosition(
+                degreesToTicks(cancoder.getPosition() % 360));
+        if (error != ErrorCode.OK) {
+            throw new IllegalStateException("Swerve module " + id + " couldn't initialize");
+        }
     }
 
     private void configCancoder() {

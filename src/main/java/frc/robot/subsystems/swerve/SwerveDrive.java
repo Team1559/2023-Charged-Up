@@ -42,6 +42,12 @@ public class SwerveDrive extends SubsystemBase {
     private double                         lastVX;
 
     public SwerveDrive() {
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
