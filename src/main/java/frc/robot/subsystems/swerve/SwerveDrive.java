@@ -152,7 +152,10 @@ public class SwerveDrive extends SubsystemBase {
             // rPIDSetpoint = Double.NaN;
         }
 
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
+        // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy,
+        // vr, getRobotAngle());
+        ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
+
         // Accel limit on VX only
         if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE) {
             speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE;
