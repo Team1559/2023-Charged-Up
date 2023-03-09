@@ -28,7 +28,7 @@ public final class Constants {
         public static final boolean CHASSIS_ENABLED = true;
         public static final boolean ARM_ENABLED     = true;
         public static final boolean GRABBER_ENABLED = true;
-        public static final boolean VISION_ENABLED  = false;
+        public static final boolean VISION_ENABLED  = true;
     }
 
     public static final double FALCON_TICKS_PER_REV   = 2048;
@@ -87,7 +87,7 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 1.0;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 0.6;
         public static final double MAX_ACCEL_PER_CYCLE          = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED / CYCLES_PER_SECOND;
 
@@ -167,7 +167,7 @@ public final class Constants {
         public static final double kP_ELBOW  = 0.8;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
-        public static final double kIZ_ELBOW = 30;    // deg * 11
+        public static final double kIZ_ELBOW = 55;    // deg * 11
 
         public static final double kP_WRIST  = 1;
         public static final double kD_WRIST  = 0;
