@@ -155,6 +155,8 @@ public class AutoRoutes {
     private final SwerveTrajectory[] leave3Traj;
     private final SwerveTrajectory[] start1ToPiece1Traj;
     private final SwerveTrajectory[] piece1ToStart1Traj;
+    private final SwerveTrajectory[] start3ToPiece4Traj;
+    private final SwerveTrajectory[] piece4ToStart3Traj;
 
     public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         this.swerve = swerve;
@@ -170,6 +172,10 @@ public class AutoRoutes {
                 makeTrajectory(mirror(START_1_TO_PIECE_1)) };
         piece1ToStart1Traj = new SwerveTrajectory[] { makeTrajectory(PIECE_1_TO_START_1),
                 makeTrajectory(mirror(PIECE_1_TO_START_1)) };
+        start3ToPiece4Traj = new SwerveTrajectory[] { makeTrajectory(START_3_TO_PIECE_4),
+                makeTrajectory(mirror(START_3_TO_PIECE_4)) };
+        piece4ToStart3Traj = new SwerveTrajectory[] { makeTrajectory(PIECE_4_TO_START_3),
+                makeTrajectory(mirror(PIECE_4_TO_START_3)) };
     }
 
     public Command leave1() {
@@ -188,8 +194,20 @@ public class AutoRoutes {
         return makeTrajectoryCommand(piece1ToStart1Traj[trajectoryIndex()]);
     }
 
+    public Command start3Piece4() {
+        return makeTrajectoryCommand(start3ToPiece4Traj[trajectoryIndex()]);
+    }
+
+    public Command piece4Start3() {
+        return makeTrajectoryCommand(piece4ToStart3Traj[trajectoryIndex()]);
+    }
+
     public Command scoreCubeHigh() {
         return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
+    }
+
+    public Command scoreConeHigh() {
+        return ScoreCommands.scoreConeHigh(arm, wrist, claw);
     }
 
     public Command pickupCube() {
@@ -208,6 +226,30 @@ public class AutoRoutes {
         return scoreCubeHigh().andThen(start1Piece1())
                               .andThen(pickupCube())
                               .andThen(piece1Start1());
+    }
+
+    public Command scoreConeLeave1() {
+        return scoreConeHigh().andThen(leave1());
+    }
+
+    public Command scoreConeLeave3() {
+        return scoreConeHigh().andThen(leave3());
+    }
+
+    public Command scoreConePickupConeReturn1() {
+        return scoreConeHigh().andThen(start1Piece1())
+                              .andThen(pickupCone())
+                              .andThen(piece1Start1());
+    }
+
+    public Command scoreConePickupConeReturn3() {
+        return scoreConeHigh().andThen(start3Piece4())
+                              .andThen(pickupCone())
+                              .andThen(piece4Start3());
+    }
+
+    private Command pickupCone() {
+        return ScoreCommands.pickupConeCommand(arm, claw);
     }
 
     private Command makeTrajectoryCommand(SwerveTrajectory trajectory) {

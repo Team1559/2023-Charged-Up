@@ -115,9 +115,10 @@ public final class Constants {
         public static final PoseStrategy POSE_STRATEGY       = PoseStrategy.LOWEST_AMBIGUITY;
         public static final double       AMBIGUITY_THRESHOLD = 0.2;
 
-        public static final double CAMERA_X     = Units.inchesToMeters(-12.625);
-        public static final double CAMERA_Y     = Units.inchesToMeters(-2.5);
-        public static final double CAMERA_Z     = Units.inchesToMeters(21.875);
+        // offsets are in meters
+        public static final double CAMERA_X     = .31;
+        public static final double CAMERA_Y     = -.265;
+        public static final double CAMERA_Z     = .34;
         public static final double CAMERA_ANGLE = Math.toRadians(180);
 
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
