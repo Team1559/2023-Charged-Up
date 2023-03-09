@@ -25,7 +25,7 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = true;
+        public static final boolean CHASSIS_ENABLED = false;
         public static final boolean ARM_ENABLED     = true;
         public static final boolean GRABBER_ENABLED = true;
         public static final boolean VISION_ENABLED  = false;
@@ -207,16 +207,15 @@ public final class Constants {
 
     public static class Grabber {
         // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
-        public static final double ZERO_ANGLE                        = 90D;
-        public static final int    SERVO_RANGE                       = 180;
+        public static final double ZERO_ANGLE                        = 79D;
+        public static final double SERVO_RANGE                       = 180D;
         public static final double TELEOP_ANGULAR_VELOCITY           = 90D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
-        public static final int    FIRST_DOUBLE_SOLENOID_CHANNEL     = 11111;
-        public static final int    SECOND_DOUBLE_SOLENOID_CHANNEL    = 22222;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
         public static final double MINIMUM_WRIST_ANGLE               = -90D;
         public static final double MAXIMUN_WRIST_ANGLE               = 90D;
+        public static final double RESET_WRIST_ANGLE                 = 0;
 
     }
 
