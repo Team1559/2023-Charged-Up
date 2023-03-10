@@ -13,7 +13,7 @@ public class Arm {
     public enum Position {
         LOWER_CONE(87, -118, -34, false),
         MIDDLE_CONE(76, -46, -66, true),
-        UPPER_CONE(52, -26, -8, true),
+        UPPER_CONE(55, -26, -20, true),
 
         LOWER_CUBE(83, -119, -38, false),
         MIDDLE_CUBE(70, -59, -71, true),
