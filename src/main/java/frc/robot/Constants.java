@@ -216,7 +216,7 @@ public final class Constants {
         // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
         public static final double ZERO_ANGLE                        = 79D;
         public static final double SERVO_RANGE                       = 180D;
-        public static final double TELEOP_ANGULAR_VELOCITY           = 90D;
+        public static final double TELEOP_ANGULAR_VELOCITY           = 180D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
