@@ -98,6 +98,7 @@ public final class Constants {
                 / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
         public static final double SLOW_MODE_RATIO = 0.25;
+        public static final double MED_MODE_RATIO  = 0.5;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -129,7 +130,7 @@ public final class Constants {
         public static final double CAMERA_X     = .31;
         public static final double CAMERA_Y     = -.265;
         public static final double CAMERA_Z     = .34;
-        public static final double CAMERA_ANGLE = Math.toRadians(180);
+        public static final double CAMERA_ANGLE = Math.toRadians(0);
 
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
@@ -216,7 +217,7 @@ public final class Constants {
         // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
         public static final double ZERO_ANGLE                        = 79D;
         public static final double SERVO_RANGE                       = 180D;
-        public static final double TELEOP_ANGULAR_VELOCITY           = 180D;
+        public static final double TELEOP_ANGULAR_VELOCITY           = 270D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
@@ -227,7 +228,7 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.25 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.50 * Swerve.MAXIMUM_LINEAR_VELOCITY;
         public static final double MAXIMUM_ANGULAR_VELOCITY = 1 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;

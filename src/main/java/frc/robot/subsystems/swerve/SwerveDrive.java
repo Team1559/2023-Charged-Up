@@ -148,7 +148,8 @@ public class SwerveDrive extends SubsystemBase {
         // .... .... set setpoint to current angle
         // .... use PID control
         // Else: command 0
-        boolean vControl = Math.abs(vr) > 1e-3;
+        rController.setP(ROTATION_KP * Math.hypot(vx, vy) / MAXIMUM_LINEAR_VELOCITY);
+        boolean vControl = true; // Math.abs(vr) > 1e-3;
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;
         if (vControl || !VISION_ENABLED) {

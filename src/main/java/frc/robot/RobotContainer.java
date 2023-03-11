@@ -16,7 +16,9 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -186,7 +188,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return arm.moveSequentially(Arm.Position.TRAVEL)
-                  .andThen(autoRouteChooser.getSelectedCommand());
+        return new WaitCommand(.5).andThen(arm.moveSequentially(Arm.Position.TRAVEL))
+                                  .andThen(autoRouteChooser.getSelectedCommand());
     }
 }

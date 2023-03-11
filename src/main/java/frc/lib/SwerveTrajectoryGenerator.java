@@ -129,10 +129,16 @@ public class SwerveTrajectoryGenerator {
             Pose2d nextPoint = waypoints[i + 1];
             deltas[i][0] = nextPoint.getX() - currentPoint.getX();
             deltas[i][1] = nextPoint.getY() - currentPoint.getY();
-            deltas[i][2] = nextPoint.getRotation()
-                                    .getDegrees()
+            double deltaR = nextPoint.getRotation()
+                                     .getDegrees()
                     - currentPoint.getRotation()
                                   .getDegrees();
+            if (deltaR < -180) {
+                deltaR += 360;
+            } else if (deltaR > 180) {
+                deltaR -= 360;
+            }
+            deltas[i][2] = deltaR;
             double deltaD = Math.hypot(deltas[i][0], deltas[i][1]);
             int pointCount = (int) (deltaD / DISTANCE_BETWEEN_POINTS);
             deltas[i][0] /= pointCount;
