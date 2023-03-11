@@ -262,7 +262,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (!DriverStation.isTeleopEnabled()) {
+        if (!DriverStation.isEnabled()) {
             isSetPointCommanded = false;
             setpointJointAngle = getJointAngle();
             target = setpointJointAngle;
@@ -335,7 +335,9 @@ public abstract class ArmSegment extends SubsystemBase {
         // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
         // CYCLES_PER_SECOND));
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
+        SmartDashboard.putNumber(name + " motor temperature: ", motor.getTemperature());
+        // SmartDashboard.putNumber(name + " error: ",
+        // motor.getClosedLoopError());
         // SmartDashboard.putNumber(name + " speed: ", speed);
     }
 
@@ -355,7 +357,10 @@ public abstract class ArmSegment extends SubsystemBase {
 
         @Override
         public void initialize() {
+            System.out.println(
+                    "ArmSegmentPositionCommand initialize " + destinationPos + " " + name);
             setDestinationJointAngle(destinationPos);
+            System.out.println("after setDestinationJointAngle " + destinationPos + " " + name);
         }
 
         @Override

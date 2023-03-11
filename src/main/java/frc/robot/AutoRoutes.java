@@ -4,12 +4,14 @@ import java.util.Arrays;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
@@ -41,9 +43,16 @@ public class AutoRoutes {
 
     // Define common positions
     // Start points are in front of CONE nodes (-x, -x, +x)
-    private static final Pose2d START_POINT_1 = new Pose2d(1.81, 0.513, DEGREES_180);
-    private static final Pose2d START_POINT_2 = new Pose2d(1.81, 2.189, DEGREES_180);
-    private static final Pose2d START_POINT_3 = new Pose2d(1.81, 4.983, DEGREES_180);
+    private static final Pose2d START_POINT_1 = new Pose2d(1.81 + Units.inchesToMeters(18), 0.513,
+            DEGREES_180);
+    // private static final Pose2d OLD_START_POINT_1 = new Pose2d(1.81, 0.513,
+    // DEGREES_180);
+    private static final Pose2d START_POINT_2 = new Pose2d(1.81 + Units.inchesToMeters(18), 2.189,
+            DEGREES_180);
+    private static final Pose2d START_POINT_3 = new Pose2d(1.81 + Units.inchesToMeters(18), 3.84,
+            DEGREES_180);
+    // private static final Pose2d START_POINT_3 = new Pose2d(1.81 +
+    // Units.inchesToMeters(18), 4.983, DEGREES_180);
 
     private static final Pose2d GAME_PIECE_4 = new Pose2d(6.791, 4.577, DEGREES_0);
     private static final Pose2d GAME_PIECE_3 = new Pose2d(6.791, 3.358, DEGREES_0);
@@ -64,7 +73,7 @@ public class AutoRoutes {
     private static final Pose2d S1_P1_A = new Pose2d(2.1, 0.8, DEGREES_180);
     private static final Pose2d S1_P1_B = new Pose2d(4.7, 0.8, DEGREES_180);
     private static final Pose2d S1_P1_C = new Pose2d(5.2, 0.8, DEGREES_150);
-    private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_30);
+    private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_0);
     private static final Pose2d S1_P1_E = new Pose2d(6.3, 0.919, DEGREES_0);
     // private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
     // private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
@@ -108,12 +117,14 @@ public class AutoRoutes {
     };
 
     // Position 3 Exit Community
-    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.58, DEGREES_0);
-    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.58, DEGREES_0);
-    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.58, DEGREES_180);
+    private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.43, DEGREES_180);
+    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.43, DEGREES_180);
+    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.43, DEGREES_180);
+    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.43, DEGREES_0);
 
     private static final Pose2d[] START_3_EXIT_COMMUNITY = {
         START_POINT_3,
+        S3_COM_A,
         S3_COM_B,
         S3_COM_C,
         S3_COM_D
@@ -212,12 +223,20 @@ public class AutoRoutes {
                 makeTrajectory(mirror(PIECE_4_TO_START_3)) };
     }
 
+    public Command scoreConeStay() {
+        return arm.moveSequentially(Arm.Position.UPPER_CONE)
+                  .andThen(claw.openClawCommand())
+                  .andThen(arm.moveSequentially(Arm.Position.TRAVEL));
+    }
+
     public Command leave1() {
-        return makeTrajectoryCommand(leave1Traj[trajectoryIndex()]);
+        return new PrintCommand("leave1").andThen(
+                makeTrajectoryCommand(leave1Traj[trajectoryIndex()]));
     }
 
     public Command leave3() {
-        return makeTrajectoryCommand(leave3Traj[trajectoryIndex()]);
+        return new PrintCommand("leave3").andThen(
+                makeTrajectoryCommand(leave3Traj[trajectoryIndex()]));
     }
 
     public Command start1Piece1() {

@@ -43,10 +43,7 @@ public class Robot extends TimedRobot {
      * LiveWindow and SmartDashboard integrated updating.
      */
     @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance()
-                        .run();
-    }
+    public void robotPeriodic() {}
 
     /**
      * This function is called once each time the robot enters Disabled mode.
@@ -73,7 +70,10 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically during autonomous. */
     @Override
-    public void autonomousPeriodic() {}
+    public void autonomousPeriodic() {
+        CommandScheduler.getInstance()
+                        .run();
+    }
 
     @Override
     public void teleopInit() {
@@ -82,7 +82,10 @@ public class Robot extends TimedRobot {
 
     /** This function is called periodically during operator control. */
     @Override
-    public void teleopPeriodic() {}
+    public void teleopPeriodic() {
+        CommandScheduler.getInstance()
+                        .run();
+    }
 
     @Override
     public void testInit() {

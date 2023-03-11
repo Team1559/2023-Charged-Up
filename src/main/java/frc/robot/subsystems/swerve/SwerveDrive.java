@@ -69,7 +69,7 @@ public class SwerveDrive extends SubsystemBase {
 
         // Control software
         kinematics = new SwerveDriveKinematics(new Translation2d(MODULE_X, MODULE_Y),
-        new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
+                new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(), modulePositions,
                 new Pose2d(0, 0, getGyroAngle()),
@@ -142,6 +142,7 @@ public class SwerveDrive extends SubsystemBase {
         // .... .... set setpoint to current angle
         // .... use PID control
         // Else: command 0
+        rController.setP(ROTATION_KP * Math.hypot(vx, vy) / MAXIMUM_LINEAR_VELOCITY);
         boolean vControl = Math.abs(vr) > 1e-3;
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;

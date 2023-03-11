@@ -129,7 +129,7 @@ public final class Constants {
         public static final double CAMERA_X     = .31;
         public static final double CAMERA_Y     = -.265;
         public static final double CAMERA_Z     = .34;
-        public static final double CAMERA_ANGLE = Math.toRadians(180);
+        public static final double CAMERA_ANGLE = Math.toRadians(0);
 
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
@@ -227,7 +227,7 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.25 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.50 * Swerve.MAXIMUM_LINEAR_VELOCITY;
         public static final double MAXIMUM_ANGULAR_VELOCITY = 1 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;
