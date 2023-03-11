@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
@@ -117,10 +118,10 @@ public class AutoRoutes {
     };
 
     // Position 3 Exit Community
-    private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.43, DEGREES_180);
-    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.43, DEGREES_180);
-    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.43, DEGREES_180);
-    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.43, DEGREES_0);
+    private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.72, DEGREES_0);
 
     private static final Pose2d[] START_3_EXIT_COMMUNITY = {
         START_POINT_3,
@@ -225,6 +226,7 @@ public class AutoRoutes {
 
     public Command scoreConeStay() {
         return arm.moveSequentially(Arm.Position.UPPER_CONE)
+                  .andThen(new WaitCommand(.5))
                   .andThen(claw.openClawCommand())
                   .andThen(arm.moveSequentially(Arm.Position.TRAVEL));
     }

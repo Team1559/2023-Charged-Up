@@ -98,6 +98,7 @@ public final class Constants {
                 / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
         public static final double SLOW_MODE_RATIO = 0.25;
+        public static final double MED_MODE_RATIO  = 0.5;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -216,7 +217,7 @@ public final class Constants {
         // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
         public static final double ZERO_ANGLE                        = 79D;
         public static final double SERVO_RANGE                       = 180D;
-        public static final double TELEOP_ANGULAR_VELOCITY           = 180D;
+        public static final double TELEOP_ANGULAR_VELOCITY           = 270D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
