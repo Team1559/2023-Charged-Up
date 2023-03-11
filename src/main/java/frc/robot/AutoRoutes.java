@@ -330,7 +330,7 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { START_3_TO_PIECE_4, PIECE_4_TO_START_3 };
+        Pose2d[][] paths = { START_3_EXIT_COMMUNITY };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);

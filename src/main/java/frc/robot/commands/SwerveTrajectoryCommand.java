@@ -27,7 +27,10 @@ public class SwerveTrajectoryCommand extends CommandBase {
         closestPointIndex = 0;
         lookAheadPointIndex = 0;
     }
-
+    @Override
+    public void initialize() {
+        swerveDrive.setFieldRelative();
+    }
     @Override
     public void execute() {
         currentPose = swerveDrive.getEstimatedPose();
