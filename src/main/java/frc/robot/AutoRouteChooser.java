@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 import frc.lib.NullCommand;
 
@@ -56,6 +57,7 @@ public class AutoRouteChooser {
 
     public Command getSelectedCommand() {
         return positionChooser.getSelected()
-                              .get();
+                              .get()
+                              .beforeStarting(new PrintCommand("Auto started"));
     }
 }

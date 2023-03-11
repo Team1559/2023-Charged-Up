@@ -84,7 +84,7 @@ public class SwerveModule {
      */
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
-        double backlashRate = steerMotor.getSelectedSensorVelocity() * STEER_DRIVE_BACKLASH;
+        double backlashRate = steerMotor.getSelectedSensorVelocity() * STEER_DRIVE_BACKLASH/2;
         driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms - backlashRate);
     }
 

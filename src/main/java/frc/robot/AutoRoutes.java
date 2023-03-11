@@ -26,24 +26,29 @@ public class AutoRoutes {
     private static final double FIELD_WIDTH  = 8.02;
 
     private static final Rotation2d DEGREES_0   = new Rotation2d();
+    private static final Rotation2d DEGREES_15  = Rotation2d.fromDegrees(15);
     private static final Rotation2d DEGREES_30  = Rotation2d.fromDegrees(30);
     private static final Rotation2d DEGREES_45  = Rotation2d.fromDegrees(45);
     private static final Rotation2d DEGREES_60  = Rotation2d.fromDegrees(60);
+    private static final Rotation2d DEGREES_75  = Rotation2d.fromDegrees(75);
     private static final Rotation2d DEGREES_90  = Rotation2d.fromDegrees(90);
+    private static final Rotation2d DEGREES_105 = Rotation2d.fromDegrees(105);
     private static final Rotation2d DEGREES_120 = Rotation2d.fromDegrees(120);
     private static final Rotation2d DEGREES_135 = Rotation2d.fromDegrees(135);
     private static final Rotation2d DEGREES_150 = Rotation2d.fromDegrees(150);
+    private static final Rotation2d DEGREES_165 = Rotation2d.fromDegrees(165);
     private static final Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
 
     // Define common positions
-    private static final Pose2d START_POINT_1 = new Pose2d(1.49, 1.07, DEGREES_0);
-    private static final Pose2d START_POINT_2 = new Pose2d(2.2, 2.75, DEGREES_180);
-    private static final Pose2d START_POINT_3 = new Pose2d(1.49, 4.42, DEGREES_0);
+    // Start points are in front of CONE nodes (-x, -x, +x)
+    private static final Pose2d START_POINT_1 = new Pose2d(1.81, 0.513, DEGREES_180);
+    private static final Pose2d START_POINT_2 = new Pose2d(1.81, 2.189, DEGREES_180);
+    private static final Pose2d START_POINT_3 = new Pose2d(1.81, 4.983, DEGREES_180);
 
-    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.82, 4.58, DEGREES_180);
-    private static final Pose2d GAME_PIECE_3 = new Pose2d(6.8, 3.35, DEGREES_0);
-    private static final Pose2d GAME_PIECE_2 = new Pose2d(6.8, 2.15, DEGREES_0);
-    private static final Pose2d GAME_PIECE_1 = new Pose2d(6.82, 0.92, DEGREES_180);
+    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.791, 4.577, DEGREES_0);
+    private static final Pose2d GAME_PIECE_3 = new Pose2d(6.791, 3.358, DEGREES_0);
+    private static final Pose2d GAME_PIECE_2 = new Pose2d(6.791, 2.138, DEGREES_0);
+    private static final Pose2d GAME_PIECE_1 = new Pose2d(6.791, 0.919, DEGREES_0);
     // Define charge station points, counter-clockwise, starting from bottom
     // left of blue
     private static final Pose2d CS_EDGE_1 = new Pose2d(2.9, 1.5, DEGREES_0);
@@ -56,12 +61,17 @@ public class AutoRoutes {
      * Define specific routes Eventually maybe add mid points to have not a
      * sharp rotation We do not want to have each one rotating
      */
+    private static final Pose2d S1_P1_A = new Pose2d(2.1, 0.8, DEGREES_180);
+    private static final Pose2d S1_P1_B = new Pose2d(4.7, 0.8, DEGREES_180);
+    private static final Pose2d S1_P1_C = new Pose2d(5.2, 0.8, DEGREES_150);
+    private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_30);
+    private static final Pose2d S1_P1_E = new Pose2d(6.3, 0.919, DEGREES_0);
+    // private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
+    // private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
+    // private static final Pose2d S1_P1_D = new Pose2d(6.5, 0.92, DEGREES_180);
 
-    private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
-    private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
-    private static final Pose2d S1_P1_D = new Pose2d(6.5, 0.92, DEGREES_180);
-
-    private static final Pose2d S1_EXIT_POINT = new Pose2d(5.52, 0.92, DEGREES_180);
+    private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
+    private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
 
     // Temporarily turn off the formatter so we can have nice route lists.
     // @format:off
@@ -69,25 +79,31 @@ public class AutoRoutes {
     // Start 1 Piece 1 Drive to piece
     private static final Pose2d[] START_1_TO_PIECE_1 = {
         START_POINT_1,
+        S1_P1_A,
         S1_P1_B,
         S1_P1_C,
         S1_P1_D,
+        S1_P1_E,
         GAME_PIECE_1
     };
 
     // Piece 1 Start 1 Drive back to start
     private static final Pose2d[] PIECE_1_TO_START_1 = {
         GAME_PIECE_1,
+        S1_P1_E,
+        S1_P1_D,
         S1_P1_C,
         S1_P1_B,
+        S1_P1_A,
         START_POINT_1
     };
 
     // Position 1 Exit Community
     private static final Pose2d[] START_1_EXIT_COMMUNITY = {
         START_POINT_1,
+        S1_P1_A,
         S1_P1_B,
-        S1_P1_C,
+        S1_EXIT_C,
         S1_EXIT_POINT
     };
 
@@ -105,22 +121,40 @@ public class AutoRoutes {
 
     // @format:on
 
-    // Start 3 Piece 4 Drive to piece
-    private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_0);
-    private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_0);
+    // private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_0);
+    // private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_0);
+    // private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
+    // private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58,
+    // DEGREES_180);
+    private static final Pose2d S3_P4_A = new Pose2d(0, 0, DEGREES_180);
+    private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_180);
+    private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_180);
     private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
     private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58, DEGREES_180);
 
-    private static final Pose2d[] START_3_TO_PIECE_4 = { START_POINT_3, S3_P4_B, S3_P4_C, S3_P4_D,
-            S3_P4_E };
+    // Start 3 Piece 4 Drive to piece
+    // @format:off
+    private static final Pose2d[] START_3_TO_PIECE_4 = {
+        START_POINT_3,
+        S3_P4_A,
+        S3_P4_B,
+        S3_P4_C,
+        S3_P4_D,
+        S3_P4_E,
+        GAME_PIECE_4
+    };
 
     // Piece 4 Start 3 Drive back to start
-    private static final Pose2d P4_S3_A = new Pose2d(6.82, 4.58, DEGREES_180);
-    private static final Pose2d P4_S3_B = new Pose2d(4.83, 4.58, DEGREES_0);
-    private static final Pose2d P4_S3_C = new Pose2d(2.94, 4.58, DEGREES_0);
-    private static final Pose2d P4_S3_D = new Pose2d(1.49, 4.42, DEGREES_0);
-
-    private static final Pose2d[] PIECE_4_TO_START_3 = { P4_S3_A, P4_S3_B, P4_S3_C, P4_S3_D };
+    private static final Pose2d[] PIECE_4_TO_START_3 = {
+        GAME_PIECE_4,
+        S3_P4_E,
+        S3_P4_D,
+        S3_P4_C,
+        S3_P4_B,
+        S3_P4_A,
+        START_POINT_3
+    };
+    // @format:on
 
     // Center of Charge Station From Start 2
     private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
@@ -275,8 +309,7 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { START_1_EXIT_COMMUNITY, START_3_EXIT_COMMUNITY, START_1_TO_PIECE_1,
-                PIECE_1_TO_START_1 };
+        Pose2d[][] paths = { START_3_TO_PIECE_4, PIECE_4_TO_START_3 };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);
@@ -285,14 +318,16 @@ public class AutoRoutes {
                                                    .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                    .toArray(SwerveTrajectory[]::new);
         Field2d field = new Field2d();
+        field.getObject("temp")
+             .setPose(new Pose2d());
         SmartDashboard.putData(field);
         while (true) {
             for (SwerveTrajectory trajectory : blueTrajectories) {
                 simulateTrajectory(field, trajectory);
             }
-            for (SwerveTrajectory trajectory : redTrajectories) {
-                simulateTrajectory(field, trajectory);
-            }
+            // for (SwerveTrajectory trajectory : redTrajectories) {
+            // simulateTrajectory(field, trajectory);
+            // }
         }
     }
 

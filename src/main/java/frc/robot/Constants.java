@@ -87,11 +87,17 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 0.6;
-        public static final double MAX_ACCEL_PER_CYCLE          = MAXIMUM_LINEAR_VELOCITY
-                / SWERVE_SECONDS_TO_FULL_SPEED / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.6;
+        public static final double MAX_ACCEL_PER_CYCLE_X          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_X / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y = 0.25;
+        public static final double MAX_ACCEL_PER_CYCLE_Y          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_Y / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_R = 0.25;
+        public static final double MAX_ACCEL_PER_CYCLE_R          = MAXIMUM_ANGULAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
-        public static final double SLOW_MODE_RATIO = 0.2;
+        public static final double SLOW_MODE_RATIO = 0.25;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -221,8 +227,8 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.5 * Swerve.MAXIMUM_LINEAR_VELOCITY;
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 2 * Math.PI;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.25 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 1 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;
         public static final double MAXIMUM_LINEAR_ACCELERATION  = MAXIMUM_LINEAR_VELOCITY

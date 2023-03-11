@@ -4,7 +4,9 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 import static frc.robot.Constants.Swerve.ENCODER_STDDEV;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
-import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_R;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_X;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_Y;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
 import static frc.robot.Constants.Swerve.ROTATION_KP;
@@ -24,9 +26,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.lib.SwerveTrajectory;
 
 public class SwerveDrive extends SubsystemBase {
@@ -40,10 +44,13 @@ public class SwerveDrive extends SubsystemBase {
     private Field2d                        field2d;
     private double                         rPIDSetpoint;
     private double                         lastVX;
+    private double                         lastVY;
+    private double                         lastVR;
 
     public SwerveDrive() {
+        SmartDashboard.putBoolean("Swerve drive ready?", false);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(30000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -62,7 +69,7 @@ public class SwerveDrive extends SubsystemBase {
 
         // Control software
         kinematics = new SwerveDriveKinematics(new Translation2d(MODULE_X, MODULE_Y),
-                new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
+        new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(), modulePositions,
                 new Pose2d(0, 0, getGyroAngle()),
@@ -70,7 +77,7 @@ public class SwerveDrive extends SubsystemBase {
                 VecBuilder.fill(2, 2, 2));
         rController = new PIDController(ROTATION_KP, 0, 0);
         rController.enableContinuousInput(-Math.PI, Math.PI);
-        rController.setTolerance(0.01);
+        rController.setTolerance(Math.toRadians(3));
         rPIDSetpoint = Double.NaN;
         gyroDataArray = new double[3];
 
@@ -78,6 +85,7 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putData(field2d);
 
         gyro.configFactoryDefault();
+        SmartDashboard.putBoolean("Swerve drive ready?", true);
     }
 
     public void setStates(SwerveModuleState... states) {
@@ -152,17 +160,32 @@ public class SwerveDrive extends SubsystemBase {
             // rPIDSetpoint = Double.NaN;
         }
 
-        // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy,
-        // vr, getRobotAngle());
-        ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
+        ChassisSpeeds speeds;
+        if (DriverStation.isAutonomous()) {
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
+        } else {
+            speeds = new ChassisSpeeds(vx, vy, vr);
+        }
 
-        // Accel limit on VX only
-        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE) {
-            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE;
-        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE) {
-            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE;
+        // Accel limits
+        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE_X) {
+            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE_X;
+        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE_X) {
+            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE_X;
+        }
+        if (speeds.vyMetersPerSecond > lastVY + MAX_ACCEL_PER_CYCLE_Y) {
+            speeds.vyMetersPerSecond = lastVY + MAX_ACCEL_PER_CYCLE_Y;
+        } else if (speeds.vyMetersPerSecond < lastVY - MAX_ACCEL_PER_CYCLE_Y) {
+            speeds.vyMetersPerSecond = lastVY - MAX_ACCEL_PER_CYCLE_Y;
+        }
+        if (speeds.omegaRadiansPerSecond > lastVR + MAX_ACCEL_PER_CYCLE_R) {
+            speeds.omegaRadiansPerSecond = lastVR + MAX_ACCEL_PER_CYCLE_R;
+        } else if (speeds.omegaRadiansPerSecond < lastVR - MAX_ACCEL_PER_CYCLE_R) {
+            speeds.omegaRadiansPerSecond = lastVR - MAX_ACCEL_PER_CYCLE_R;
         }
         lastVX = speeds.vxMetersPerSecond;
+        lastVY = speeds.vyMetersPerSecond;
+        lastVR = speeds.omegaRadiansPerSecond;
 
         SmartDashboard.putBoolean("Rotating", rotating);
         SmartDashboard.putBoolean("Setpoint", setpointSet);
@@ -237,6 +260,7 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Pos Rot", currentPose.getRotation()
                                                        .getDegrees());
         SmartDashboard.putNumber("Yaw", gyro.getYaw());
+
     }
 
     /**
