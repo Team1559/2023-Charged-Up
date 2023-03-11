@@ -41,6 +41,7 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pigeon2                  gyro;
     private final double[]                 gyroDataArray;
+    private boolean                        isFieldRelative;
     private Field2d                        field2d;
     private double                         rPIDSetpoint;
     private double                         lastVX;
@@ -69,7 +70,7 @@ public class SwerveDrive extends SubsystemBase {
 
         // Control software
         kinematics = new SwerveDriveKinematics(new Translation2d(MODULE_X, MODULE_Y),
-        new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
+                new Translation2d(MODULE_X, -MODULE_Y), new Translation2d(-MODULE_X, MODULE_Y),
                 new Translation2d(-MODULE_X, -MODULE_Y));
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, getGyroAngle(), modulePositions,
                 new Pose2d(0, 0, getGyroAngle()),
@@ -121,6 +122,11 @@ public class SwerveDrive extends SubsystemBase {
         rPIDSetpoint = angle.getRadians();
     }
 
+    public void driveVelocity(ChassisSpeeds speeds) {
+        driveVelocity(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
+                speeds.omegaRadiansPerSecond);
+    }
+
     /**
      * Calculates and commands {@link SwerveModuleState SwerveModuleStates} from
      * a set of field-relative speeds
@@ -155,13 +161,16 @@ public class SwerveDrive extends SubsystemBase {
             }
             rController.setSetpoint(rPIDSetpoint);
             vr = rController.calculate(getRobotAngle().getRadians());
+            if (rController.atSetpoint()) {
+                vr = 0;
+            }
         } else {
             vr = 0;
             // rPIDSetpoint = Double.NaN;
         }
 
         ChassisSpeeds speeds;
-        if (DriverStation.isAutonomous()) {
+        if (isFieldRelative) {
             speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
         } else {
             speeds = new ChassisSpeeds(vx, vy, vr);
@@ -242,6 +251,18 @@ public class SwerveDrive extends SubsystemBase {
             positions[i] = modules[i].getCurrentPosition();
         }
         poseEstimator.update(Rotation2d.fromDegrees(gyro.getYaw()), positions);
+    }
+
+    public void setFieldRelative() {
+        isFieldRelative = true;
+    }
+
+    public void setRobotRelative() {
+        isFieldRelative = false;
+    }
+
+    public boolean isFieldRelative() {
+        return isFieldRelative;
     }
 
     public double getRSetpoint() {
