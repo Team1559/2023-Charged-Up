@@ -336,8 +336,7 @@ public abstract class ArmSegment extends SubsystemBase {
         // CYCLES_PER_SECOND));
         SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
         SmartDashboard.putNumber(name + " motor temperature: ", motor.getTemperature());
-        // SmartDashboard.putNumber(name + " error: ",
-        // motor.getClosedLoopError());
+        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
         // SmartDashboard.putNumber(name + " speed: ", speed);
     }
 

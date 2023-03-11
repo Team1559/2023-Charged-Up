@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
 
 import frc.robot.commands.ScoreCommands;
+import frc.robot.commands.SwerveTeleopAlignToGridCommand;
 import frc.robot.commands.SwerveTeleopDriveCommand;
 import frc.robot.commands.SwerveTeleopSnapRotateCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
@@ -177,6 +178,7 @@ public class RobotContainer {
             swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
             controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
             controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
+            controller0.aButton.onTrue(new SwerveTeleopAlignToGridCommand(swerve, controller0));
         }
     }
 
