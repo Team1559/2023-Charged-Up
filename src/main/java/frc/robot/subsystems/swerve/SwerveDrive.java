@@ -4,7 +4,9 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 import static frc.robot.Constants.Swerve.ENCODER_STDDEV;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
-import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_R;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_X;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_Y;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
 import static frc.robot.Constants.Swerve.ROTATION_KP;
@@ -24,9 +26,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.lib.SwerveTrajectory;
 
 public class SwerveDrive extends SubsystemBase {
@@ -37,16 +41,20 @@ public class SwerveDrive extends SubsystemBase {
     private final SwerveDrivePoseEstimator poseEstimator;
     private final Pigeon2                  gyro;
     private final double[]                 gyroDataArray;
+    private boolean                        isFieldRelative;
     private Field2d                        field2d;
     private double                         rPIDSetpoint;
     private double                         lastVX;
+    private double                         lastVY;
+    private double                         lastVR;
 
     public SwerveDrive() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SmartDashboard.putBoolean("Swerve drive ready?", false);
+        // try {
+        //     Thread.sleep(30000);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
 
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
@@ -70,7 +78,7 @@ public class SwerveDrive extends SubsystemBase {
                 VecBuilder.fill(2, 2, 2));
         rController = new PIDController(ROTATION_KP, 0, 0);
         rController.enableContinuousInput(-Math.PI, Math.PI);
-        rController.setTolerance(0.01);
+        rController.setTolerance(Math.toRadians(1));
         rPIDSetpoint = Double.NaN;
         gyroDataArray = new double[3];
 
@@ -78,6 +86,7 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putData(field2d);
 
         gyro.configFactoryDefault();
+        SmartDashboard.putBoolean("Swerve drive ready?", true);
     }
 
     public void setStates(SwerveModuleState... states) {
@@ -113,6 +122,11 @@ public class SwerveDrive extends SubsystemBase {
         rPIDSetpoint = angle.getRadians();
     }
 
+    public void driveVelocity(ChassisSpeeds speeds) {
+        driveVelocity(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond,
+                speeds.omegaRadiansPerSecond);
+    }
+
     /**
      * Calculates and commands {@link SwerveModuleState SwerveModuleStates} from
      * a set of field-relative speeds
@@ -134,7 +148,7 @@ public class SwerveDrive extends SubsystemBase {
         // .... .... set setpoint to current angle
         // .... use PID control
         // Else: command 0
-        boolean vControl = Math.abs(vr) > 1e-3;
+        boolean vControl = DriverStation.isTeleop();
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;
         if (vControl || !VISION_ENABLED) {
@@ -147,22 +161,42 @@ public class SwerveDrive extends SubsystemBase {
             }
             rController.setSetpoint(rPIDSetpoint);
             vr = rController.calculate(getRobotAngle().getRadians());
+            if (rController.atSetpoint()) {
+                vr = 0;
+            } else if (Math.abs(vr) > MAXIMUM_ANGULAR_VELOCITY) {
+                vr = Math.copySign(MAXIMUM_ANGULAR_VELOCITY, vr);
+            }
         } else {
             vr = 0;
             // rPIDSetpoint = Double.NaN;
         }
 
-        // ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy,
-        // vr, getRobotAngle());
-        ChassisSpeeds speeds = new ChassisSpeeds(vx, vy, vr);
+        ChassisSpeeds speeds;
+        if (isFieldRelative) {
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(vx, vy, vr, getRobotAngle());
+        } else {
+            speeds = new ChassisSpeeds(vx, vy, vr);
+        }
 
-        // Accel limit on VX only
-        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE) {
-            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE;
-        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE) {
-            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE;
+        // Accel limits
+        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE_X) {
+            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE_X;
+        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE_X) {
+            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE_X;
+        }
+        if (speeds.vyMetersPerSecond > lastVY + MAX_ACCEL_PER_CYCLE_Y) {
+            speeds.vyMetersPerSecond = lastVY + MAX_ACCEL_PER_CYCLE_Y;
+        } else if (speeds.vyMetersPerSecond < lastVY - MAX_ACCEL_PER_CYCLE_Y) {
+            speeds.vyMetersPerSecond = lastVY - MAX_ACCEL_PER_CYCLE_Y;
+        }
+        if (speeds.omegaRadiansPerSecond > lastVR + MAX_ACCEL_PER_CYCLE_R) {
+            speeds.omegaRadiansPerSecond = lastVR + MAX_ACCEL_PER_CYCLE_R;
+        } else if (speeds.omegaRadiansPerSecond < lastVR - MAX_ACCEL_PER_CYCLE_R) {
+            speeds.omegaRadiansPerSecond = lastVR - MAX_ACCEL_PER_CYCLE_R;
         }
         lastVX = speeds.vxMetersPerSecond;
+        lastVY = speeds.vyMetersPerSecond;
+        lastVR = speeds.omegaRadiansPerSecond;
 
         SmartDashboard.putBoolean("Rotating", rotating);
         SmartDashboard.putBoolean("Setpoint", setpointSet);
@@ -170,7 +204,12 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Vx", vx);
         SmartDashboard.putNumber("Vy", vy);
         SmartDashboard.putNumber("Vr", vr);
+        SmartDashboard.putNumber("rPID error", rController.getPositionError());
+        SmartDashboard.putNumber("Actual Vx", lastVX);
+        SmartDashboard.putNumber("Actual Vy", lastVY);
+        SmartDashboard.putNumber("Actual Vr", lastVR);
         SmartDashboard.putNumber("rPIDSetpoint", Math.toDegrees(rPIDSetpoint));
+        SmartDashboard.putBoolean("isFieldRelative", isFieldRelative);
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(newStates, speeds, MAXIMUM_LINEAR_VELOCITY,
@@ -221,12 +260,28 @@ public class SwerveDrive extends SubsystemBase {
         poseEstimator.update(Rotation2d.fromDegrees(gyro.getYaw()), positions);
     }
 
+    public void setFieldRelative() {
+        isFieldRelative = true;
+    }
+
+    public void setRobotRelative() {
+        isFieldRelative = false;
+    }
+
+    public boolean isFieldRelative() {
+        return isFieldRelative;
+    }
+
     public double getRSetpoint() {
         return rPIDSetpoint;
     }
 
     @Override
     public void periodic() {
+        if (DriverStation.isDisabled()) {
+            rPIDSetpoint = Double.NaN;
+        }
+
         updatePositions();
         gyro.getRawGyro(gyroDataArray);
 
@@ -237,6 +292,8 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Pos Rot", currentPose.getRotation()
                                                        .getDegrees());
         SmartDashboard.putNumber("Yaw", gyro.getYaw());
+        SmartDashboard.putNumber("Roll", gyro.getRoll());
+        SmartDashboard.putNumber("Pitch", gyro.getPitch());
     }
 
     /**

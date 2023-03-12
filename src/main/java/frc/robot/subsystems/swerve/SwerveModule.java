@@ -47,6 +47,17 @@ public class SwerveModule {
         steerMotor = new TalonFX(MODULE_STEER_MOTOR_IDS[id], CANIVORE_BUS_ID);
         cancoder = new CANCoder(MODULE_CANCODER_IDS[id], CANIVORE_BUS_ID);
 
+        while (true) {
+            cancoder.getAbsolutePosition();
+            if (cancoder.getLastError() == ErrorCode.OK) {
+                break;
+            }
+            System.out.println("Waiting for communications (canivore)");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+            }
+        }
         configCancoder();
 
         driveMotor.configFactoryDefault();
@@ -84,7 +95,7 @@ public class SwerveModule {
      */
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
-        double backlashRate = steerMotor.getSelectedSensorVelocity() * STEER_DRIVE_BACKLASH;
+        double backlashRate = steerMotor.getSelectedSensorVelocity() * STEER_DRIVE_BACKLASH / 2;
         driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms - backlashRate);
     }
 

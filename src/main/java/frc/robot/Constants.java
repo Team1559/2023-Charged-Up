@@ -87,11 +87,18 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 0.6;
-        public static final double MAX_ACCEL_PER_CYCLE          = MAXIMUM_LINEAR_VELOCITY
-                / SWERVE_SECONDS_TO_FULL_SPEED / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.6;
+        public static final double MAX_ACCEL_PER_CYCLE_X          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_X / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y = 0.25;
+        public static final double MAX_ACCEL_PER_CYCLE_Y          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_Y / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_R = 0.25;
+        public static final double MAX_ACCEL_PER_CYCLE_R          = MAXIMUM_ANGULAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
-        public static final double SLOW_MODE_RATIO = 0.2;
+        public static final double SLOW_MODE_RATIO = 0.25;
+        public static final double MED_MODE_RATIO  = 0.5;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -119,10 +126,11 @@ public final class Constants {
         public static final PoseStrategy POSE_STRATEGY       = PoseStrategy.LOWEST_AMBIGUITY;
         public static final double       AMBIGUITY_THRESHOLD = 0.2;
 
-        public static final double CAMERA_X     = Units.inchesToMeters(-12.625);
-        public static final double CAMERA_Y     = Units.inchesToMeters(-2.5);
-        public static final double CAMERA_Z     = Units.inchesToMeters(21.875);
-        public static final double CAMERA_ANGLE = Math.toRadians(180);
+        // offsets are in meters
+        public static final double CAMERA_X     = .31;
+        public static final double CAMERA_Y     = -.265;
+        public static final double CAMERA_Z     = .34;
+        public static final double CAMERA_ANGLE = Math.toRadians(0);
 
         public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
                 new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
@@ -209,7 +217,7 @@ public final class Constants {
         // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
         public static final double ZERO_ANGLE                        = 79D;
         public static final double SERVO_RANGE                       = 180D;
-        public static final double TELEOP_ANGULAR_VELOCITY           = 90D;
+        public static final double TELEOP_ANGULAR_VELOCITY           = 120D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
@@ -220,8 +228,8 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.5 * Swerve.MAXIMUM_LINEAR_VELOCITY;
-        public static final double MAXIMUM_ANGULAR_VELOCITY = 2 * Math.PI;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.50 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_ANGULAR_VELOCITY = 1 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;
         public static final double MAXIMUM_LINEAR_ACCELERATION  = MAXIMUM_LINEAR_VELOCITY

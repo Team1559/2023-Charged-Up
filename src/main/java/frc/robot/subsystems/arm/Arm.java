@@ -1,24 +1,19 @@
 package frc.robot.subsystems.arm;
 
+import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Map.Entry;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.lib.NullCommand;
 
 public class Arm {
     public enum Position {
         LOWER_CONE(87, -118, -34, false),
         MIDDLE_CONE(76, -46, -66, true),
-        UPPER_CONE(52, -26, -8, true),
+        UPPER_CONE(55, -26, -20, true),
 
         LOWER_CUBE(83, -119, -38, false),
         MIDDLE_CUBE(70, -59, -71, true),
@@ -87,29 +82,31 @@ public class Arm {
         return isUpper != destinationPosition.isUpper;
     }
 
-    public Command moveArmToPosition(Position position) {
-        return new ParallelCommandGroup(
-                base.setAngleCommandPos(position), elbow.setAngleCommandPos(position),
-                wrist.setAngleCommandPos(position)).beforeStarting(() -> targetPosition = position)
-                                                   .finallyDo(i -> {
-                                                       if (!i) {
-                                                           lastPosition = targetPosition;
-                                                       }
-                                                   });
+    public Command moveToPosition(Position position) {
+        return base.setAngleCommandPos(position)
+                   .alongWith(elbow.setAngleCommandPos(position))
+                   .alongWith(wrist.setAngleCommandPos(position))
+                   .beforeStarting(() -> {
+                       System.out.println("beforeStarting " + position);
+                       targetPosition = position;
+                   })
+                   .finallyDo(i -> {
+                       if (!i) {
+                           lastPosition = targetPosition;
+                       }
+                   });
     }
 
     public Command moveToLocations(Position... positions) {
-        Command[] groupOfCommands = new Command[positions.length];
-        for (int i = 0; i < groupOfCommands.length; i++) {
-            groupOfCommands[i] = moveArmToPosition(positions[i]);
-        }
-        return new SequentialCommandGroup(groupOfCommands);
+        return new SequentialCommandGroup(Arrays.stream(positions)
+                                                .map(this::moveToPosition)
+                                                .toArray(Command[]::new));
     }
 
     public Command moveSequentially(Position position) {
         return new SelectCommand(
                 Map.ofEntries(Map.entry(true, moveToLocations(Position.WAYPOINT, position)),
-                        Map.entry(false, moveArmToPosition(position))),
+                        Map.entry(false, moveToPosition(position))),
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position);
     }
 
@@ -120,6 +117,6 @@ public class Arm {
     }
 
     public Command armPanicCommand() {
-        return new SequentialCommandGroup(new InstantCommand(this::armPanic), new WaitCommand(1.0));
+        return new InstantCommand(this::armPanic).andThen(new WaitCommand(1.0));
     }
 }
