@@ -8,20 +8,25 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.lib.SwerveTrajectory;
+
+import frc.robot.Vision;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class SwerveTrajectoryCommand extends CommandBase {
     private final SwerveDrive      swerveDrive;
     private final SwerveTrajectory trajectory;
+    private final Vision vision;
     private final Pose2d           targetPose;
     private Pose2d                 currentPose;
     private int                    closestPointIndex;
     private int                    lookAheadPointIndex;
 
-    public SwerveTrajectoryCommand(SwerveDrive swerveDrive, SwerveTrajectory trajectory) {
+    public SwerveTrajectoryCommand(SwerveDrive swerveDrive, SwerveTrajectory trajectory, Vision vision) {
         this.swerveDrive = swerveDrive;
         this.trajectory = trajectory;
+        this.vision = vision;
 
         targetPose = trajectory.points[trajectory.length - 1].pose;
         closestPointIndex = 0;
@@ -33,6 +38,11 @@ public class SwerveTrajectoryCommand extends CommandBase {
     }
     @Override
     public void execute() {
+        if (!vision.isPoseSet()) {
+            rotateSlowly();
+            return;
+        }
+        
         currentPose = swerveDrive.getEstimatedPose();
         calculateGoals();
         driveToSetpoints();
@@ -100,6 +110,10 @@ public class SwerveTrajectoryCommand extends CommandBase {
 
         swerveDrive.setRSetpoint(targetPose.getRotation());
         swerveDrive.driveVelocity(vx, vy, 0);
+    }
+
+    private void rotateSlowly() {
+        swerveDrive.driveVelocity(0, 0, 0.5);
     }
 
     @Override

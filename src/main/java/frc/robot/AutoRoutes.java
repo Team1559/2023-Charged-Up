@@ -195,6 +195,7 @@ public class AutoRoutes {
     private final Arm          arm;
     private final GrabberWrist wrist;
     private final GrabberClaw  claw;
+    private final Vision       vision;
 
     // Index 0 is blue, index 1 is red (mirrored)
     private final SwerveTrajectory[] leave1Traj;
@@ -204,11 +205,12 @@ public class AutoRoutes {
     private final SwerveTrajectory[] start3ToPiece4Traj;
     private final SwerveTrajectory[] piece4ToStart3Traj;
 
-    public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw) {
+    public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw, Vision vision) {
         this.swerve = swerve;
         this.arm = arm;
         this.wrist = wrist;
         this.claw = claw;
+        this.vision = vision;
 
         leave1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_EXIT_COMMUNITY),
                 makeTrajectory(mirror(START_1_EXIT_COMMUNITY)) };
@@ -308,7 +310,7 @@ public class AutoRoutes {
     }
 
     private Command makeTrajectoryCommand(SwerveTrajectory trajectory) {
-        return new SwerveTrajectoryCommand(swerve, trajectory);
+        return new SwerveTrajectoryCommand(swerve, trajectory, vision);
     }
 
     private static int trajectoryIndex() {

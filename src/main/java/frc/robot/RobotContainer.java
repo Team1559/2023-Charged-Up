@@ -105,7 +105,7 @@ public class RobotContainer {
         }
 
         boolean isBlue = DriverStation.getAlliance() == Alliance.Blue;
-        autoRoutes = new AutoRoutes(swerve, arm, wrist, claw);
+        autoRoutes = new AutoRoutes(swerve, arm, wrist, claw, vision);
         autoRouteChooser = new AutoRouteChooser(autoRoutes);
 
         configureBindings();

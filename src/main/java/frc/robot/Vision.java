@@ -90,4 +90,8 @@ public class Vision extends SubsystemBase {
             }
         }
     }
+
+    public boolean isPoseSet() {
+        return poseSet;
+    }
 }

@@ -163,6 +163,8 @@ public class SwerveDrive extends SubsystemBase {
             vr = rController.calculate(getRobotAngle().getRadians());
             if (rController.atSetpoint()) {
                 vr = 0;
+            } else if (Math.abs(vr) > MAXIMUM_ANGULAR_VELOCITY) {
+                vr = Math.copySign(MAXIMUM_ANGULAR_VELOCITY, vr);
             }
         } else {
             vr = 0;
