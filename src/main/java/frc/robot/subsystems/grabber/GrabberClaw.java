@@ -4,6 +4,7 @@ import static frc.robot.Constants.Grabber.CLAW_PNEUMATIC_WAIT_TIME;
 import static frc.robot.Constants.Wiring.CLAW_SOLENOID_ID;
 import static frc.robot.Constants.Wiring.PNEUMATICS_HUB_ID;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,6 +46,9 @@ public class GrabberClaw extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (DriverStation.isDisabled()) {
+            closeClaw();
+        }
         SmartDashboard.putBoolean("Claw Closed", !clawIsOpen());
     }
 }

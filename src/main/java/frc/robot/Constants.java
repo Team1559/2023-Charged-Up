@@ -28,7 +28,7 @@ public final class Constants {
         public static final boolean CHASSIS_ENABLED = true;
         public static final boolean ARM_ENABLED     = true;
         public static final boolean GRABBER_ENABLED = true;
-        public static final boolean VISION_ENABLED  = false;
+        public static final boolean VISION_ENABLED  = true;
     }
 
     public static final double FALCON_TICKS_PER_REV   = 2048;
@@ -86,7 +86,11 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SLOW_MODE_RATIO              = 0.2;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED = 0.6;
+        public static final double MAX_ACCEL_PER_CYCLE          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED / CYCLES_PER_SECOND;
+
+        public static final double SLOW_MODE_RATIO = 0.2;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -162,7 +166,7 @@ public final class Constants {
         public static final double kP_ELBOW  = 0.8;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
-        public static final double kIZ_ELBOW = 30;    // deg * 11
+        public static final double kIZ_ELBOW = 55;    // deg * 11
 
         public static final double kP_WRIST  = 1;
         public static final double kD_WRIST  = 0;
@@ -201,16 +205,16 @@ public final class Constants {
     }
 
     public static class Grabber {
-        public static final double ZERO_ANGLE                        = 90D;
-        public static final int    SERVO_RANGE                       = 180;
+        // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
+        public static final double ZERO_ANGLE                        = 79D;
+        public static final double SERVO_RANGE                       = 180D;
         public static final double TELEOP_ANGULAR_VELOCITY           = 90D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
         public static final double MAX_ANGULAR_VELOCITY              = 360D;
-        public static final int    FIRST_DOUBLE_SOLENOID_CHANNEL     = 11111;
-        public static final int    SECOND_DOUBLE_SOLENOID_CHANNEL    = 22222;
         public static final double CLAW_PNEUMATIC_WAIT_TIME          = 0.1;
         public static final double MINIMUM_WRIST_ANGLE               = -90D;
         public static final double MAXIMUN_WRIST_ANGLE               = 90D;
+        public static final double RESET_WRIST_ANGLE                 = 0;
 
     }
 

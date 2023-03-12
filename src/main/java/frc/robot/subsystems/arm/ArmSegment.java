@@ -233,7 +233,7 @@ public abstract class ArmSegment extends SubsystemBase {
     public boolean isAtPosition(Arm.Position position) {
         double maxError = MAXIMUM_ANGLE_ERROR;
         if (tickToAngle(motor.getSelectedSensorVelocity()) * 10 < 1) {
-            maxError *= 10;
+            maxError *= 5;
         }
         double jointAngle = getTargetAngle(position);
         double angleError = Math.abs(jointAngle - getJointAngle());

@@ -9,6 +9,8 @@ import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
+import static frc.robot.Constants.Grabber.RESET_WRIST_ANGLE;
+
 import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -129,20 +131,32 @@ public class RobotContainer {
 
     private void configureBindings() {
         if (ARM_ENABLED) {
-            controller1.yButton.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.UPPER_CONE)),
-                    Map.entry(CommandSelector.CUBE, arm.moveSequentially(Arm.Position.UPPER_CUBE))),
-                    this::selectModifier));
-            controller1.xButton.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.MIDDLE_CONE)),
-                    Map.entry(CommandSelector.CUBE,
-                            arm.moveSequentially(Arm.Position.MIDDLE_CUBE))),
-                    this::selectModifier));
+            controller1.yButton.onTrue(
+                    new SequentialCommandGroup(wrist.setWristAngleCommand(RESET_WRIST_ANGLE),
+                            new SelectCommand(
+                                    Map.ofEntries(
+                                            Map.entry(CommandSelector.CONE,
+                                                    arm.moveSequentially(Arm.Position.UPPER_CONE)),
+                                            Map.entry(CommandSelector.CUBE,
+                                                    arm.moveSequentially(Arm.Position.UPPER_CUBE))),
+                                    this::selectModifier)));
+            controller1.xButton.onTrue(
+                    new SequentialCommandGroup(wrist.setWristAngleCommand(RESET_WRIST_ANGLE),
+                            new SelectCommand(
+                                    Map.ofEntries(
+                                            Map.entry(CommandSelector.CONE,
+                                                    arm.moveSequentially(Arm.Position.MIDDLE_CONE)),
+                                            Map.entry(CommandSelector.CUBE,
+                                                    arm.moveSequentially(
+                                                            Arm.Position.MIDDLE_CUBE))),
+                                    this::selectModifier)));
             controller1.bButton.onTrue(new SelectCommand(Map.ofEntries(
                     Map.entry(CommandSelector.CONE, arm.moveSequentially(Arm.Position.LOWER_CONE)),
                     Map.entry(CommandSelector.CUBE, arm.moveSequentially(Arm.Position.LOWER_CUBE))),
                     this::selectModifier));
-            controller1.aButton.onTrue(arm.moveSequentially(Arm.Position.TRAVEL));
+            controller1.aButton.onTrue(
+                    new SequentialCommandGroup(arm.moveSequentially(Arm.Position.TRAVEL),
+                            wrist.setWristAngleCommand(RESET_WRIST_ANGLE)));
             controller1.startButton.onTrue(arm.armPanicCommand());
         }
         if (GRABBER_ENABLED) {
@@ -150,6 +164,9 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
+
+            // controller1.yButton.onTrue(wrist.setWristAngleCommand(0));
+            // controller1.xButton.onTrue(wrist.setWristAngleCommand(0));
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SequentialCommandGroup(claw.openClawCommand(),
