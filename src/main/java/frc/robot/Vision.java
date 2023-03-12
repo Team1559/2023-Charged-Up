@@ -44,7 +44,6 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("Vision Periodic");
         Optional<EstimatedRobotPose> estimatedPose = photonPoseEstimator.update();
         PhotonPipelineResult cameraResult = camera.getLatestResult();
         boolean posePresent = estimatedPose.isPresent() && cameraResult.hasTargets()

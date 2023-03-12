@@ -24,6 +24,8 @@ public class AutoRouteChooser {
         positionChooser.setDefaultOption("Do Nothing (1)", NullCommand::new);
         positionChooser.addOption("Leave community (1)", routes::leave1);
         positionChooser.addOption("Score cone, stay", routes::scoreConeStay);
+        positionChooser.addOption("Score cone, leave (1)", routes::scoreLeave1);
+        positionChooser.addOption("Score cone, leave (3)", routes::scoreLeave3);
         // positionChooser.addOption("Score, leave community, grab a piece (1)",
         // AutoRoute.SCORE_LEAVE_GRAB);
         // positionChooser.addOption("Score, leave community, grab a piece,

@@ -48,10 +48,11 @@ public class SwerveModule {
         cancoder = new CANCoder(MODULE_CANCODER_IDS[id], CANIVORE_BUS_ID);
 
         while (true) {
-            if (driveMotor.configFactoryDefault() == ErrorCode.OK) {
+            cancoder.getAbsolutePosition();
+            if (cancoder.getLastError() == ErrorCode.OK) {
                 break;
             }
-            System.out.println("Waiting for motor communications (canivore)");
+            System.out.println("Waiting for communications (canivore)");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -59,6 +60,7 @@ public class SwerveModule {
         }
         configCancoder();
 
+        driveMotor.configFactoryDefault();
         driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.setInverted(true);
         driveMotor.setSelectedSensorPosition(0D);

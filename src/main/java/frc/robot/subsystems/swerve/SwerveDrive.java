@@ -50,11 +50,11 @@ public class SwerveDrive extends SubsystemBase {
 
     public SwerveDrive() {
         SmartDashboard.putBoolean("Swerve drive ready?", false);
-        try {
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        // try {
+        //     Thread.sleep(30000);
+        // } catch (InterruptedException e) {
+        //     e.printStackTrace();
+        // }
 
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
@@ -78,7 +78,7 @@ public class SwerveDrive extends SubsystemBase {
                 VecBuilder.fill(2, 2, 2));
         rController = new PIDController(ROTATION_KP, 0, 0);
         rController.enableContinuousInput(-Math.PI, Math.PI);
-        rController.setTolerance(Math.toRadians(3));
+        rController.setTolerance(Math.toRadians(1));
         rPIDSetpoint = Double.NaN;
         gyroDataArray = new double[3];
 
@@ -204,6 +204,7 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Vx", vx);
         SmartDashboard.putNumber("Vy", vy);
         SmartDashboard.putNumber("Vr", vr);
+        SmartDashboard.putNumber("rPID error", rController.getPositionError());
         SmartDashboard.putNumber("Actual Vx", lastVX);
         SmartDashboard.putNumber("Actual Vy", lastVY);
         SmartDashboard.putNumber("Actual Vr", lastVR);
@@ -291,7 +292,8 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Pos Rot", currentPose.getRotation()
                                                        .getDegrees());
         SmartDashboard.putNumber("Yaw", gyro.getYaw());
-
+        SmartDashboard.putNumber("Roll", gyro.getRoll());
+        SmartDashboard.putNumber("Pitch", gyro.getPitch());
     }
 
     /**

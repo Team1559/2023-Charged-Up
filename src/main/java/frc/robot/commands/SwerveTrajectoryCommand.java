@@ -38,6 +38,12 @@ public class SwerveTrajectoryCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        if (swerveDrive.getEstimatedPose()
+                       .minus(trajectory.points[0].pose)
+                       .getTranslation()
+                       .getNorm() > 1) {
+            cancel();
+        }
         swerveDrive.setFieldRelative();
     }
 
@@ -102,8 +108,10 @@ public class SwerveTrajectoryCommand extends CommandBase {
     private void driveToSetpoints() {
         // Set to move towards lookahead pose
         Pose2d targetPose = trajectory.points[lookAheadPointIndex].pose;
-        Translation2d robotToTarget = targetPose.minus(currentPose)
-                                                .getTranslation();
+        // Translation2d robotToTarget = targetPose.minus(currentPose)
+        // .getTranslation();
+        Translation2d robotToTarget = targetPose.getTranslation()
+                                                .minus(currentPose.getTranslation());
         // Convert from linear displacement to linear velocity
         double scalar = trajectory.points[closestPointIndex].commandedVelocity
                 / robotToTarget.getNorm();

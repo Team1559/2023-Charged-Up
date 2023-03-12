@@ -262,7 +262,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (!DriverStation.isEnabled()) {
+        if (DriverStation.isDisabled()) {
             isSetPointCommanded = false;
             setpointJointAngle = getJointAngle();
             target = setpointJointAngle;

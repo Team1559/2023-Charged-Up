@@ -49,38 +49,32 @@ public class ScoreCommands {
 
     public static Command scoreConeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeHigh(arm, wrist)
-                            .andThen(claw.openClawCommand())
-                            .andThen(moveToTravel(arm));
+                            .andThen(claw.openClawCommand());
     }
 
     public static Command scoreConeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeMid(arm, wrist)
-                            .andThen(claw.openClawCommand())
-                            .andThen(moveToTravel(arm));
+                            .andThen(claw.openClawCommand());
     }
 
     public static Command scoreConeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeLow(arm, wrist)
-                            .andThen(claw.openClawCommand())
-                            .andThen(moveToTravel(arm));
+                            .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeHigh(arm, wrist)
-                            .andThen(claw.openClawCommand())
-                            .andThen(moveToTravel(arm));
+                            .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeMid(arm, wrist)
-                            .andThen(claw.openClawCommand())
-                            .andThen(moveToTravel(arm));
+                            .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeLow(arm, wrist)
-                            .andThen(claw.openClawCommand())
-                            .andThen(moveToTravel(arm));
+                            .andThen(claw.openClawCommand());
     }
 
     public static Command pickupConeCommand(Arm arm, GrabberClaw claw) {
