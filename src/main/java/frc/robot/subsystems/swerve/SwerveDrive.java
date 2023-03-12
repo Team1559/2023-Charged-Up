@@ -204,7 +204,11 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putNumber("Vx", vx);
         SmartDashboard.putNumber("Vy", vy);
         SmartDashboard.putNumber("Vr", vr);
+        SmartDashboard.putNumber("Actual Vx", lastVX);
+        SmartDashboard.putNumber("Actual Vy", lastVY);
+        SmartDashboard.putNumber("Actual Vr", lastVR);
         SmartDashboard.putNumber("rPIDSetpoint", Math.toDegrees(rPIDSetpoint));
+        SmartDashboard.putBoolean("isFieldRelative", isFieldRelative);
 
         SwerveModuleState[] newStates = kinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(newStates, speeds, MAXIMUM_LINEAR_VELOCITY,
@@ -273,6 +277,10 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (DriverStation.isDisabled()) {
+            rPIDSetpoint = Double.NaN;
+        }
+
         updatePositions();
         gyro.getRawGyro(gyroDataArray);
 

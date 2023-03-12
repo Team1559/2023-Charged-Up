@@ -17,13 +17,14 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class SwerveTrajectoryCommand extends CommandBase {
     private final SwerveDrive      swerveDrive;
     private final SwerveTrajectory trajectory;
-    private final Vision vision;
+    private final Vision           vision;
     private final Pose2d           targetPose;
     private Pose2d                 currentPose;
     private int                    closestPointIndex;
     private int                    lookAheadPointIndex;
 
-    public SwerveTrajectoryCommand(SwerveDrive swerveDrive, SwerveTrajectory trajectory, Vision vision) {
+    public SwerveTrajectoryCommand(SwerveDrive swerveDrive, SwerveTrajectory trajectory,
+            Vision vision) {
         this.swerveDrive = swerveDrive;
         this.trajectory = trajectory;
         this.vision = vision;
@@ -31,18 +32,22 @@ public class SwerveTrajectoryCommand extends CommandBase {
         targetPose = trajectory.points[trajectory.length - 1].pose;
         closestPointIndex = 0;
         lookAheadPointIndex = 0;
+
+        addRequirements(swerveDrive);
     }
+
     @Override
     public void initialize() {
         swerveDrive.setFieldRelative();
     }
+
     @Override
     public void execute() {
         if (!vision.isPoseSet()) {
             rotateSlowly();
             return;
         }
-        
+
         currentPose = swerveDrive.getEstimatedPose();
         calculateGoals();
         driveToSetpoints();

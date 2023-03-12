@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+    private Command        autoCommand;
     private RobotContainer robotContainer;
     public Compressor      airCompressor;
     public PneumaticHub    hub;
@@ -50,6 +51,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        CommandScheduler.getInstance()
+                        .cancelAll();
         airCompressor.disable();
     }
 
@@ -63,9 +66,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
-        Command auto = robotContainer.getAutonomousCommand();
         CommandScheduler.getInstance()
-                        .schedule(auto);
+                        .cancelAll();
+        autoCommand = robotContainer.getAutonomousCommand();
+        CommandScheduler.getInstance()
+                        .schedule(autoCommand);
     }
 
     /** This function is called periodically during autonomous. */
@@ -77,6 +82,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        CommandScheduler.getInstance()
+                        .cancelAll();
         airCompressor.enableDigital();
     }
 
