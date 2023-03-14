@@ -47,17 +47,14 @@ public class SwerveModule {
         steerMotor = new TalonFX(MODULE_STEER_MOTOR_IDS[id], CANIVORE_BUS_ID);
         cancoder = new CANCoder(MODULE_CANCODER_IDS[id], CANIVORE_BUS_ID);
 
-        while (true) {
-            cancoder.getAbsolutePosition();
-            if (cancoder.getLastError() == ErrorCode.OK) {
-                break;
-            }
+        while (driveMotor.getBusVoltage() == 0) {
             System.out.println("Waiting for communications (canivore)");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
         }
+
         configCancoder();
 
         driveMotor.configFactoryDefault();
