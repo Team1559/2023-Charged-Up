@@ -1,7 +1,12 @@
 package frc.robot.subsystems.arm;
 
-import static frc.robot.Constants.Arm.*;
-import static frc.robot.Constants.*;
+import static frc.robot.Constants.CANCODER_TICKS_PER_REV;
+import static frc.robot.Constants.CYCLES_PER_SECOND;
+import static frc.robot.Constants.FALCON_MAX_RPM;
+import static frc.robot.Constants.FALCON_STALL_TORQUE;
+import static frc.robot.Constants.GRAVITY_ACCELERATION;
+import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
+import static frc.robot.Constants.Arm.MINIMUM_TARGET_DISTANCE;
 
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
@@ -57,13 +62,8 @@ public abstract class ArmSegment extends SubsystemBase {
         this.mass = mass;
         this.length = length;
         this.centerOfMass = centerOfMass;
-
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
-        // if (isInverted) {
-        // kd *= -1;
-        // kp *= -1;
-        // ki *= -1;
-        // }
+
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
         motor.enableVoltageCompensation(true);
@@ -77,7 +77,6 @@ public abstract class ArmSegment extends SubsystemBase {
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Brake);
-        // motor.setNeutralMode(NeutralMode.Coast);
         motor.configClosedLoopPeakOutput(0, 0.2);
         canCoder = new CANCoder(cancoderID);
         configCancoder(canCoder);
@@ -87,15 +86,8 @@ public abstract class ArmSegment extends SubsystemBase {
         motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
         motor.setSensorPhase(isInverted);
         motor.setInverted(isInverted);
-        // motor.configAllowableClosedloopError(0, closedLoopErrorValue);
 
-        // if (isInverted) {
-        // motor.configSelectedFeedbackCoefficient(-1);
-        // Motor is mounted in opposite orientation (inverted)
-        // }
-        // motor.setInverted(isInverted);
-
-        motor.configForwardSoftLimitEnable(true); // will eventually enable
+        motor.configForwardSoftLimitEnable(true);
         motor.configReverseSoftLimitEnable(true);
         motor.configForwardSoftLimitThreshold(angleToTick(upperLimit));
         motor.configReverseSoftLimitThreshold(angleToTick(lowerLimit));
@@ -167,17 +159,12 @@ public abstract class ArmSegment extends SubsystemBase {
     }
 
     public double calculateFeedForward(double velocity, double acceleration) {
-        /**
-         * int inversionCoefficient = 0; if (isInverted) { inversionCoefficient
-         * = -1; } else { inversionCoefficient = 1; }
-         */
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
         return (kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
                                                                           .getCos());
-        // * inversionCoefficient;
     }
 
     public Arm.Position getTargetPosition() {
@@ -319,31 +306,8 @@ public abstract class ArmSegment extends SubsystemBase {
             motor.neutralOutput();
         }
 
-        // Translation2d centerOfMass = getRelativeCenterOfMass();
-        // SmartDashboard.putString(name + " Center of mass: ",
-        // String.format(formatPolar(centerOfMass)));
-        // SmartDashboard.putNumber(name + " kG: ", calculateKG(centerOfMass));
-        // SmartDashboard.putNumber(name + " kV: ", calculateKV(centerOfMass));
-        // SmartDashboard.putNumber(name + " kA: ", calculateKA(centerOfMass));
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
-        // SmartDashboard.putNumber(name + "CANCoder Angle: ",
-        // canCoder.getAbsolutePosition());
-        // SmartDashboard.putNumber(name + "CANCoder Relative: ",
-        // canCoder.getPosition());
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
-        // SmartDashboard.putNumber(name + " ff",
-        // calculateFeedForward(velo * CYCLES_PER_SECOND, accel *
-        // CYCLES_PER_SECOND));
-        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent());
-        SmartDashboard.putNumber(name + " motor temperature: ", motor.getTemperature());
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError());
-        // SmartDashboard.putNumber(name + " speed: ", speed);
-    }
-
-    private static String formatPolar(Translation2d t) {
-        return String.format("ø=%4.1f, m=%4.2f", t.getAngle()
-                                                  .getDegrees(),
-                t.getNorm());
     }
 
     private class ArmSegmentPositionCommand extends CommandBase {

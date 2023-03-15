@@ -14,40 +14,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class GrabberWrist extends SubsystemBase {
     private Servo wristServo;
 
-    // private WPI_TalonSRX wristMotor;
-    // private CANCoder canCoder;
-    // private PIDController pidController;
     public GrabberWrist() {
-        wristServo = new Servo(WRIST_SERVO_PORT);// if servo
-        // wristMotor = new WPI_TalonSRX(WRIST_MOTOR_PORT);
-        // canCoder = new CANCoder(WRIST_CANCODER_ID);
-        // canCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-        // pidController = new PIDController(0.1, 0.0, 0.0);
+        wristServo = new Servo(WRIST_SERVO_PORT);
     }
 
-    public void setAngle(double grabberAngle) {// Verify selected servo is 0-180
-
-        wristServo.setAngle(grabberAngle + ZERO_ANGLE); //
-        // * if not use
-        // * wristServo.set()
-        // * instead (0.0 to 1.0)
-        // */
-        // double currentPosition = canCoder.getAbsolutePosition(); // find
-        // current position
-        // double pidValue = pidController.calculate(grabberAngle,
-        // currentPosition);
-        // wristMotor.set(pidValue);
-
-        /**
-         * pass current position to PID controller and get value from PID
-         * representing amount of motor power set motor to that value /*
-         */
+    public void setAngle(double grabberAngle) {
+        wristServo.setAngle(grabberAngle + ZERO_ANGLE);
     }
 
     public double getAngle() {
         return wristServo.getAngle() - ZERO_ANGLE;
-        // return canCoder.getAbsolutePosition();
-        // returns from -180 to +180 ^
     }
 
     public Command setWristAngleCommand(double angle) {
@@ -62,13 +38,6 @@ public class GrabberWrist extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // SmartDashboard.putNumber("Grabber Angle",wristMotor.get() *
-        // SERVO_RANGE - ZERO_ANGLE);
         SmartDashboard.putNumber("Grabber Angle", wristServo.get() * SERVO_RANGE - ZERO_ANGLE);
-        // speedNumber("Grabber Servo Angle",
-        // wristServo.getAngle());
     }
-    // private double calculateServoAngle(double targetAngle){
-    // return targetAngle+ZERO_ANGLE;
-    // }
 }

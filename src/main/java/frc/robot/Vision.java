@@ -73,19 +73,16 @@ public class Vision extends SubsystemBase {
                                             .getTranslation()
                                             .toTranslation2d()
                                             .getNorm();
-                SmartDashboard.putNumber("Vision StdDev", stdDev);
                 if (poseSet) {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
                 } else {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(0, 0, 0));
-                    swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                            pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
                     poseSet = true;
                 }
             } catch (ConcurrentModificationException e) {
-                SmartDashboard.putString("Error", e.toString());
+                // ignore
             }
         }
     }

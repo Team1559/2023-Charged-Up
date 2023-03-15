@@ -7,7 +7,6 @@ import static frc.robot.Constants.Swerve.MED_MODE_RATIO;
 import static frc.robot.Constants.Swerve.SLOW_MODE_RATIO;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.lib.DTXboxController;
