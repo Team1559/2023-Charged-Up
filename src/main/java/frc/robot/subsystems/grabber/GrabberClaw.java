@@ -7,7 +7,6 @@ import static frc.robot.Constants.Wiring.PNEUMATICS_HUB_ID;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -49,6 +48,6 @@ public class GrabberClaw extends SubsystemBase {
         if (DriverStation.isDisabled()) {
             closeClaw();
         }
-        // SmartDashboard.putBoolean("Claw Closed", !clawIsOpen());
+        // SmartDashboard.putBoolean("Claw Closed", !clawIsOpen()); // remove
     }
 }

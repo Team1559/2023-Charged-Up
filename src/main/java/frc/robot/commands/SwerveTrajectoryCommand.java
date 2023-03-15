@@ -108,8 +108,10 @@ public class SwerveTrajectoryCommand extends CommandBase {
     private void driveToSetpoints() {
         // Set to move towards lookahead pose
         Pose2d targetPose = trajectory.points[lookAheadPointIndex].pose;
+        // remove
         // Translation2d robotToTarget = targetPose.minus(currentPose)
         // .getTranslation();
+        // remove
         Translation2d robotToTarget = targetPose.getTranslation()
                                                 .minus(currentPose.getTranslation());
         // Convert from linear displacement to linear velocity

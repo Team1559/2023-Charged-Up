@@ -213,7 +213,7 @@ public final class Constants {
     }
 
     public static class Grabber {
-        // public static final double GRABBER_WRIST_GEAR_RATIO=1D;
+        // public static final double GRABBER_WRIST_GEAR_RATIO=1D; // remove
         public static final double ZERO_ANGLE                        = 79D;
         public static final double SERVO_RANGE                       = 180D;
         public static final double TELEOP_ANGULAR_VELOCITY           = 120D;

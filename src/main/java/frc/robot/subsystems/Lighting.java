@@ -41,4 +41,3 @@ public class Lighting extends SubsystemBase {
         ledStrip.setData(buffer);
     }
 }
-

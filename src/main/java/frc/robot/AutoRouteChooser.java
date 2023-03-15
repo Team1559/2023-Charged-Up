@@ -26,6 +26,7 @@ public class AutoRouteChooser {
         positionChooser.addOption("Score cone, stay", routes::scoreConeStay);
         positionChooser.addOption("Score cone, leave (1)", routes::scoreLeave1);
         positionChooser.addOption("Score cone, leave (3)", routes::scoreLeave3);
+        // remove
         // positionChooser.addOption("Score, leave community, grab a piece (1)",
         // AutoRoute.SCORE_LEAVE_GRAB);
         // positionChooser.addOption("Score, leave community, grab a piece,
@@ -46,7 +47,9 @@ public class AutoRouteChooser {
         // positionChooser.addOption("Score, leave the community, grab a piece,
         // dock (2)",
         // AutoRoute.SCORE_LEAVE_GRAB_DOCK);
+        // remove
         positionChooser.addOption("Leave community (3)", routes::leave3);
+        // remove
         // positionChooser.addOption("Score, leave community, grab a piece (3)",
         // AutoRoute.SCORE_LEAVE_GRAB_3);
         // positionChooser.addOption("Score, leave community, grab a piece,
@@ -56,6 +59,7 @@ public class AutoRouteChooser {
         // "Score, leave community, grab a piece, score, leave the community
         // (3)",
         // AutoRoute.SCORE_LEAVE_GRAB_SCORE_LEAVE_3);
+        // remove
     }
 
     public Command getSelectedCommand() {

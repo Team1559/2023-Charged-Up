@@ -10,6 +10,7 @@ import static frc.robot.Constants.Auto.VELOCITY_PROPORTION;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+
 import frc.lib.SwerveTrajectory.Point;
 
 public class SwerveTrajectoryGenerator {

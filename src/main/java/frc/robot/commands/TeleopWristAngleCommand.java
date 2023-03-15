@@ -1,10 +1,12 @@
 package frc.robot.commands;
 
 import static frc.robot.Constants.Grabber.SERVO_RANGE;
-import static frc.robot.Constants.Grabber.*;
+import static frc.robot.Constants.Grabber.TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.lib.DTXboxController;
+
 import frc.robot.subsystems.grabber.GrabberWrist;
 
 public class TeleopWristAngleCommand extends CommandBase {
@@ -32,7 +34,7 @@ public class TeleopWristAngleCommand extends CommandBase {
         } else {
             return;
         }
-        // double angle = wrist.getAngle();
+        // double angle = wrist.getAngle(); // remove
         if (newAngle > SERVO_RANGE / 2 - 2) {
             newAngle = SERVO_RANGE / 2 - 2;
         } else if (newAngle < -SERVO_RANGE / 2 + 2) {
