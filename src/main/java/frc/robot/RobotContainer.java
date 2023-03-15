@@ -134,15 +134,6 @@ public class RobotContainer {
 
     private void configureBindings() {
         if (ARM_ENABLED) {
-            // remove
-            // controller1.aButton.onTrue(elbow.setAngleCommandPos(0));
-            // controller1.bButton.onTrue(base.setAngleCommandPos(1));
-            // controller1.xButton.onTrue(elbow.setAngleCommandPos(1));
-            // controller1.yButton.onTrue(base.setAngleCommandPos(4));
-            // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
-            // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
-            // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
-            // remove
             controller1.yButton.onTrue(new SelectCommand(Map.ofEntries(
                     Map.entry(CommandSelector.CONE, ScoreCommands.moveToConeHigh(arm, wrist)),
                     Map.entry(CommandSelector.CUBE, ScoreCommands.moveToCubeHigh(arm, wrist))),
@@ -163,11 +154,6 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
-
-            // remove
-            // controller1.yButton.onTrue(wrist.setWristAngleCommand(0));
-            // controller1.xButton.onTrue(wrist.setWristAngleCommand(0));
-            // remove
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SelectCommand(Map.ofEntries(

@@ -48,6 +48,5 @@ public class GrabberClaw extends SubsystemBase {
         if (DriverStation.isDisabled()) {
             closeClaw();
         }
-        // SmartDashboard.putBoolean("Claw Closed", !clawIsOpen()); // remove
     }
 }

@@ -46,21 +46,15 @@ public class AutoRoutes {
     // Start points are in front of CONE nodes (-x, -x, +x)
     private static final Pose2d START_POINT_1 = new Pose2d(1.81 + Units.inchesToMeters(18), 1.072,
             DEGREES_180);
-    // remove
-    // private static final Pose2d OLD_START_POINT_1 = new Pose2d(1.81, 0.513,
-    // DEGREES_180);
-    // remove
     private static final Pose2d START_POINT_2 = new Pose2d(1.81 + Units.inchesToMeters(18), 2.189,
             DEGREES_180);
     private static final Pose2d START_POINT_3 = new Pose2d(1.81 + Units.inchesToMeters(18), 4.424,
             DEGREES_180);
+
     private static final Pose2d SCORE_POINT_1 = new Pose2d(1.75, 1.631, DEGREES_180);
     private static final Pose2d SCORE_POINT_2 = new Pose2d(1.75, 2.189, DEGREES_180);
     private static final Pose2d SCORE_POINT_3 = new Pose2d(1.75, 3.84, DEGREES_180);
-    // remove
-    // private static final Pose2d START_POINT_3 = new Pose2d(1.81 +
-    // Units.inchesToMeters(18), 4.983, DEGREES_180);
-    // remove
+
     private static final Pose2d START_TO_SCORE_1 = new Pose2d(START_POINT_1.getX(),
             SCORE_POINT_1.getY(), DEGREES_180);
     private static final Pose2d START_TO_SCORE_2 = new Pose2d(START_POINT_2.getX(),
@@ -89,11 +83,6 @@ public class AutoRoutes {
     private static final Pose2d S1_P1_C = new Pose2d(5.2, 0.8, DEGREES_150);
     private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_30);
     private static final Pose2d S1_P1_E = new Pose2d(6.3, 0.919, DEGREES_0);
-    // remove
-    // private static final Pose2d S1_P1_B = new Pose2d(2.94, 0.92, DEGREES_0);
-    // private static final Pose2d S1_P1_C = new Pose2d(4.83, 0.92, DEGREES_0);
-    // private static final Pose2d S1_P1_D = new Pose2d(6.5, 0.92, DEGREES_180);
-    // remove
 
     private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
     private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
@@ -159,13 +148,6 @@ public class AutoRoutes {
     };
 
     // @format:on
-    // remove
-    // private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_0);
-    // private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_0);
-    // private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
-    // private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58,
-    // DEGREES_180);
-    // remove
     private static final Pose2d S3_P4_A = new Pose2d(0, 0, DEGREES_180);
     private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_180);
     private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_180);

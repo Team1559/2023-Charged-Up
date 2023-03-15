@@ -77,7 +77,6 @@ public abstract class ArmSegment extends SubsystemBase {
         motor.configNeutralDeadband(0.001);
         motor.configClosedloopRamp(0.5);
         motor.setNeutralMode(NeutralMode.Brake);
-        // motor.setNeutralMode(NeutralMode.Coast); // remove
         motor.configClosedLoopPeakOutput(0, 0.2);
         canCoder = new CANCoder(cancoderID);
         configCancoder(canCoder);
@@ -87,9 +86,6 @@ public abstract class ArmSegment extends SubsystemBase {
         motor.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
         motor.setSensorPhase(isInverted);
         motor.setInverted(isInverted);
-        // remove
-        // motor.configAllowableClosedloopError(0, closedLoopErrorValue);
-        // remove
 
         motor.configForwardSoftLimitEnable(true);
         motor.configReverseSoftLimitEnable(true);
@@ -312,9 +308,6 @@ public abstract class ArmSegment extends SubsystemBase {
 
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
-        SmartDashboard.putNumber(name + " current draw:", motor.getSupplyCurrent()); // remove
-        SmartDashboard.putNumber(name + " motor temperature: ", motor.getTemperature()); // remove
-        SmartDashboard.putNumber(name + " error: ", motor.getClosedLoopError()); // remove
     }
 
     private class ArmSegmentPositionCommand extends CommandBase {

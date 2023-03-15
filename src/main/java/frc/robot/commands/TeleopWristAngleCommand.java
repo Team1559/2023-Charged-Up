@@ -34,7 +34,7 @@ public class TeleopWristAngleCommand extends CommandBase {
         } else {
             return;
         }
-        // double angle = wrist.getAngle(); // remove
+
         if (newAngle > SERVO_RANGE / 2 - 2) {
             newAngle = SERVO_RANGE / 2 - 2;
         } else if (newAngle < -SERVO_RANGE / 2 + 2) {
