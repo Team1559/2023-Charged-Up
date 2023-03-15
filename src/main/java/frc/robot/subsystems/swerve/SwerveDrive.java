@@ -49,13 +49,6 @@ public class SwerveDrive extends SubsystemBase {
     private double                         lastVR;
 
     public SwerveDrive() {
-        SmartDashboard.putBoolean("Swerve drive ready?", false);
-        // try {
-        //     Thread.sleep(30000);
-        // } catch (InterruptedException e) {
-        //     e.printStackTrace();
-        // }
-
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
@@ -86,7 +79,6 @@ public class SwerveDrive extends SubsystemBase {
         SmartDashboard.putData(field2d);
 
         gyro.configFactoryDefault();
-        SmartDashboard.putBoolean("Swerve drive ready?", true);
     }
 
     public void setStates(SwerveModuleState... states) {
@@ -198,16 +190,10 @@ public class SwerveDrive extends SubsystemBase {
         lastVY = speeds.vyMetersPerSecond;
         lastVR = speeds.omegaRadiansPerSecond;
 
-        SmartDashboard.putBoolean("Rotating", rotating);
-        SmartDashboard.putBoolean("Setpoint", setpointSet);
-        SmartDashboard.putBoolean("vControl", vControl);
         SmartDashboard.putNumber("Vx", vx);
         SmartDashboard.putNumber("Vy", vy);
         SmartDashboard.putNumber("Vr", vr);
         SmartDashboard.putNumber("rPID error", rController.getPositionError());
-        SmartDashboard.putNumber("Actual Vx", lastVX);
-        SmartDashboard.putNumber("Actual Vy", lastVY);
-        SmartDashboard.putNumber("Actual Vr", lastVR);
         SmartDashboard.putNumber("rPIDSetpoint", Math.toDegrees(rPIDSetpoint));
         SmartDashboard.putBoolean("isFieldRelative", isFieldRelative);
 

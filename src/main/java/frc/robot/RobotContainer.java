@@ -9,14 +9,11 @@ import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
-import static frc.robot.Constants.Grabber.RESET_WRIST_ANGLE;
-
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -137,13 +134,6 @@ public class RobotContainer {
 
     private void configureBindings() {
         if (ARM_ENABLED) {
-            // controller1.aButton.onTrue(elbow.setAngleCommandPos(0));
-            // controller1.bButton.onTrue(base.setAngleCommandPos(1));
-            // controller1.xButton.onTrue(elbow.setAngleCommandPos(1));
-            // controller1.yButton.onTrue(base.setAngleCommandPos(4));
-            // controller1.leftBumper.onTrue(armWrist.setAngleCommandPos(9));
-            // controller1.rightBumper.onTrue(elbow.setAngleCommandPos(4));
-            // controller1.backButton.onTrue(armWrist.setAngleCommandPos(4));
             controller1.yButton.onTrue(new SelectCommand(Map.ofEntries(
                     Map.entry(CommandSelector.CONE, ScoreCommands.moveToConeHigh(arm, wrist)),
                     Map.entry(CommandSelector.CUBE, ScoreCommands.moveToCubeHigh(arm, wrist))),
@@ -164,9 +154,6 @@ public class RobotContainer {
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
-
-            // controller1.yButton.onTrue(wrist.setWristAngleCommand(0));
-            // controller1.xButton.onTrue(wrist.setWristAngleCommand(0));
         }
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SelectCommand(Map.ofEntries(
