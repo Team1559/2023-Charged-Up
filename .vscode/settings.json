@@ -30,5 +30,16 @@
     "java.test.defaultConfig": "WPIlibUnitTests",
     "java.format.settings.url": "./java-formatter.xml",
     "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "java.completion.importOrder": [
+        "#",
+        "java",
+        "javax",
+        "org",
+        "com",
+        "edu.wpi",
+        "",
+        "frc.lib",
+        "frc.robot"
+    ]
 }

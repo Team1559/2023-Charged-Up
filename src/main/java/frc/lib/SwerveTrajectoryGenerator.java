@@ -133,6 +133,7 @@ public class SwerveTrajectoryGenerator {
                                     .getDegrees()
                     - currentPoint.getRotation()
                                   .getDegrees();
+
             double deltaD = Math.hypot(deltas[i][0], deltas[i][1]);
             int pointCount = (int) (deltaD / DISTANCE_BETWEEN_POINTS);
             deltas[i][0] /= pointCount;
