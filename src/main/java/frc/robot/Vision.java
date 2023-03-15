@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -43,20 +44,21 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
-        Optional<EstimatedRobotPose> result = photonPoseEstimator.update();
-        boolean resultPresent = result.isPresent();
-        SmartDashboard.putBoolean("Apriltag", resultPresent);
-        if (!resultPresent) {
+        Optional<EstimatedRobotPose> estimatedPose = photonPoseEstimator.update();
+        PhotonPipelineResult cameraResult = camera.getLatestResult();
+        boolean posePresent = estimatedPose.isPresent() && cameraResult.hasTargets()
+                && cameraResult.getBestTarget() != null;
+        SmartDashboard.putBoolean("Apriltag", posePresent);
+        if (!posePresent) {
             return;
         }
-        boolean lowAmbiguity = camera.getLatestResult()
-                                     .getBestTarget()
-                                     .getPoseAmbiguity() < AMBIGUITY_THRESHOLD;
+        boolean lowAmbiguity = cameraResult.getBestTarget()
+                                           .getPoseAmbiguity() < AMBIGUITY_THRESHOLD;
         if (!lowAmbiguity) {
             return;
         }
 
-        EstimatedRobotPose pose = result.get();
+        EstimatedRobotPose pose = estimatedPose.get();
         SmartDashboard.putNumber("Vision Pose X", pose.estimatedPose.toPose2d()
                                                                     .getX());
         SmartDashboard.putNumber("Vision Pose Y", pose.estimatedPose.toPose2d()
@@ -66,8 +68,7 @@ public class Vision extends SubsystemBase {
                                                                     .getDegrees());
         if (Constants.FeatureFlags.CHASSIS_ENABLED) {
             try {
-                double stdDev = 0.5 * camera.getLatestResult()
-                                            .getBestTarget()
+                double stdDev = cameraResult.getBestTarget()
                                             .getBestCameraToTarget()
                                             .getTranslation()
                                             .toTranslation2d()
@@ -87,5 +88,9 @@ public class Vision extends SubsystemBase {
                 SmartDashboard.putString("Error", e.toString());
             }
         }
+    }
+
+    public boolean isPoseSet() {
+        return poseSet;
     }
 }

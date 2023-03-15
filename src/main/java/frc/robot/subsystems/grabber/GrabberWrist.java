@@ -65,7 +65,8 @@ public class GrabberWrist extends SubsystemBase {
         // SmartDashboard.putNumber("Grabber Angle",wristMotor.get() *
         // SERVO_RANGE - ZERO_ANGLE);
         SmartDashboard.putNumber("Grabber Angle", wristServo.get() * SERVO_RANGE - ZERO_ANGLE);
-        SmartDashboard.putNumber("Grabber Servo Angle", wristServo.getAngle());
+        // speedNumber("Grabber Servo Angle",
+        // wristServo.getAngle());
     }
     // private double calculateServoAngle(double targetAngle){
     // return targetAngle+ZERO_ANGLE;

@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import static frc.robot.Constants.Grabber.SERVO_RANGE;
+import static frc.robot.Constants.Grabber.*;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.lib.DTXboxController;
@@ -20,18 +21,18 @@ public class TeleopWristAngleCommand extends CommandBase {
     public void execute() {
         // If negative, rotate the wrist left by a set amount.
         // If positive, rotate the wrist right.
-        int x = controller.getDpad();
-        if (x == 90) {
-            x = 1;
-        } else if (x == 270) {
-            x = -1;
-        } else if (x == 0) {
-            wrist.setAngle(0);
+        int dir = controller.getDpad();
+        double newAngle = wrist.getAngle();
+        if (dir == 90) {
+            newAngle += TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
+        } else if (dir == 270) {
+            newAngle -= TELEOP_ANGULAR_VELOCITY_PER_CYCLE;
+        } else if (dir == 0) {
+            newAngle = 0;
         } else {
             return;
         }
         // double angle = wrist.getAngle();
-        double newAngle = wrist.getAngle() + x;
         if (newAngle > SERVO_RANGE / 2 - 2) {
             newAngle = SERVO_RANGE / 2 - 2;
         } else if (newAngle < -SERVO_RANGE / 2 + 2) {
