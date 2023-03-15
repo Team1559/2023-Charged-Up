@@ -51,9 +51,9 @@ public class SwerveDrive extends SubsystemBase {
     public SwerveDrive() {
         SmartDashboard.putBoolean("Swerve drive ready?", false);
         // try {
-        //     Thread.sleep(30000);
+        // Thread.sleep(30000);
         // } catch (InterruptedException e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
 
         setSubsystem("Swerve Drive");
@@ -218,8 +218,21 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void initialize() {
-        for (SwerveModule module : modules) {
-            module.initialize();
+        for (int i = 0;; i++) {
+            try {
+                for (SwerveModule module : modules) {
+                    module.initialize();
+                }
+                System.out.println("Swerve init successful");
+                return;
+            } catch (IllegalStateException e) {
+                System.out.printf("Swerve init failed, retrying... (%d)%n", i);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e2) {
+                    // ignore
+                }
+            }
         }
     }
 

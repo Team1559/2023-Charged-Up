@@ -272,7 +272,7 @@ public class AutoRoutes {
 
     public Command scoreConeStay() {
         return arm.moveSequentially(Arm.Position.UPPER_CONE)
-                  .andThen(new WaitCommand(.5))
+                  .andThen(new WaitCommand(1))
                   .andThen(claw.openClawCommand())
                   .andThen(arm.moveSequentially(Arm.Position.TRAVEL));
     }
