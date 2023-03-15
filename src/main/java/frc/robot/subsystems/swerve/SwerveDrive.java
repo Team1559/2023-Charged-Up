@@ -49,6 +49,13 @@ public class SwerveDrive extends SubsystemBase {
     private double                         lastVR;
 
     public SwerveDrive() {
+        SmartDashboard.putBoolean("Swerve drive ready?", false);
+        // try {
+        // Thread.sleep(30000);
+        // } catch (InterruptedException e) {
+        // e.printStackTrace();
+        // }
+
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
@@ -203,6 +210,25 @@ public class SwerveDrive extends SubsystemBase {
         setStates(newStates);
     }
 
+    public void initialize() {
+        for (int i = 0;; i++) {
+            try {
+                for (SwerveModule module : modules) {
+                    module.initialize();
+                }
+                System.out.println("Swerve init successful");
+                return;
+            } catch (IllegalStateException e) {
+                System.out.printf("Swerve init failed, retrying... (%d)%n", i);
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e2) {
+                    // ignore
+                }
+            }
+        }
+    }
+
     /**
      * @return the current estimated robot rotation in the range (-π, π)
      */
@@ -242,6 +268,7 @@ public class SwerveDrive extends SubsystemBase {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < positions.length; i++) {
             positions[i] = modules[i].getCurrentPosition();
+            modules[i].log();
         }
         poseEstimator.update(Rotation2d.fromDegrees(gyro.getYaw()), positions);
     }

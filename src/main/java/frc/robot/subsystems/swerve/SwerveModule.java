@@ -26,6 +26,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.Constants;
 
@@ -47,44 +48,62 @@ public class SwerveModule {
         steerMotor = new TalonFX(MODULE_STEER_MOTOR_IDS[id], CANIVORE_BUS_ID);
         cancoder = new CANCoder(MODULE_CANCODER_IDS[id], CANIVORE_BUS_ID);
 
-        while (true) {
-            cancoder.getAbsolutePosition();
-            if (cancoder.getLastError() == ErrorCode.OK) {
-                break;
-            }
-            System.out.println("Waiting for communications (canivore)");
+        do {
+            System.out.println("Swerve module " + id + " waiting for canivore communications");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
             }
-        }
-        configCancoder();
+        } while (driveMotor.getBusVoltage() < 2 || steerMotor.getBusVoltage() < 2
+                || cancoder.getBusVoltage() < 2);
 
-        driveMotor.configFactoryDefault();
-        driveMotor.setNeutralMode(NeutralMode.Brake);
-        driveMotor.setInverted(true);
-        driveMotor.setSelectedSensorPosition(0D);
-        driveMotor.config_kP(0, MODULE_DRIVE_KP);
-
-        steerMotor.configFactoryDefault();
-        steerMotor.setNeutralMode(NeutralMode.Brake);
-        steerMotor.config_kP(0, MODULE_STEER_KP);
-        steerMotor.config_kD(0, MODULE_STEER_KD);
-        ErrorCode error = steerMotor.setSelectedSensorPosition(
-                degreesToTicks(cancoder.getPosition() % 360));
-        if (error != ErrorCode.OK) {
-            throw new IllegalStateException("Swerve module " + id + " couldn't initialize");
-        }
+        initialize();
     }
 
-    private void configCancoder() {
+    public void initialize() {
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         config.magnetOffsetDegrees = 0;
         config.sensorDirection = false;
         config.initializationStrategy = SensorInitializationStrategy.BootToAbsolutePosition;
         cancoder.configAllSettings(config);
-        cancoder.setPosition(cancoder.getAbsolutePosition() - CANCODER_OFFSETS[id]);
+        checkCtreError(cancoder.getLastError());
+        double absolute = cancoder.getAbsolutePosition();
+        checkCtreError(cancoder.getLastError());
+        cancoder.setPosition(absolute - CANCODER_OFFSETS[id]);
+        checkCtreError(cancoder.getLastError());
+
+        checkCtreError(driveMotor.configFactoryDefault());
+        driveMotor.setNeutralMode(NeutralMode.Brake);
+        checkCtreError(driveMotor.getLastError());
+        driveMotor.setInverted(true);
+        checkCtreError(driveMotor.getLastError());
+        checkCtreError(driveMotor.setSelectedSensorPosition(0D));
+        checkCtreError(driveMotor.config_kP(0, MODULE_DRIVE_KP));
+
+        checkCtreError(steerMotor.configFactoryDefault());
+        steerMotor.setNeutralMode(NeutralMode.Brake);
+        checkCtreError(steerMotor.getLastError());
+        checkCtreError(steerMotor.config_kP(0, MODULE_STEER_KP));
+        checkCtreError(steerMotor.config_kD(0, MODULE_STEER_KD));
+        double position = cancoder.getPosition() % 360;
+        checkCtreError(cancoder.getLastError());
+        checkCtreError(steerMotor.setSelectedSensorPosition(degreesToTicks(position)));
+    }
+
+    public void log() {
+        SmartDashboard.putNumber("Module " + id + " cancoder", cancoder.getPosition());
+        SmartDashboard.putNumber("Module " + id + " cancoder absolute", cancoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Module " + id + " cancoder offset",
+                cancoder.getPosition() - cancoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Module " + id + " angle",
+                ticksToDegrees(steerMotor.getSelectedSensorPosition()));
+    }
+
+    private void checkCtreError(ErrorCode error) {
+        if (error != ErrorCode.OK) {
+            throw new IllegalStateException("Swerve module " + id + " couldn't initialize");
+        }
     }
 
     /**

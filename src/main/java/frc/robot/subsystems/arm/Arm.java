@@ -105,7 +105,8 @@ public class Arm {
         return new SelectCommand(
                 Map.ofEntries(Map.entry(true, moveToLocations(Position.WAYPOINT, position)),
                         Map.entry(false, moveToPosition(position))),
-                this::needWaypoint).beforeStarting(() -> destinationPosition = position);
+                this::needWaypoint).beforeStarting(() -> destinationPosition = position)
+                                   .withTimeout(10);
     }
 
     public void armPanic() {

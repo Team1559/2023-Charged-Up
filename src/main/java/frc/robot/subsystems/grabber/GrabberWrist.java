@@ -27,7 +27,9 @@ public class GrabberWrist extends SubsystemBase {
     }
 
     public Command setWristAngleCommand(double angle) {
-        return Commands.sequence(new InstantCommand(() -> setAngle(angle), this));
+        return new InstantCommand(() -> setAngle(angle), this);
+        // new WaitCommand(
+        // Math.abs(angle - getAngle()) / MAX_ANGULAR_VELOCITY));
     }
 
     public void resetWrist() {

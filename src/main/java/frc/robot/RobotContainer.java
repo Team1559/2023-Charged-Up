@@ -13,7 +13,12 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -163,10 +168,16 @@ public class RobotContainer {
         }
         if (CHASSIS_ENABLED) {
             swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
-            controller0.leftBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, false));
-            controller0.rightBumper.onTrue(new SwerveTeleopSnapRotateCommand(swerve, true));
+            // controller0.leftBumper.onTrue(new
+            // SwerveTeleopSnapRotateCommand(swerve, false));
+            // controller0.rightBumper.onTrue(new
+            // SwerveTeleopSnapRotateCommand(swerve, true));
             controller0.aButton.onTrue(new SwerveTeleopAlignToGridCommand(swerve, controller0));
+            controller0.yButton.onTrue(new InstantCommand(swerve::initialize, swerve));
         }
+        CommandScheduler.getInstance()
+                        .schedule(new RunCommand(() -> SmartDashboard.putBoolean("Cube modifier",
+                                selectModifier() == CommandSelector.CUBE)));
     }
 
     /**
@@ -177,5 +188,9 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         return new WaitCommand(.5).andThen(arm.moveSequentially(Arm.Position.TRAVEL))
                                   .andThen(autoRouteChooser.getSelectedCommand());
+    }
+
+    public void swerveInit() {
+        swerve.initialize();
     }
 }

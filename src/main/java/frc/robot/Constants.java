@@ -86,7 +86,7 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.6;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.5;
         public static final double MAX_ACCEL_PER_CYCLE_X          = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_X / CYCLES_PER_SECOND;
         public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y = 0.25;
@@ -98,6 +98,7 @@ public final class Constants {
 
         public static final double SLOW_MODE_RATIO = 0.25;
         public static final double MED_MODE_RATIO  = 0.5;
+        public static final double HIGH_MODE_RATIO = 0.75;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -109,7 +110,7 @@ public final class Constants {
                 / 360;
         public static final double TICKS_TO_DEGREES = 1 / DEGREES_TO_TICKS;
 
-        public static final double[] CANCODER_OFFSETS = { 70.2, 42.1, 94.3, 180.9 };
+        public static final double[] CANCODER_OFFSETS = { 70.9, 44.5, 92.9, 180.7 };
 
         public static final double MODULE_DRIVE_KP = 0.05;
         public static final double MODULE_STEER_KP = 0.22;
@@ -148,38 +149,40 @@ public final class Constants {
                 / CYCLES_PER_SECOND;
 
         public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
-        public static final double MAXIMUM_VELOCITY_WRIST    = 30D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_ELBOW    = 30D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_BASE     = 20D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_WRIST    = 60D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW    = 90D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE     = 30D / CYCLES_PER_SECOND;
         public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
 
         public static final double BASE_ACCELERATION_TIME  = 0.7;
-        public static final double ELBOW_ACCELERATION_TIME = 1;
+        public static final double ELBOW_ACCELERATION_TIME = 0.7; // 1.0
         public static final double WRIST_ACCELERATION_TIME = 0.5;
-        public static final double ACCELERATION_WRIST      = MAXIMUM_VELOCITY_WRIST
-                / CYCLES_PER_SECOND / WRIST_ACCELERATION_TIME;
-        public static final double ACCELERATION_ELBOW      = MAXIMUM_VELOCITY_ELBOW
-                / CYCLES_PER_SECOND / ELBOW_ACCELERATION_TIME;
-        public static final double ACCELERATION_BASE       = MAXIMUM_VELOCITY_BASE
-                / CYCLES_PER_SECOND / BASE_ACCELERATION_TIME;
+
+        public static final double ACCELERATION_WRIST = MAXIMUM_VELOCITY_WRIST / CYCLES_PER_SECOND
+                / WRIST_ACCELERATION_TIME;
+        public static final double ACCELERATION_ELBOW = MAXIMUM_VELOCITY_ELBOW / CYCLES_PER_SECOND
+                / ELBOW_ACCELERATION_TIME;
+        public static final double ACCELERATION_BASE  = MAXIMUM_VELOCITY_BASE / CYCLES_PER_SECOND
+                / BASE_ACCELERATION_TIME;
 
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
-        public static final double kP_BASE  = 1.5;   // 1.25;
-        public static final double kD_BASE  = 1.0;   // 0.0;
-        public static final double kI_BASE  = 0.0015;
-        public static final double kIZ_BASE = 20;    // deg * 11
+        public static final double kp_speed_adjust = 0.7;
+        public static final double kP_BASE         = 1.5;
+        public static final double kD_BASE         = 1.0;
+        public static final double kI_BASE         = 0.0015;
+        public static final double kIZ_BASE        = 20;
 
-        public static final double kP_ELBOW  = 0.8;
+        public static final double kP_ELBOW  = 0.8 * kp_speed_adjust;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
-        public static final double kIZ_ELBOW = 55;    // deg * 11
+        public static final double kIZ_ELBOW = 55;
 
-        public static final double kP_WRIST  = 1;
+        public static final double kP_WRIST  = 1 * kp_speed_adjust;
         public static final double kD_WRIST  = 0;
         public static final double kI_WRIST  = 0.1;
-        public static final double kIZ_WRIST = 3;  // deg * 11
+        public static final double kIZ_WRIST = 3;
 
         public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.35;
         public static final double ELBOW_SEGMENT_EFFICIENCY = 0.8; // 0.85;

@@ -18,62 +18,62 @@ public class ScoreCommands {
     }
 
     public static Command moveToConeHigh(Arm arm, GrabberWrist wrist) {
-        return arm.moveSequentially(Arm.Position.UPPER_CONE)
-                  .alongWith(zeroWrist(wrist));
+        return arm.moveSequentially(Arm.Position.UPPER_CONE);
     }
 
     public static Command moveToConeMid(Arm arm, GrabberWrist wrist) {
-        return arm.moveSequentially(Arm.Position.MIDDLE_CONE)
-                  .alongWith(zeroWrist(wrist));
+        return arm.moveSequentially(Arm.Position.MIDDLE_CONE);
     }
 
     public static Command moveToConeLow(Arm arm, GrabberWrist wrist) {
-        return arm.moveSequentially(Arm.Position.LOWER_CONE)
-                  .alongWith(zeroWrist(wrist));
+        return arm.moveSequentially(Arm.Position.LOWER_CONE);
     }
 
     public static Command moveToCubeHigh(Arm arm, GrabberWrist wrist) {
-        return arm.moveSequentially(Arm.Position.UPPER_CUBE)
-                  .alongWith(zeroWrist(wrist));
+        return arm.moveSequentially(Arm.Position.UPPER_CUBE);
     }
 
     public static Command moveToCubeMid(Arm arm, GrabberWrist wrist) {
-        return arm.moveSequentially(Arm.Position.MIDDLE_CUBE)
-                  .alongWith(zeroWrist(wrist));
+        return arm.moveSequentially(Arm.Position.MIDDLE_CUBE);
     }
 
     public static Command moveToCubeLow(Arm arm, GrabberWrist wrist) {
-        return arm.moveSequentially(Arm.Position.LOWER_CUBE)
-                  .alongWith(zeroWrist(wrist));
+        return arm.moveSequentially(Arm.Position.LOWER_CUBE);
     }
 
     public static Command scoreConeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeHigh(arm, wrist)
+                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreConeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeMid(arm, wrist)
+                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreConeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeLow(arm, wrist)
+                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeHigh(arm, wrist)
+                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeMid(arm, wrist)
+                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeLow(arm, wrist)
+                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
