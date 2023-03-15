@@ -87,7 +87,7 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.6;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.5;
         public static final double MAX_ACCEL_PER_CYCLE_X          = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_X / CYCLES_PER_SECOND;
         public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y = 0.25;
@@ -99,6 +99,7 @@ public final class Constants {
 
         public static final double SLOW_MODE_RATIO = 0.25;
         public static final double MED_MODE_RATIO  = 0.5;
+        public static final double HIGH_MODE_RATIO = 0.75;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;
@@ -110,7 +111,7 @@ public final class Constants {
                 / 360;
         public static final double TICKS_TO_DEGREES = 1 / DEGREES_TO_TICKS;
 
-        public static final double[] CANCODER_OFFSETS = { 70.2, 42.1, 94.3, 180.9 };
+        public static final double[] CANCODER_OFFSETS = { 70.9, 44.5, 92.9, 180.7 };
 
         public static final double MODULE_DRIVE_KP = 0.05;
         public static final double MODULE_STEER_KP = 0.22;

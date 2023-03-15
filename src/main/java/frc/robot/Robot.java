@@ -56,6 +56,7 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance()
                         .cancelAll();
         airCompressor.disable();
+        robotContainer.swerveInit();
     }
 
     /** This function is called periodically while the robot is disabled.. */
@@ -71,6 +72,7 @@ public class Robot extends TimedRobot {
         airCompressor.enableDigital();
         CommandScheduler.getInstance()
                         .cancelAll();
+        robotContainer.swerveInit();
         autoCommand = robotContainer.getAutonomousCommand();
         CommandScheduler.getInstance()
                         .schedule(autoCommand);
@@ -84,6 +86,7 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         CommandScheduler.getInstance()
                         .cancelAll();
+        robotContainer.swerveInit();
         airCompressor.enableDigital();
     }
 
@@ -94,6 +97,7 @@ public class Robot extends TimedRobot {
     @Override
     public void testInit() {
         airCompressor.enableDigital();
+        robotContainer.swerveInit();
     }
 
     /** This function is called periodically during test mode. */

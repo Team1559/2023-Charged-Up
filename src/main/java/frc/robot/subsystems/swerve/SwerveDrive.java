@@ -217,6 +217,12 @@ public class SwerveDrive extends SubsystemBase {
         setStates(newStates);
     }
 
+    public void initialize() {
+        for (SwerveModule module : modules) {
+            module.initialize();
+        }
+    }
+
     /**
      * @return the current estimated robot rotation in the range (-π, π)
      */
@@ -256,6 +262,7 @@ public class SwerveDrive extends SubsystemBase {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < positions.length; i++) {
             positions[i] = modules[i].getCurrentPosition();
+            modules[i].log();
         }
         poseEstimator.update(Rotation2d.fromDegrees(gyro.getYaw()), positions);
     }
