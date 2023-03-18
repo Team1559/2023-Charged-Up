@@ -273,6 +273,14 @@ public class SwerveDrive extends SubsystemBase {
         poseEstimator.update(Rotation2d.fromDegrees(gyro.getYaw()), positions);
     }
 
+    public void holdPosition() {
+        // Wheels make an X
+        modules[0].holdPosition(Rotation2d.fromDegrees(45));
+        modules[1].holdPosition(Rotation2d.fromDegrees(-45));
+        modules[2].holdPosition(Rotation2d.fromDegrees(-45));
+        modules[3].holdPosition(Rotation2d.fromDegrees(45));
+    }
+
     public void setFieldRelative() {
         isFieldRelative = true;
     }

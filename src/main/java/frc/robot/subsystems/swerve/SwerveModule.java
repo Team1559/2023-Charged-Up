@@ -93,7 +93,8 @@ public class SwerveModule {
 
     public void log() {
         SmartDashboard.putNumber("Module " + id + " cancoder", cancoder.getPosition());
-        SmartDashboard.putNumber("Module " + id + " cancoder absolute", cancoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Module " + id + " cancoder absolute",
+                cancoder.getAbsolutePosition());
         SmartDashboard.putNumber("Module " + id + " cancoder offset",
                 cancoder.getPosition() - cancoder.getAbsolutePosition());
         SmartDashboard.putNumber("Module " + id + " angle",
@@ -197,6 +198,14 @@ public class SwerveModule {
      */
     public Rotation2d getSteerAngleMod() {
         return getSteerAngle().plus(Rotation2d.fromDegrees(0));
+    }
+
+    public void holdPosition(Rotation2d steerAngle) {
+        Rotation2d optimizedAngle = SwerveModuleState.optimize(new SwerveModuleState(0, steerAngle),
+                getSteerAngle()).angle;
+        setSteerAngle(optimizedAngle);
+        double currentPos = driveMotor.getSelectedSensorPosition();
+        driveMotor.set(TalonFXControlMode.Position, currentPos);
     }
 
     /**
