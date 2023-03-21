@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.DTXboxController;
 
 import frc.robot.commands.ScoreCommands;
+import frc.robot.commands.SwerveHoldPositionCommand;
 import frc.robot.commands.SwerveTeleopAlignToGridCommand;
 import frc.robot.commands.SwerveTeleopDriveCommand;
 import frc.robot.commands.SwerveTeleopSnapRotateCommand;
@@ -106,7 +107,6 @@ public class RobotContainer {
             vision = null;
         }
 
-        boolean isBlue = DriverStation.getAlliance() == Alliance.Blue;
         autoRoutes = new AutoRoutes(swerve, arm, wrist, claw, vision);
         autoRouteChooser = new AutoRouteChooser(autoRoutes);
 
@@ -174,6 +174,8 @@ public class RobotContainer {
             // SwerveTeleopSnapRotateCommand(swerve, true));
             controller0.aButton.onTrue(new SwerveTeleopAlignToGridCommand(swerve, controller0));
             controller0.yButton.onTrue(new InstantCommand(swerve::initialize, swerve));
+            controller0.leftTrigger.and(controller0.rightTrigger)
+                                   .whileTrue(new SwerveHoldPositionCommand(swerve));
         }
         CommandScheduler.getInstance()
                         .schedule(new RunCommand(() -> SmartDashboard.putBoolean("Cube modifier",
