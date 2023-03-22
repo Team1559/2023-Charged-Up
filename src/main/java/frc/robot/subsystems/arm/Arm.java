@@ -70,13 +70,6 @@ public class Arm {
             isUpper = lastPosition.isUpper;
         }
 
-        System.out.println("lastPos: " + lastPosition);
-        System.out.println("targetPos: " + targetPosition);
-        System.out.println("destPos: " + destinationPosition);
-        System.out.println("isUpper: " + isUpper);
-        System.out.println("Waypoint: " + (isUpper != destinationPosition.isUpper));
-        System.out.println();
-
         return isUpper != destinationPosition.isUpper;
     }
 

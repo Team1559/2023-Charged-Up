@@ -82,7 +82,7 @@ public class ScoreCommands {
                   .andThen(claw.openClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE))
                   .andThen(claw.closeClawCommand())
-                  .andThen(arm.moveToLocations(Arm.Position.TRAVEL, Arm.Position.TRAVEL));
+                  .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
     }
 
     public static Command pickupCubeCommand(Arm arm, GrabberClaw claw) {
@@ -90,6 +90,6 @@ public class ScoreCommands {
                   .andThen(claw.openClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.PICKUP_CUBE))
                   .andThen(claw.closeClawCommand())
-                  .andThen(arm.moveToLocations(Arm.Position.TRAVEL, Arm.Position.TRAVEL));
+                  .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
     }
 }

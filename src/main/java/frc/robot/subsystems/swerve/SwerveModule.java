@@ -79,6 +79,7 @@ public class SwerveModule {
         driveMotor.setInverted(true);
         checkCtreError(driveMotor.getLastError());
         checkCtreError(driveMotor.setSelectedSensorPosition(0D));
+        checkCtreError(driveMotor.configAllowableClosedloopError(0, 0));
         checkCtreError(driveMotor.config_kP(0, MODULE_DRIVE_KP));
 
         checkCtreError(steerMotor.configFactoryDefault());
@@ -204,7 +205,7 @@ public class SwerveModule {
         Rotation2d optimizedAngle = SwerveModuleState.optimize(new SwerveModuleState(0, steerAngle),
                 getSteerAngle()).angle;
         setSteerAngle(optimizedAngle);
-        double currentPos = driveMotor.getSelectedSensorPosition();
+        double currentPos = getDriveMotorPosition();
         driveMotor.set(TalonFXControlMode.Position, currentPos);
     }
 

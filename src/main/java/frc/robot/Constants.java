@@ -96,9 +96,7 @@ public final class Constants {
         public static final double MAX_ACCEL_PER_CYCLE_R          = MAXIMUM_ANGULAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
-        public static final double SLOW_MODE_RATIO = 0.25;
-        public static final double MED_MODE_RATIO  = 0.5;
-        public static final double HIGH_MODE_RATIO = 0.75;
+        public static final double SLOW_MODE_RATIO = 0.5;
 
         public static final double MINIMUM_LINEAR_VELOCITY  = 0.05;
         public static final double MINIMUM_ANGULAR_VELOCITY = 0.01;

@@ -49,13 +49,6 @@ public class SwerveDrive extends SubsystemBase {
     private double                         lastVR;
 
     public SwerveDrive() {
-        SmartDashboard.putBoolean("Swerve drive ready?", false);
-        // try {
-        // Thread.sleep(30000);
-        // } catch (InterruptedException e) {
-        // e.printStackTrace();
-        // }
-
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
@@ -147,10 +140,9 @@ public class SwerveDrive extends SubsystemBase {
         // .... .... set setpoint to current angle
         // .... use PID control
         // Else: command 0
-        boolean vControl = DriverStation.isTeleop();
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;
-        if (vControl || !VISION_ENABLED) {
+        if (DriverStation.isTeleop() || !VISION_ENABLED) {
             rPIDSetpoint = Double.NaN;
             // vr = vr;
         } else if (setpointSet || !rotating) {
@@ -211,7 +203,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public void initialize() {
-        for (int i = 0;; i++) {
+        for (int i = 0; i <= 60; i++) {
             try {
                 for (SwerveModule module : modules) {
                     module.initialize();
@@ -227,6 +219,7 @@ public class SwerveDrive extends SubsystemBase {
                 }
             }
         }
+        throw new IllegalStateException("Swerve init unsuccessful after 30 seconds, restarting...");
     }
 
     /**
