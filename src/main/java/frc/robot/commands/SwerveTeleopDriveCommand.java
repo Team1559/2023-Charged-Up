@@ -1,9 +1,7 @@
 package frc.robot.commands;
 
-import static frc.robot.Constants.Swerve.HIGH_MODE_RATIO;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
-import static frc.robot.Constants.Swerve.MED_MODE_RATIO;
 import static frc.robot.Constants.Swerve.SLOW_MODE_RATIO;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -46,19 +44,12 @@ public class SwerveTeleopDriveCommand extends CommandBase {
             vy = -vy;
         }
 
-        if (controller.getLeftTrigger() >= 0.5) {
+        if (controller.getRightBumper()) {
             vx *= SLOW_MODE_RATIO;
             vy *= SLOW_MODE_RATIO;
             vr *= SLOW_MODE_RATIO;
-        } else if (controller.getRightTrigger() >= 0.5) {
-            vx *= MED_MODE_RATIO;
-            vy *= MED_MODE_RATIO;
-            vr *= MED_MODE_RATIO;
-        } else if (controller.getRightBumper()) {
-            vx *= HIGH_MODE_RATIO;
-            vy *= HIGH_MODE_RATIO;
-            vr *= HIGH_MODE_RATIO;
         }
+        
         swerve.driveVelocity(vx, vy, vr);
     }
 }

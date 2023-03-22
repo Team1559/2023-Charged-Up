@@ -11,13 +11,10 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -28,9 +25,7 @@ import frc.lib.DTXboxController;
 
 import frc.robot.commands.ScoreCommands;
 import frc.robot.commands.SwerveHoldPositionCommand;
-import frc.robot.commands.SwerveTeleopAlignToGridCommand;
 import frc.robot.commands.SwerveTeleopDriveCommand;
-import frc.robot.commands.SwerveTeleopSnapRotateCommand;
 import frc.robot.commands.TeleopWristAngleCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.ArmBase;
@@ -68,6 +63,7 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
+
         if (ARM_ENABLED) {
             base = new ArmBase();
             elbow = new ArmElbow();
@@ -83,6 +79,7 @@ public class RobotContainer {
             armWrist = null;
             arm = null;
         }
+
         if (CHASSIS_ENABLED) {
             swerve = new SwerveDrive();
         } else {
@@ -125,61 +122,57 @@ public class RobotContainer {
      * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
      * joysticks}.
      */
-    private enum CommandSelector {
+    private enum Piece {
         CONE,
         CUBE
     }
 
-    private CommandSelector selectModifier() {
-        if (controller1.getLeftBumper()) {
-            return CommandSelector.CUBE;
-        }
-        return CommandSelector.CONE;
+    private Piece selectModifier() {
+        return controller1.getLeftBumper() ? Piece.CUBE : Piece.CONE;
     }
 
     private void configureBindings() {
         if (ARM_ENABLED) {
-            controller1.yButton.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, ScoreCommands.moveToConeHigh(arm, wrist)),
-                    Map.entry(CommandSelector.CUBE, ScoreCommands.moveToCubeHigh(arm, wrist))),
+            controller1.yButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeHigh(arm, wrist)),
+                            Map.entry(Piece.CUBE, ScoreCommands.moveToCubeHigh(arm, wrist))),
                     this::selectModifier));
-            controller1.xButton.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, ScoreCommands.moveToConeMid(arm, wrist)),
-                    Map.entry(CommandSelector.CUBE, ScoreCommands.moveToCubeMid(arm, wrist))),
+            controller1.xButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeMid(arm, wrist)),
+                            Map.entry(Piece.CUBE, ScoreCommands.moveToCubeMid(arm, wrist))),
                     this::selectModifier));
-            controller1.bButton.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, ScoreCommands.moveToConeLow(arm, wrist)),
-                    Map.entry(CommandSelector.CUBE, ScoreCommands.moveToCubeLow(arm, wrist))),
+            controller1.bButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeLow(arm, wrist)),
+                            Map.entry(Piece.CUBE, ScoreCommands.moveToCubeLow(arm, wrist))),
                     this::selectModifier));
             controller1.aButton.onTrue(ScoreCommands.moveToTravel(arm));
             controller1.startButton.onTrue(arm.armPanicCommand());
         }
+
         if (GRABBER_ENABLED) {
             Command teleopWristCommand = new TeleopWristAngleCommand(wrist, controller1);
             wrist.setDefaultCommand(teleopWristCommand);
             controller1.leftStickButton.onTrue(claw.closeClawCommand());
             controller1.rightStickButton.onTrue(claw.openClawCommand());
         }
+
         if (GRABBER_ENABLED && ARM_ENABLED) {
-            controller1.rightBumper.onTrue(new SelectCommand(Map.ofEntries(
-                    Map.entry(CommandSelector.CONE, ScoreCommands.pickupConeCommand(arm, claw)),
-                    Map.entry(CommandSelector.CUBE, ScoreCommands.pickupCubeCommand(arm, claw))),
+            controller1.rightBumper.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.pickupConeCommand(arm, claw)),
+                            Map.entry(Piece.CUBE, ScoreCommands.pickupCubeCommand(arm, claw))),
                     this::selectModifier));
         }
+
         if (CHASSIS_ENABLED) {
             swerve.setDefaultCommand(new SwerveTeleopDriveCommand(swerve, controller0));
-            // controller0.leftBumper.onTrue(new
-            // SwerveTeleopSnapRotateCommand(swerve, false));
-            // controller0.rightBumper.onTrue(new
-            // SwerveTeleopSnapRotateCommand(swerve, true));
-            controller0.aButton.onTrue(new SwerveTeleopAlignToGridCommand(swerve, controller0));
             controller0.yButton.onTrue(new InstantCommand(swerve::initialize, swerve));
-            controller0.leftTrigger.and(controller0.rightTrigger)
-                                   .whileTrue(new SwerveHoldPositionCommand(swerve));
+            controller0.aButton.and(controller0.bButton)
+                               .whileTrue(new SwerveHoldPositionCommand(swerve));
         }
+
         CommandScheduler.getInstance()
                         .schedule(new RunCommand(() -> SmartDashboard.putBoolean("Cube modifier",
-                                selectModifier() == CommandSelector.CUBE)));
+                                selectModifier() == Piece.CUBE)));
     }
 
     /**
