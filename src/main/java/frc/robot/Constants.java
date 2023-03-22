@@ -86,14 +86,14 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_X = 0.5;
-        public static final double MAX_ACCEL_PER_CYCLE_X          = MAXIMUM_LINEAR_VELOCITY
-                / SWERVE_SECONDS_TO_FULL_SPEED_X / CYCLES_PER_SECOND;
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y = 0.25;
-        public static final double MAX_ACCEL_PER_CYCLE_Y          = MAXIMUM_LINEAR_VELOCITY
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_SLOW = 0.7;
+        public static final double MAX_ACCEL_PER_CYCLE_SLOW          = MAXIMUM_LINEAR_VELOCITY
+                / SWERVE_SECONDS_TO_FULL_SPEED_SLOW / CYCLES_PER_SECOND;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y    = 0.25;
+        public static final double MAX_ACCEL_PER_CYCLE_Y             = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_Y / CYCLES_PER_SECOND;
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_R = 0.25;
-        public static final double MAX_ACCEL_PER_CYCLE_R          = MAXIMUM_ANGULAR_VELOCITY
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_R    = 0.25;
+        public static final double MAX_ACCEL_PER_CYCLE_R             = MAXIMUM_ANGULAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
         public static final double SLOW_MODE_RATIO = 0.25;
@@ -149,21 +149,14 @@ public final class Constants {
                 / CYCLES_PER_SECOND;
 
         public static final double ANGULAR_VELOCITY_UNIT_DPS = 20D;
-        public static final double MAXIMUM_VELOCITY_WRIST    = 60D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_ELBOW    = 90D / CYCLES_PER_SECOND;
-        public static final double MAXIMUM_VELOCITY_BASE     = 30D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_WRIST    = 120D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_ELBOW    = 240D / CYCLES_PER_SECOND;
+        public static final double MAXIMUM_VELOCITY_BASE     = 120D / CYCLES_PER_SECOND;
         public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
 
-        public static final double BASE_ACCELERATION_TIME  = 0.7;
-        public static final double ELBOW_ACCELERATION_TIME = 0.7; // 1.0
-        public static final double WRIST_ACCELERATION_TIME = 0.5;
-
-        public static final double ACCELERATION_WRIST = MAXIMUM_VELOCITY_WRIST / CYCLES_PER_SECOND
-                / WRIST_ACCELERATION_TIME;
-        public static final double ACCELERATION_ELBOW = MAXIMUM_VELOCITY_ELBOW / CYCLES_PER_SECOND
-                / ELBOW_ACCELERATION_TIME;
-        public static final double ACCELERATION_BASE  = MAXIMUM_VELOCITY_BASE / CYCLES_PER_SECOND
-                / BASE_ACCELERATION_TIME;
+        public static final double ACCELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
+        public static final double ACCELERATION_ELBOW = 2.4 / CYCLES_PER_SECOND;
+        public static final double ACCELERATION_BASE  = 3.6 / CYCLES_PER_SECOND;
 
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
@@ -190,7 +183,7 @@ public final class Constants {
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);
         public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6.5);
-        public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(5.5);
+        public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(6.7);
 
         public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32);
         public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28);
@@ -201,7 +194,7 @@ public final class Constants {
         public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
                 Units.inchesToMeters(16), 0);
         public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                Units.inchesToMeters(9.5), 0);
+                Units.inchesToMeters(10.5), 0);
 
         public static final double LOWER_ARM_WRIST_LIMIT = -95.0;
         public static final double UPPER_ARM_WRIST_LIMIT = 60.0;
