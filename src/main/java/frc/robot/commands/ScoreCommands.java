@@ -88,7 +88,8 @@ public class ScoreCommands {
     public static Command pickupCubeCommand(Arm arm, GrabberClaw claw) {
         return arm.moveSequentially(Arm.Position.TRAVEL)
                   .andThen(claw.openClawCommand())
-                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CUBE))
+                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CUBE)
+                              .withTimeout(2))
                   .andThen(claw.closeClawCommand())
                   .andThen(arm.moveToLocations(Arm.Position.TRAVEL, Arm.Position.TRAVEL));
     }
