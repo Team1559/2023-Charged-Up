@@ -51,9 +51,10 @@ public class AutoRoutes {
     private static final Pose2d START_POINT_2 = new Pose2d(1.81, 2.189, DEGREES_180);
     private static final Pose2d START_POINT_3 = new Pose2d(1.81, 4.983, DEGREES_180);
 
-    private static final Pose2d SCORE_POINT_1 = new Pose2d(1.75, 1.631, DEGREES_180);
-    private static final Pose2d SCORE_POINT_2 = new Pose2d(1.75, 2.189, DEGREES_180);
-    private static final Pose2d SCORE_POINT_3 = new Pose2d(1.75, 3.84, DEGREES_180);
+    private static final Pose2d SCORE_POINT_1      = new Pose2d(1.75, 1.631, DEGREES_180);
+    private static final Pose2d SCORE_POINT_CUBE_1 = new Pose2d(1.88, 0.97, DEGREES_180);
+    private static final Pose2d SCORE_POINT_2      = new Pose2d(1.75, 2.189, DEGREES_180);
+    private static final Pose2d SCORE_POINT_3      = new Pose2d(1.75, 3.84, DEGREES_180);
 
     private static final Pose2d START_TO_SCORE_1 = new Pose2d(START_POINT_1.getX(),
             SCORE_POINT_1.getY(), DEGREES_180);
@@ -76,6 +77,19 @@ public class AutoRoutes {
     private static final Pose2d CS_EDGE_4 = new Pose2d(2.9, 4.0, DEGREES_0);
     private static final Pose2d CS_CENTER = new Pose2d(3.9, 2.75, DEGREES_0);
 
+    // Center of Charge Station From Start 2
+    private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
+    private static final Pose2d S2_CS_B = new Pose2d(2.94, 2.75, DEGREES_0);
+    private static final Pose2d S2_CS_C = new Pose2d(3.88, 2.75, DEGREES_0);
+
+    private static final Pose2d[] START_2_TO_CHARGE_STATION = { S2_CS_A, S2_CS_B, S2_CS_C };
+
+    // Go over charge station from start 2
+    private static final Pose2d S2_OCS_A = new Pose2d(1.49, 2.75, DEGREES_0);
+    private static final Pose2d S2_OCS_B = new Pose2d(2.94, 2.75, DEGREES_0);
+    private static final Pose2d S2_OCS_C = new Pose2d(4.19, 2.75, DEGREES_0);
+    private static final Pose2d S2_OCS_D = new Pose2d(5.52, 2.75, DEGREES_0);
+    private static final Pose2d S2_OCS_E = new Pose2d(5.52, 2.75, DEGREES_180);
     /*
      * Define specific routes Eventually maybe add mid points to have not a
      * sharp rotation We do not want to have each one rotating
@@ -89,6 +103,11 @@ public class AutoRoutes {
     private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
     private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
 
+    // Position 3 Exit Community
+    private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.72, DEGREES_0);
     // Temporarily turn off the formatter so we can have nice route lists.
     // @format:off
 
@@ -105,7 +124,7 @@ public class AutoRoutes {
     private static final Pose2d[] SCORE_1_TO_START_1 = reverse(START_1_TO_SCORE_1);
 
     // Start 1 Piece 1 Drive to piece
-    private static final Pose2d[] START_1_TO_PIECE_1 = {
+    private static final Pose2d[] START_1_TO_GAME_PIECE_1 = {
         START_POINT_1,
         S1_P1_A,
         S1_P1_B,
@@ -113,6 +132,16 @@ public class AutoRoutes {
         S1_P1_D,
         S1_P1_E,
         GAME_PIECE_1
+    };
+// In progress, goal is to have robot score high, leave to game piece 1, grab, return to scoring point
+    private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1 = {
+        GAME_PIECE_1,
+        S1_P1_E,
+        S1_P1_D,
+        S1_P1_C,
+        S1_P1_B,
+        S1_P1_A,
+        SCORE_POINT_CUBE_1
     };
 
     // Piece 1 Start 1 Drive back to start
@@ -135,11 +164,7 @@ public class AutoRoutes {
         S1_EXIT_POINT
     };
 
-    // Position 3 Exit Community
-    private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
-    private static final Pose2d S3_COM_B = new Pose2d(2.94, 4.72, DEGREES_180);
-    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.72, DEGREES_180);
-    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.72, DEGREES_0);
+
 
     private static final Pose2d[] START_3_EXIT_COMMUNITY = {
         START_POINT_3,
@@ -158,6 +183,8 @@ public class AutoRoutes {
         GAME_PIECE_4
     };
 
+
+ 
     // @format:on
     private static final Pose2d S3_P4_A = new Pose2d(0, 0, DEGREES_180);
     private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_180);
@@ -189,20 +216,6 @@ public class AutoRoutes {
     };
     // @format:on
 
-    // Center of Charge Station From Start 2
-    private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
-    private static final Pose2d S2_CS_B = new Pose2d(2.94, 2.75, DEGREES_0);
-    private static final Pose2d S2_CS_C = new Pose2d(3.88, 2.75, DEGREES_0);
-
-    private static final Pose2d[] START_2_TO_CHARGE_STATION = { S2_CS_A, S2_CS_B, S2_CS_C };
-
-    // Go over charge station from start 2
-    private static final Pose2d S2_OCS_A = new Pose2d(1.49, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_B = new Pose2d(2.94, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_C = new Pose2d(4.19, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_D = new Pose2d(5.52, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_E = new Pose2d(5.52, 2.75, DEGREES_180);
-
     private static final Pose2d[] START_2_OVER_CHARGE_STATION = { S2_OCS_A, S2_OCS_B, S2_OCS_C,
             S2_OCS_D, S2_OCS_E };
 
@@ -222,6 +235,8 @@ public class AutoRoutes {
     private final SwerveTrajectory[] leave1Traj;
     private final SwerveTrajectory[] leave3Traj;
     private final SwerveTrajectory[] leave3ToGamePiece4Traj;
+    private final SwerveTrajectory[] leave1ToGamePiece1Traj;
+    private final SwerveTrajectory[] piece1ToScoreCube1Traj;
     private final SwerveTrajectory[] start1ToPiece1Traj;
     private final SwerveTrajectory[] piece1ToStart1Traj;
     private final SwerveTrajectory[] start3ToPiece4Traj;
@@ -245,8 +260,10 @@ public class AutoRoutes {
                 makeTrajectory(mirror(START_3_EXIT_COMMUNITY)) };
         leave3ToGamePiece4Traj = new SwerveTrajectory[] { makeTrajectory(START_3_TO_GAME_PIECE_4),
                 makeTrajectory(mirror(START_3_TO_GAME_PIECE_4)) };
-        start1ToPiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_PIECE_1),
-                makeTrajectory(mirror(START_1_TO_PIECE_1)) };
+        leave1ToGamePiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_GAME_PIECE_1),
+                makeTrajectory(mirror(START_1_TO_GAME_PIECE_1)) };
+        start1ToPiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_GAME_PIECE_1),
+                makeTrajectory(mirror(START_1_TO_GAME_PIECE_1)) };
         piece1ToStart1Traj = new SwerveTrajectory[] { makeTrajectory(PIECE_1_TO_START_1),
                 makeTrajectory(mirror(PIECE_1_TO_START_1)) };
         start3ToPiece4Traj = new SwerveTrajectory[] { makeTrajectory(START_3_TO_PIECE_4),
@@ -261,8 +278,12 @@ public class AutoRoutes {
                 makeTrajectory(mirror(START_1_TO_SCORE_1)) };
         score1ToStart1Traj = new SwerveTrajectory[] { makeTrajectory(SCORE_1_TO_START_1),
                 makeTrajectory(mirror(SCORE_1_TO_START_1)) };
+        piece1ToScoreCube1Traj = new SwerveTrajectory[] {
+                makeTrajectory(GAME_PIECE_1_TO_SCORE_CUBE_1),
+                makeTrajectory(mirror(GAME_PIECE_1_TO_SCORE_CUBE_1)) };
     }
 
+    // All below here are being used in auto route selector
     public Command scoreLeave3() {
         return new InstantCommand(() -> setStartingPose(START_POINT_3)).andThen(scoreConeHigh())
                                                                        .andThen(
@@ -276,6 +297,24 @@ public class AutoRoutes {
                                                                                armToTravel().alongWith(
                                                                                        leave3ToGamePiece4()))
                                                                        .andThen(pickupCube());
+    }
+
+    public Command scoreLeave1ToGamePiece1() {
+        return new InstantCommand(() -> setStartingPose(START_POINT_1)).andThen(scoreConeHigh())
+                                                                       .andThen(
+                                                                               armToTravel().alongWith(
+                                                                                       leave1ToGamePiece1()))
+                                                                       .andThen(pickupCube());
+    }
+
+    public Command scoreLeave1ToGamePiece1ScoreCube() {
+        return new InstantCommand(() -> setStartingPose(START_POINT_1)).andThen(scoreConeHigh())
+                                                                       .andThen(
+                                                                               armToTravel().alongWith(
+                                                                                       leave1ToGamePiece1()))
+                                                                       .andThen(pickupCube())
+                                                                       .andThen(
+                                                                               gamepiece1tocubescore1());
     }
 
     public Command scoreLeave1() {
@@ -308,40 +347,14 @@ public class AutoRoutes {
                 makeTrajectoryCommand(leave3ToGamePiece4Traj[trajectoryIndex()]));
     }
 
-    public Command start3Score3() {
-        return makeTrajectoryCommand(start3ToScore3Traj[trajectoryIndex()]);
+    public Command leave1ToGamePiece1() {
+        return new PrintCommand("leave1").andThen(
+                makeTrajectoryCommand(leave1ToGamePiece1Traj[trajectoryIndex()]));
     }
 
-    public Command score3Start3() {
-        return makeTrajectoryCommand(score3ToStart3Traj[trajectoryIndex()]);
-    }
-
-    public Command start1Score1() {
-        return makeTrajectoryCommand(start1ToScore1Traj[trajectoryIndex()]);
-    }
-
-    public Command score1Start1() {
-        return makeTrajectoryCommand(score1ToStart1Traj[trajectoryIndex()]);
-    }
-
-    public Command start1Piece1() {
-        return makeTrajectoryCommand(start1ToPiece1Traj[trajectoryIndex()]);
-    }
-
-    public Command piece1Start1() {
-        return makeTrajectoryCommand(piece1ToStart1Traj[trajectoryIndex()]);
-    }
-
-    public Command start3Piece4() {
-        return makeTrajectoryCommand(start3ToPiece4Traj[trajectoryIndex()]);
-    }
-
-    public Command piece4Start3() {
-        return makeTrajectoryCommand(piece4ToStart3Traj[trajectoryIndex()]);
-    }
-
-    public Command scoreCubeHigh() {
-        return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
+    public Command gamepiece1tocubescore1() {
+        return new PrintCommand("gamepiece1tocubescore1").andThen(
+                makeTrajectoryCommand(piece1ToScoreCube1Traj[trajectoryIndex()]));
     }
 
     public Command scoreConeHigh() {
@@ -350,44 +363,6 @@ public class AutoRoutes {
 
     public Command pickupCube() {
         return ScoreCommands.pickupCubeCommand(arm, claw);
-    }
-
-    public Command scoreCubeLeave1() {
-        return scoreCubeHigh().andThen(leave1());
-    }
-
-    public Command scoreCubeLeave3() {
-        return scoreCubeHigh().andThen(leave3());
-    }
-
-    public Command scoreCubePickupCubeReturn1() {
-        return scoreCubeHigh().andThen(start1Piece1())
-                              .andThen(pickupCube())
-                              .andThen(piece1Start1());
-    }
-
-    public Command scoreConeLeave1() {
-        return scoreConeHigh().andThen(leave1());
-    }
-
-    public Command scoreConeLeave3() {
-        return scoreConeHigh().andThen(leave3());
-    }
-
-    public Command scoreConePickupConeReturn1() {
-        return scoreConeHigh().andThen(start1Piece1())
-                              .andThen(pickupCone())
-                              .andThen(piece1Start1());
-    }
-
-    public Command scoreConePickupConeReturn3() {
-        return scoreConeHigh().andThen(start3Piece4())
-                              .andThen(pickupCone())
-                              .andThen(piece4Start3());
-    }
-
-    private Command pickupCone() {
-        return ScoreCommands.pickupConeCommand(arm, claw);
     }
 
     private Command armToTravel() {
@@ -425,7 +400,7 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { START_3_EXIT_COMMUNITY };
+        Pose2d[][] paths = { GAME_PIECE_1_TO_SCORE_CUBE_1 };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);
@@ -474,3 +449,80 @@ public class AutoRoutes {
         }
     }
 }
+
+// I am pretty sure that little if any of this is being
+// Do we use?
+// public Command start3Score3() {
+// return makeTrajectoryCommand(start3ToScore3Traj[trajectoryIndex()]);
+// }
+
+// public Command score3Start3() {
+// return makeTrajectoryCommand(score3ToStart3Traj[trajectoryIndex()]);
+// }
+
+// public Command start1Score1() {
+// return makeTrajectoryCommand(start1ToScore1Traj[trajectoryIndex()]);
+// }
+
+// public Command score1Start1() {
+// return makeTrajectoryCommand(score1ToStart1Traj[trajectoryIndex()]);
+// }
+
+// // public Command start1Piece1() {
+// // return makeTrajectoryCommand(start1ToPiece1Traj[trajectoryIndex()]);
+// // }
+
+// public Command piece1Start1() {
+// return makeTrajectoryCommand(piece1ToStart1Traj[trajectoryIndex()]);
+// }
+
+// public Command start3Piece4() {
+// return makeTrajectoryCommand(start3ToPiece4Traj[trajectoryIndex()]);
+// }
+
+// public Command piece4Start3() {
+// return makeTrajectoryCommand(piece4ToStart3Traj[trajectoryIndex()]);
+// }
+
+// public Command scoreCubeHigh() {
+// return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
+// }
+
+// public Command scoreCubeLeave1() {
+// return scoreCubeHigh().andThen(leave1());
+// }
+
+// public Command scoreCubeLeave3() {
+// return scoreCubeHigh().andThen(leave3());
+// }
+
+// public Command scoreCubePickupCubeReturn1() {
+// return scoreCubeHigh().andThen(start1Piece1())
+// .andThen(pickupCube())
+// .andThen(piece1Start1());
+// }
+
+// public Command scoreConeLeave1() {
+// return scoreConeHigh().andThen(leave1());
+// }
+
+// public Command scoreConeLeave3() {
+// return scoreConeHigh().andThen(leave3());
+// }
+
+// public Command scoreConePickupConeReturn1() {
+// return scoreConeHigh().andThen(start1Piece1())
+// .andThen(pickupCone())
+// .andThen(piece1Start1());
+// }
+
+// public Command scoreConePickupConeReturn3() {
+// return scoreConeHigh().andThen(start3Piece4())
+// .andThen(pickupCone())
+// .andThen(piece4Start3());
+// }
+
+// private Command pickupCone() {
+// return ScoreCommands.pickupConeCommand(arm, claw);
+// }
+// USED
