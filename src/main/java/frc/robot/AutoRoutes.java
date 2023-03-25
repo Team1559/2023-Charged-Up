@@ -67,14 +67,24 @@ public class AutoRoutes {
     // START_POINT_1 is aligned with cone scoring position closest to outside
     // wall by judges tables
     private static final Pose2d START_POINT_1 = new Pose2d(1.81, 0.513, DEGREES_180);
+    // START_POINT_2A is aligned with cone scoring position at Station 2
+    // closest to outside wall by judges tables
+    private static final Pose2d START_POINT_2A = new Pose2d(1.81, 2.18, DEGREES_180);
+    // START_POINT_2B is aligned with cone scoring position at Station 2
+    // closest to inside wall of opponents loading area
+    private static final Pose2d START_POINT_2B = new Pose2d(1.81, 3.3, DEGREES_180);
     // START_POINT_3 is aligned with cone scoring position closest to inside
     // wall of opponents loading area
     private static final Pose2d START_POINT_3 = new Pose2d(1.81, 4.983, DEGREES_180);
 
     // Score positions
-    // SCORE_POINT_CUBE_1 is cube scoring position next to START_POINT_1, but 2
-    // inches back in x-axis
+    // SCORE_POINT_CUBE_1 is cube scoring position next to START_POINT_1,
+    // but 2 inches back in x-axis
     private static final Pose2d SCORE_POINT_CUBE_1 = new Pose2d(1.86, 0.97, DEGREES_180);
+    // Score positions
+    // SCORE_POINT_CUBE_3 is cube scoring position next to START_POINT_3,
+    // but 2 inches back in x-axis
+    private static final Pose2d SCORE_POINT_CUBE_3 = new Pose2d(1.86, 4.52, DEGREES_180);
 
     // Way point positions for Starting Position 1 to Game Piece 1 route
     private static final Pose2d S1_P1_A = new Pose2d(2.1, 0.8, DEGREES_180);
@@ -146,17 +156,27 @@ public class AutoRoutes {
         GAME_PIECE_4
     };
 
-    // Game Piece 4 to Score Cube 1 path
+    // Game Piece 1 to Score Cube 1 path
     // @format:off
     private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = { 
-        GAME_PIECE_1, S1_P1_E,
+        GAME_PIECE_1, 
+        S1_P1_E,
         S1_P1_D, 
         S1_P1_C, 
         S1_P1_B, 
         S1_P1_A, 
-        SCORE_POINT_CUBE_1 
     };
 
+    // Game Piece 4 to Score Cube 3 path
+    // @format:off
+    private static final Pose2d[] GAME_PIECE_4_TO_SCORE_CUBE_3_PATH = {
+        GAME_PIECE_4,
+        S3_COM_D,
+        S3_COM_C,
+        S3_COM_B,
+        S3_COM_A,
+        SCORE_POINT_CUBE_1 
+    };
 
     static {
         if (RobotBase.isSimulation()) {
@@ -176,7 +196,7 @@ public class AutoRoutes {
     private final SwerveTrajectory[] leave3Traj;
     private final SwerveTrajectory[] leave3ToGamePiece4Traj;
     private final SwerveTrajectory[] gamePiece1ToScoreCube1Traj;
-    //private final SwerveTrajectory[] start1ToPiece1Traj;
+    private final SwerveTrajectory[] gamePiece4ToScoreCube3Traj;
     //private final SwerveTrajectory[] piece1ToStart1Traj;
     //private final SwerveTrajectory[] start3ToPiece4Traj;
     //private final SwerveTrajectory[] piece4ToStart3Traj;
@@ -214,6 +234,10 @@ public class AutoRoutes {
         gamePiece1ToScoreCube1Traj = new SwerveTrajectory[] {
             makeTrajectory(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH),
             makeTrajectory(mirror(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH)) 
+        };
+        gamePiece4ToScoreCube3Traj = new SwerveTrajectory[] {
+            makeTrajectory(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH),
+            makeTrajectory(mirror(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH)) 
         };
         //start1ToPiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_GAME_PIECE_1_PATH),
         //        makeTrajectory(mirror(START_1_TO_GAME_PIECE_1_PATH)) };
@@ -291,6 +315,13 @@ public class AutoRoutes {
                 .andThen(pickupCubeCmd());
     }
 
+    public Command scoreLeave3ToGamePiece4ScoreCubeCmd() {
+        return new InstantCommand(() -> setStartingPose(START_POINT_3))
+                .andThen(scoreConeHighCmd())
+                .andThen(armToTravelCmd().alongWith(leave3ToGamePiece4Cmd()))
+                .andThen(pickupCubeCmd())
+                .andThen(gamePiece4ToCubeScore3Cmd());
+    }
 
     // ----------------
     // Commands that are used by (make up) auto route commands
@@ -327,6 +358,11 @@ public class AutoRoutes {
     public Command gamePiece1ToCubeScore1Cmd() {
         return new PrintCommand("gamePiece1ToCubeScore1")
                 .andThen(makeTrajectoryCommand(gamePiece1ToScoreCube1Traj[trajectoryIndex()]));
+    }
+
+    public Command gamePiece4ToCubeScore3Cmd() {
+        return new PrintCommand("gamePiece4ToCubeScore3")
+                .andThen(makeTrajectoryCommand(gamePiece4ToScoreCube3Traj[trajectoryIndex()]));
     }
 
 

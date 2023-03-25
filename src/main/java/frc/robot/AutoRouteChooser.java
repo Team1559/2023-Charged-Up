@@ -33,6 +33,8 @@ public class AutoRouteChooser {
         positionChooser.addOption("Score cone, leave (3)", routes::scoreLeave3Cmd);
         positionChooser.addOption("Score cone, leave (3) to GP 4",
                 routes::scoreLeave3ToGamePiece4Cmd);
+        positionChooser.addOption("Score cone, leave (3) to GP 4, Score Cube 3",
+                routes::scoreLeave3ToGamePiece4ScoreCubeCmd);
     }
 
     public Command getSelectedCommand() {
