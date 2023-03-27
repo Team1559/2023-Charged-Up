@@ -42,6 +42,8 @@ public class SwerveTrajectoryCommand extends CommandBase {
                        .minus(trajectory.points[0].pose)
                        .getTranslation()
                        .getNorm() > 1) {
+
+            System.out.println("SwerveTrajectoryCommad - point too far");
             cancel();
         }
         swerveDrive.setFieldRelative();
@@ -49,10 +51,11 @@ public class SwerveTrajectoryCommand extends CommandBase {
 
     @Override
     public void execute() {
-        if (!vision.isPoseSet()) {
-            rotateSlowly();
-            return;
-        }
+        // if (!vision.isPoseSet()) {
+        // rotateSlowly();
+        // System.out.println("SwerveTrajectoryCommad - Vision Pose not set");
+        // return;
+        // }
 
         currentPose = swerveDrive.getEstimatedPose();
         calculateGoals();
