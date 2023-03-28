@@ -154,7 +154,11 @@ public final class Constants {
 
         public static final double ACCELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
         public static final double ACCELERATION_ELBOW = 2.4 / CYCLES_PER_SECOND;
-        public static final double ACCELERATION_BASE  = 3.6 / CYCLES_PER_SECOND;
+        public static final double ACCELERATION_BASE  = 2.4 / CYCLES_PER_SECOND;
+
+        public static final double DECELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
+        public static final double DECELERATION_ELBOW = 2.4 / CYCLES_PER_SECOND;
+        public static final double DECELERATION_BASE  = 1.2 / CYCLES_PER_SECOND;
 
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
