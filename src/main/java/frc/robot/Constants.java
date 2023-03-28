@@ -136,7 +136,7 @@ public final class Constants {
     }
 
     public static class Arm {
-        public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (38 / 84.0);
+        public static final double GEAR_RATIO_BASE                 = (1 / 64.0) * (50.0 / 72.0);
         public static final double INV_GEAR_RATIO_BASE             = 1 / GEAR_RATIO_BASE;
         public static final double ELBOW_GEAR_RATIO                = 1 / 64.0;
         public static final double INV_ELBOW_GEAR_RATIO            = 1 / ELBOW_GEAR_RATIO;
@@ -159,24 +159,23 @@ public final class Constants {
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
-        public static final double kp_speed_adjust = 0.7;
-        public static final double kP_BASE         = 1.5;
-        public static final double kD_BASE         = 1.0;
-        public static final double kI_BASE         = 0.0015;
-        public static final double kIZ_BASE        = 20;
+        public static final double kP_BASE  = 1.5;
+        public static final double kD_BASE  = 1.0;
+        public static final double kI_BASE  = 0.0015;
+        public static final double kIZ_BASE = 30;
 
-        public static final double kP_ELBOW  = 0.8 * kp_speed_adjust;
+        public static final double kP_ELBOW  = 0.8;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
         public static final double kIZ_ELBOW = 55;
 
-        public static final double kP_WRIST  = 1 * kp_speed_adjust;
+        public static final double kP_WRIST  = 1;
         public static final double kD_WRIST  = 0;
         public static final double kI_WRIST  = 0.1;
         public static final double kIZ_WRIST = 3;
 
-        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.35;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.8; // 0.85;
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.3;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.8; // 0.8;
         public static final double WRIST_SEGMENT_EFFICIENCY = 1.0; // 0.7;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);
