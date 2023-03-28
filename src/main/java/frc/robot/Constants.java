@@ -86,13 +86,13 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_SLOW = 0.7;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_SLOW = 1.0;
         public static final double MAX_ACCEL_PER_CYCLE_SLOW          = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_SLOW / CYCLES_PER_SECOND;
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y    = 0.25;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y    = 0.4;
         public static final double MAX_ACCEL_PER_CYCLE_Y             = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_Y / CYCLES_PER_SECOND;
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_R    = 0.25;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_R    = 0.4;
         public static final double MAX_ACCEL_PER_CYCLE_R             = MAXIMUM_ANGULAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_R / CYCLES_PER_SECOND;
 
