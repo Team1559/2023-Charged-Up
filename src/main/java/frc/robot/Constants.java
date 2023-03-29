@@ -154,11 +154,11 @@ public final class Constants {
 
         public static final double ACCELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
         public static final double ACCELERATION_ELBOW = 2.4 / CYCLES_PER_SECOND;
-        public static final double ACCELERATION_BASE  = 2.4 / CYCLES_PER_SECOND;
+        public static final double ACCELERATION_BASE  = 1.8 / CYCLES_PER_SECOND;
 
         public static final double DECELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
-        public static final double DECELERATION_ELBOW = 2.4 / CYCLES_PER_SECOND;
-        public static final double DECELERATION_BASE  = 1.2 / CYCLES_PER_SECOND;
+        public static final double DECELERATION_ELBOW = 1.2 / CYCLES_PER_SECOND;
+        public static final double DECELERATION_BASE  = 0.8 / CYCLES_PER_SECOND;
 
         public static final double ZERO_ANGLE          = 0;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
@@ -168,7 +168,7 @@ public final class Constants {
         public static final double kI_BASE  = 0.0015;
         public static final double kIZ_BASE = 30;
 
-        public static final double kP_ELBOW  = 0.8;
+        public static final double kP_ELBOW  = 0.7;
         public static final double kD_ELBOW  = 0.2;
         public static final double kI_ELBOW  = 0.0015;
         public static final double kIZ_ELBOW = 55;
@@ -179,7 +179,7 @@ public final class Constants {
         public static final double kIZ_WRIST = 3;
 
         public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.3;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.8; // 0.8;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 1.0; // 0.8;
         public static final double WRIST_SEGMENT_EFFICIENCY = 1.0; // 0.7;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);
@@ -195,7 +195,7 @@ public final class Constants {
         public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
                 Units.inchesToMeters(16), 0);
         public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                Units.inchesToMeters(10.5), 0);
+                Units.inchesToMeters(11.75), 0);
 
         public static final double LOWER_ARM_WRIST_LIMIT = -95.0;
         public static final double UPPER_ARM_WRIST_LIMIT = 60.0;

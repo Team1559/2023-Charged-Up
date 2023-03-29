@@ -46,6 +46,7 @@ public abstract class ArmSegment extends SubsystemBase {
     private Arm.Position targetPosition;
     private Arm.Position lastPosition;
     private double       target;
+    private double       accel;
     private boolean      isSetPointCommanded = false;
     private double       setpointJointAngle;
     private double       speed;
@@ -201,6 +202,18 @@ public abstract class ArmSegment extends SubsystemBase {
         return angle;
     }
 
+    public double getBaseAccel() {
+        if (name.equalsIgnoreCase("elbow")) {
+            return lowerSegment.getAccel();
+        } else {
+            return 0;
+        }
+    }
+
+    public double getAccel() {
+        return accel;
+    }
+
     public void setDestinationJointAngle(Arm.Position position) {
         double destinationJointAngle = getTargetAngle(position);
         target = destinationJointAngle;
@@ -263,7 +276,6 @@ public abstract class ArmSegment extends SubsystemBase {
             setpointJointAngle = getJointAngle();
             target = setpointJointAngle;
         }
-        double accel = 0;
         double velo = 0;
         if (isSetPointCommanded) {
             double distanceToTarget = Math.abs(setpointJointAngle - target);
@@ -310,7 +322,7 @@ public abstract class ArmSegment extends SubsystemBase {
             }
 
             setJointAngleOnMotor(setpointJointAngle, velo * CYCLES_PER_SECOND,
-                    accel * CYCLES_PER_SECOND * CYCLES_PER_SECOND);
+                    (accel + this.getBaseAccel()) * CYCLES_PER_SECOND * CYCLES_PER_SECOND);
         } else {
             motor.neutralOutput();
         }
