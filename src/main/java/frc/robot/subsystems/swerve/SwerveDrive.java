@@ -238,6 +238,14 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
+    public double getGyroPitchDegrees() {
+        return gyro.getPitch();
+    }
+
+    public double getGyroPitchVelocity() {
+        return gyroDataArray[1];
+    }
+
     /**
      * @return the {@link SwerveDrivePoseEstimator} used to calculate odometry
      */
