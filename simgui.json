@@ -14,15 +14,15 @@
       "/SmartDashboard/Field": {
         "Robot": {
           "arrows": false,
-          "length": 1.0,
-          "weight": 1.0,
-          "width": 1.0
+          "length": 0.8999999761581421,
+          "width": 0.8999999761581421
         },
         "height": 8.020000457763672,
         "image": "Field Image.png",
         "trajectory": {
           "arrows": false,
           "length": 1.0,
+          "style": "Line",
           "weight": 1.0,
           "width": 1.0
         },
