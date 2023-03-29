@@ -15,6 +15,7 @@ import static frc.robot.Constants.Wiring.MODULE_DRIVE_MOTOR_IDS;
 import static frc.robot.Constants.Wiring.MODULE_STEER_MOTOR_IDS;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -117,7 +118,10 @@ public class SwerveModule {
     public void setVelocity(double metersPerSecond) {
         double ticksPer100ms = mpsToTicks100(metersPerSecond);
         double backlashRate = steerMotor.getSelectedSensorVelocity() * STEER_DRIVE_BACKLASH / 2;
-        driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms - backlashRate);
+        if (id == 0) {
+            SmartDashboard.putNumber("Real velocity module 0", driveMotor.getSelectedSensorVelocity());       
+        }
+        driveMotor.set(TalonFXControlMode.Velocity, ticksPer100ms - backlashRate, DemandType.ArbitraryFeedForward, metersPerSecond / Constants.Swerve.MAXIMUM_LINEAR_VELOCITY);
     }
 
     /**
