@@ -11,6 +11,7 @@ import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
 
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -185,8 +186,14 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new WaitCommand(.5).andThen(arm.moveSequentially(Arm.Position.TRAVEL))
-                                  .andThen(autoRouteChooser.getSelectedCommand());
+        return arm.moveSequentially(Arm.Position.TRAVEL)
+                  .andThen(autoRouteChooser.getSelectedCommand())
+                  .withTimeout(14)
+                  .andThen(holdPositionUntilTeleop());
+    }
+
+    private Command holdPositionUntilTeleop() {
+        return new SwerveHoldPositionCommand(swerve).until(DriverStation::isTeleopEnabled);
     }
 
     public void swerveInit() {

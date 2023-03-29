@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -14,7 +13,7 @@ public class BalanceChargeStationCommands {
         return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve))
                                                 .andThen(holdPositionUntilStable(swerve))
                                                 .andThen(balanceWithPID(swerve))
-                                                .andThen(holdPositionUntilTeleop(swerve));
+                                                .andThen(new SwerveHoldPositionCommand(swerve));
     }
 
     private static Command driveUntilOnTippedStation(SwerveDrive swerve) {
@@ -29,7 +28,7 @@ public class BalanceChargeStationCommands {
                 }
                 return maxPitch >= 15 && pitch <= 9;
             }
-        });
+        }).withTimeout(5);
     }
 
     private static Command driveUntilTippingDown(SwerveDrive swerve) {
@@ -46,7 +45,7 @@ public class BalanceChargeStationCommands {
                 return triggerCycleCount >= 10; // 0.2 consecutive seconds of
                                                 // movement
             }
-        });
+        }).withTimeout(5);
     }
 
     private static Command holdPositionUntilStable(SwerveDrive swerve) {
@@ -63,15 +62,12 @@ public class BalanceChargeStationCommands {
                 return triggerCycleCount >= 10; // 0.2 consecutive seconds of
                                                 // stability
             }
-        });
-    }
-
-    private static Command holdPositionUntilTeleop(SwerveDrive swerve) {
-        return new SwerveHoldPositionCommand(swerve).until(DriverStation::isTeleopEnabled);
+        })
+                                                    .withTimeout(2);
     }
 
     private static Command balanceWithPID(SwerveDrive swerve) {
         // 1 consecutive second
-        return new SwerveDrivePidBalanceCommand(swerve, 0, 0, 0, 50);
+        return new SwerveDrivePidBalanceCommand(swerve, 0, 0, 0, 50).withTimeout(10);
     }
 }

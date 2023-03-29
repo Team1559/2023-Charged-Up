@@ -239,11 +239,11 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     public double getGyroPitchDegrees() {
-        return gyro.getPitch();
+        return -gyro.getPitch();
     }
 
     public double getGyroPitchVelocity() {
-        return gyroDataArray[1];
+        return -gyroDataArray[1];
     }
 
     /**
