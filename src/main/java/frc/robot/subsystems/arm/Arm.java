@@ -99,7 +99,8 @@ public class Arm {
                 Map.ofEntries(Map.entry(true, moveToLocations(Position.WAYPOINT, position)),
                         Map.entry(false, moveToPosition(position))),
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position)
-                                   .withTimeout(10);
+                                   .andThen(new WaitCommand(0.5))
+                                   .withTimeout(6);
     }
 
     public void armPanic() {
