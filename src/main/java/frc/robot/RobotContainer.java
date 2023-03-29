@@ -145,7 +145,11 @@ public class RobotContainer {
                     Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeLow(arm, wrist)),
                             Map.entry(Piece.CUBE, ScoreCommands.moveToCubeLow(arm, wrist))),
                     this::selectModifier));
-            controller1.aButton.onTrue(ScoreCommands.moveToTravel(arm));
+            controller1.aButton.onTrue(new SelectCommand(
+                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToTravel(arm)),
+                            Map.entry(Piece.CUBE, arm.moveToPosition(Arm.Position.TRAVEL))),
+                    this::selectModifier));
+            // controller1.aButton.onTrue(ScoreCommands.moveToTravel(arm));
             controller1.startButton.onTrue(arm.armPanicCommand());
         }
 

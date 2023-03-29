@@ -5,7 +5,7 @@ import static frc.robot.Constants.Swerve.ENCODER_STDDEV;
 import static frc.robot.Constants.Swerve.MAXIMUM_ANGULAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAXIMUM_LINEAR_VELOCITY;
 import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_R;
-import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_X;
+import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_SLOW;
 import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_Y;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
@@ -170,10 +170,10 @@ public class SwerveDrive extends SubsystemBase {
         }
 
         // Accel limits
-        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE_X) {
-            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE_X;
-        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE_X) {
-            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE_X;
+        if (speeds.vxMetersPerSecond > lastVX + MAX_ACCEL_PER_CYCLE_SLOW) {
+            speeds.vxMetersPerSecond = lastVX + MAX_ACCEL_PER_CYCLE_SLOW;
+        } else if (speeds.vxMetersPerSecond < lastVX - MAX_ACCEL_PER_CYCLE_SLOW) {
+            speeds.vxMetersPerSecond = lastVX - MAX_ACCEL_PER_CYCLE_SLOW;
         }
         if (speeds.vyMetersPerSecond > lastVY + MAX_ACCEL_PER_CYCLE_Y) {
             speeds.vyMetersPerSecond = lastVY + MAX_ACCEL_PER_CYCLE_Y;
