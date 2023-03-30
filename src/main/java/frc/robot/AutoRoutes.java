@@ -261,49 +261,59 @@ public class AutoRoutes {
     // -------------------
 
     public Command scoreConeStayCmd() {
-        return scoreConeHigh().andThen(armToTravel());
+        return scoreConeHigh().andThen(startArmToTravel());
     }
 
     public Command leave1Cmd() {
-        return print("leave1").andThen(armToTravel())
-                              .alongWith(wait(0.25).andThen(
-                                      followTrajectory(leave1Traj[trajIndex()])));
+        return setStartPose(START_POINT_1).andThen(startArmToTravel())
+                                          .andThen(leave1Traj());
     }
 
-    public Command scoreLeave1Cmd() {
+    public Command scoreConeLeave1Cmd() {
         return setStartPose(START_POINT_1).andThen(scoreConeHigh())
-                                          .andThen(leave1Cmd());
+                                          .andThen(startArmToTravel())
+                                          .andThen(leave1Traj());
     }
 
     public Command scoreConeLeave1PickupCube1Cmd() {
         return setStartPose(START_POINT_1).andThen(scoreConeHigh())
-                                          .andThen(armToTravel().alongWith(leave1ToPiece1Traj()))
+                                          .andThen(startArmToTravel())
+                                          .andThen(leave1ToPiece1Traj())
                                           .andThen(pickupCube());
     }
 
     public Command scoreConeLeave1PickupCube1ScoreCmd() {
-        return scoreConeLeave1PickupCube1Cmd().andThen(piece1ToCubeScore1Traj());
+        return setStartPose(START_POINT_1).andThen(scoreConeHigh())
+                                          .andThen(startArmToTravel())
+                                          .andThen(leave1ToPiece1Traj())
+                                          .andThen(pickupCube())
+                                          .andThen(piece1ToCubeScore1Traj());
     }
 
     public Command leave3Cmd() {
-        return print("leave3").andThen(armToTravel())
-                              .alongWith(new WaitCommand(0.25).andThen(
-                                      followTrajectory(leave3Traj[trajIndex()])));
+        return setStartPose(START_POINT_3).andThen(startArmToTravel())
+                                          .andThen(leave3Traj());
     }
 
-    public Command scoreLeave3Cmd() {
+    public Command scoreConeLeave3Cmd() {
         return setStartPose(START_POINT_3).andThen(scoreConeHigh())
-                                          .andThen(leave3Cmd());
+                                          .andThen(startArmToTravel())
+                                          .andThen(leave3Traj());
     }
 
-    public Command scoreLeave3ToGamePiece4Cmd() {
+    public Command scoreConeLeave3PickupCube4Cmd() {
         return setStartPose(START_POINT_3).andThen(scoreConeHigh())
-                                          .andThen(armToTravel().alongWith(leave3ToPiece4Traj()))
+                                          .andThen(startArmToTravel())
+                                          .andThen(leave3ToPiece4Traj())
                                           .andThen(pickupCube());
     }
 
-    public Command scoreLeave3ToGamePiece4ScoreCubeCmd() {
-        return scoreLeave3ToGamePiece4Cmd().andThen(piece4ToCubeScore3Traj());
+    public Command scoreConeLeave3PickupCube4ScoreCmd() {
+        return setStartPose(START_POINT_3).andThen(scoreConeHigh())
+                                          .andThen(startArmToTravel())
+                                          .andThen(leave3ToPiece4Traj())
+                                          .andThen(pickupCube())
+                                          .andThen(piece4ToCubeScore3Traj());
     }
 
     // ----------------------------------
@@ -337,8 +347,17 @@ public class AutoRoutes {
         return print("pickupCube").andThen(ScoreCommands.pickupCubeCommand(arm, claw));
     }
 
-    private Command armToTravel() {
-        return print("armToTravel").andThen(ScoreCommands.moveToTravel(arm));
+    private Command startArmToTravel() {
+        return print("armToTravel").andThen(ScoreCommands.moveToTravel(arm))
+                                   .withTimeout(0.25);
+    }
+
+    private Command leave1Traj() {
+        return print("leave1").andThen(followTrajectory(leave1Traj[trajIndex()]));
+    }
+
+    private Command leave3Traj() {
+        return print("leave3").andThen(followTrajectory(leave3Traj[trajIndex()]));
     }
 
     private Command leave1ToPiece1Traj() {
