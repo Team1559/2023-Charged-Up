@@ -100,7 +100,7 @@ public class Arm {
                         Map.entry(false, moveToPosition(position))),
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position)
                                    .andThen(new WaitCommand(0.5))
-                                   .withTimeout(6);
+                                   .withTimeout(7);
     }
 
     public void armPanic() {

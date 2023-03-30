@@ -79,7 +79,7 @@ public class SwerveModule {
         checkCtreError(driveMotor.getLastError());
         driveMotor.setInverted(true);
         checkCtreError(driveMotor.getLastError());
-        checkCtreError(driveMotor.setSelectedSensorPosition(0D));
+        // checkCtreError(driveMotor.setSelectedSensorPosition(0D));
         checkCtreError(driveMotor.configAllowableClosedloopError(0, 0));
         checkCtreError(driveMotor.config_kP(0, MODULE_DRIVE_KP));
 

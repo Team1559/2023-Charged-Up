@@ -5,6 +5,7 @@ import java.util.Arrays;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -42,6 +43,8 @@ public class AutoRoutes {
     private static final Rotation2d DEGREES_150 = Rotation2d.fromDegrees(150);
     private static final Rotation2d DEGREES_165 = Rotation2d.fromDegrees(165);
     private static final Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
+    private static final Rotation2d DEGREES_210 = Rotation2d.fromDegrees(210);
+    private static final Rotation2d DEGREES_255 = Rotation2d.fromDegrees(255);
 
     // ----------------
     // Defined Paths
@@ -53,7 +56,7 @@ public class AutoRoutes {
     private static final Pose2d GAME_PIECE_1 = new Pose2d(6.791, 0.919, DEGREES_0);
     private static final Pose2d GAME_PIECE_2 = new Pose2d(6.791, 2.138, DEGREES_0);
     private static final Pose2d GAME_PIECE_3 = new Pose2d(6.791, 3.358, DEGREES_0);
-    private static final Pose2d GAME_PIECE_4 = new Pose2d(7.07, 4.33, DEGREES_0);
+    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.9, 4.4, DEGREES_255);
 
     // Define charge station points, counter-clockwise, starting from bottom
     // left of blue
@@ -84,23 +87,24 @@ public class AutoRoutes {
     // Score positions
     // SCORE_POINT_CUBE_3 is cube scoring position next to START_POINT_3,
     // but 2 inches back in x-axis
-    private static final Pose2d SCORE_POINT_CUBE_3 = new Pose2d(1.86, 4.52, DEGREES_180);
+    private static final Pose2d SCORE_POINT_CUBE_3 = new Pose2d(1.86, 4.42, DEGREES_180);
 
     // Way point positions for Starting Position 1 to Game Piece 1 route
     private static final Pose2d S1_P1_A = new Pose2d(2.1, 0.8, DEGREES_180);
     private static final Pose2d S1_P1_B = new Pose2d(4.7, 0.8, DEGREES_180);
-    private static final Pose2d S1_P1_C = new Pose2d(5.2, 0.8, DEGREES_150);
+    private static final Pose2d S1_P1_C = new Pose2d(5.2, 2.8, DEGREES_150);
     private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_30);
     private static final Pose2d S1_P1_E = new Pose2d(6.3, 0.919, DEGREES_0);
+    
 
     private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
     private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
 
     // Way point positions for Starting Position 3 Exit Community
     private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
-    private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.72, DEGREES_180);
-    private static final Pose2d S3_COM_C = new Pose2d(4.83, 4.72, DEGREES_90);
-    private static final Pose2d S3_COM_D = new Pose2d(5.52, 4.72, DEGREES_0);
+    private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.8, DEGREES_180);
+    private static final Pose2d S3_COM_C = new Pose2d(6.9, 5.9, DEGREES_210);
+    private static final Pose2d S3_COM_D = new Pose2d(7.5, 5.5, DEGREES_255);
 
     // Way point positions for Starting Position 3 to Game Piece 4 route
     private static final Pose2d S3_P4_A = new Pose2d(0, 0, DEGREES_180);
@@ -108,7 +112,7 @@ public class AutoRoutes {
     private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_180);
     private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
     private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58, DEGREES_180);
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     // ----------------
     // Defined Paths
     // ----------------
@@ -135,12 +139,12 @@ public class AutoRoutes {
     // Game Piece 1 to Score Cube 1 path
 
     private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = { GAME_PIECE_1, S1_P1_E,
-            S1_P1_D, S1_P1_C, S1_P1_B, S1_P1_A, };
+            S1_P1_D, S1_P1_C, S1_P1_B, S1_P1_A, SCORE_POINT_CUBE_1};
 
     // Game Piece 4 to Score Cube 3 path
 
     private static final Pose2d[] GAME_PIECE_4_TO_SCORE_CUBE_3_PATH = { GAME_PIECE_4, S3_COM_D,
-            S3_COM_C, S3_COM_B, S3_COM_A, SCORE_POINT_CUBE_1 };
+            S3_COM_C, S3_COM_B, S3_COM_A, SCORE_POINT_CUBE_3 };
 
     // @format:on
 
@@ -227,10 +231,7 @@ public class AutoRoutes {
     // ----------------
 
     public Command scoreConeStayCmd() {
-        return arm.moveSequentially(Arm.Position.UPPER_CONE)
-                  .andThen(new WaitCommand(1))
-                  .andThen(claw.openClawCommand())
-                  .andThen(arm.moveSequentially(Arm.Position.TRAVEL));
+        return scoreConeHighCmd().andThen(arm.moveSequentially(Arm.Position.TRAVEL));
     }
 
     public Command leave1Cmd() {
@@ -375,8 +376,7 @@ public class AutoRoutes {
 
     private void setStartingPose(Pose2d startPose) {
         swerve.getPoseEstimator()
-              .addVisionMeasurement(startPose, System.nanoTime() * Math.pow(10.0, -6),
-                      VecBuilder.fill(0, 0, 0));
+              .addVisionMeasurement(startPose, WPIUtilJNI.now() * 1e-6, VecBuilder.fill(0, 0, 0));
     }
 
     private static void simulateTrajectory(Field2d field, SwerveTrajectory trajectory) {
@@ -386,7 +386,7 @@ public class AutoRoutes {
         sleep(1000);
         for (int i = 0; i < trajectory.length - 1; i++) {
             field.setRobotPose(trajectory.points[i].pose);
-            sleep((int) ((trajectory.points[i + 1].time - trajectory.points[i].time) * 1000));
+            sleep((int) ((trajectory.points[i + 1].time - trajectory.points[i].time) * 2000));
         }
         field.setRobotPose(trajectory.points[trajectory.length - 1].pose);
         sleep(1000);

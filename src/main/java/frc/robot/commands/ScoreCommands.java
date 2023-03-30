@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.grabber.GrabberClaw;
@@ -44,6 +45,7 @@ public class ScoreCommands {
     public static Command scoreConeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeHigh(arm, wrist)
                             .alongWith(zeroWrist(wrist))
+                            .andThen(new WaitCommand(.6))
                             .andThen(claw.openClawCommand());
     }
 

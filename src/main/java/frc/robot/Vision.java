@@ -26,7 +26,7 @@ public class Vision extends SubsystemBase {
     private final AprilTagFieldLayout      aprilTagFieldLayout;
     private final PhotonPoseEstimator      photonPoseEstimator;
     private final SwerveDrivePoseEstimator swervePoseEstimator;
-    private boolean                        poseSet = false;
+    private boolean                        poseSet = true;
 
     public Vision(SwerveDrivePoseEstimator poseEstimator) {
         try {

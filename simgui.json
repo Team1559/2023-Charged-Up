@@ -1,4 +1,16 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    },
+    "Timing": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -6,27 +18,22 @@
       "/SmartDashboard/Field": "Field2d"
     },
     "windows": {
-      "/SmartDashboard/Auto Start Position": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Field": {
         "Robot": {
-          "arrows": false,
+          "arrowSize": 44,
           "length": 0.8999999761581421,
+          "style": "Box/Image",
           "width": 0.8999999761581421
         },
-        "height": 8.020000457763672,
-        "image": "Field Image.png",
+        "image": "C:\\Users\\frost\\OneDrive\\Documents\\GitHub\\2023-Charged-Up\\Field Image.png",
+        "temp": {
+          "style": "Line"
+        },
         "trajectory": {
           "arrows": false,
-          "length": 1.0,
           "style": "Line",
-          "weight": 1.0,
-          "width": 1.0
+          "weight": 0.5
         },
-        "width": 16.540000915527344,
         "window": {
           "visible": true
         }
@@ -36,9 +43,6 @@
   "NetworkTables": {
     "transitory": {
       "SmartDashboard": {
-        "Field": {
-          "open": true
-        },
         "open": true
       }
     }
