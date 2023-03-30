@@ -17,7 +17,7 @@ public class BalanceChargeStationCommands {
     }
 
     private static Command driveUntilOnTippedStation(SwerveDrive swerve) {
-        return new SwerveDriveForwardCommand(swerve, 0.5, new BooleanSupplier() {
+        return new SwerveDriveForwardCommand(swerve, 1, new BooleanSupplier() {
             private double maxPitch;
 
             @Override
@@ -26,18 +26,18 @@ public class BalanceChargeStationCommands {
                 if (pitch > maxPitch) {
                     maxPitch = pitch;
                 }
-                return maxPitch >= 15 && pitch <= 9;
+                return maxPitch >= 18 && pitch <= 18;
             }
         }).withTimeout(5);
     }
 
     private static Command driveUntilTippingDown(SwerveDrive swerve) {
-        return new SwerveDriveForwardCommand(swerve, 0, new BooleanSupplier() {
+        return new SwerveDriveForwardCommand(swerve, 0.5, new BooleanSupplier() {
             private int triggerCycleCount;
 
             @Override
             public boolean getAsBoolean() {
-                if (swerve.getGyroPitchVelocity() < -5) {
+                if (swerve.getGyroPitchVelocity() <= -2) {
                     triggerCycleCount++;
                 } else {
                     triggerCycleCount = 0;
@@ -54,7 +54,7 @@ public class BalanceChargeStationCommands {
 
             @Override
             public boolean getAsBoolean() {
-                if (swerve.getGyroPitchVelocity() > -2) {
+                if (Math.abs(swerve.getGyroPitchVelocity()) <= 2) {
                     triggerCycleCount++;
                 } else {
                     triggerCycleCount = 0;

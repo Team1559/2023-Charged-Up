@@ -20,9 +20,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
 
+import frc.robot.commands.BalanceChargeStationCommands;
 import frc.robot.commands.ScoreCommands;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Arm.Position;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -115,24 +117,24 @@ public class AutoRoutes {
 
     // Start 1 Exit Community path
     // @format:off
-    private static final Pose2d[] START_1_EXIT_COMMUNITY_PATH = { 
-        START_POINT_1, 
-        S1_P1_A, 
+    private static final Pose2d[] START_1_EXIT_COMMUNITY_PATH = {
+        START_POINT_1,
+        S1_P1_A,
         S1_P1_B,
-        S1_EXIT_C, 
-        S1_EXIT_POINT 
+        S1_EXIT_C,
+        S1_EXIT_POINT
     };
 
     // Start 1 to Game Piece 1 path
     // @format:off
-    private static final Pose2d[] START_1_TO_GAME_PIECE_1_PATH = { 
-        START_POINT_1, 
-        S1_P1_A, 
+    private static final Pose2d[] START_1_TO_GAME_PIECE_1_PATH = {
+        START_POINT_1,
+        S1_P1_A,
         S1_P1_B,
-        S1_P1_C, 
-        S1_P1_D, 
-        S1_P1_E, 
-        GAME_PIECE_1 
+        S1_P1_C,
+        S1_P1_D,
+        S1_P1_E,
+        GAME_PIECE_1
     };
 
     // Start 3 Exit Community path
@@ -158,13 +160,13 @@ public class AutoRoutes {
 
     // Game Piece 1 to Score Cube 1 path
     // @format:off
-    private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = { 
-        GAME_PIECE_1, 
+    private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = {
+        GAME_PIECE_1,
         S1_P1_E,
-        S1_P1_D, 
-        S1_P1_C, 
-        S1_P1_B, 
-        S1_P1_A, 
+        S1_P1_D,
+        S1_P1_C,
+        S1_P1_B,
+        S1_P1_A,
     };
 
     // Game Piece 4 to Score Cube 3 path
@@ -175,7 +177,7 @@ public class AutoRoutes {
         S3_COM_C,
         S3_COM_B,
         S3_COM_A,
-        SCORE_POINT_CUBE_1 
+        SCORE_POINT_CUBE_1
     };
 
     static {
@@ -215,29 +217,29 @@ public class AutoRoutes {
 
         // @format:off
         // Define all trajectories used by auto routes
-        leave1Traj = new SwerveTrajectory[] { 
+        leave1Traj = new SwerveTrajectory[] {
             makeTrajectory(START_1_EXIT_COMMUNITY_PATH),
-            makeTrajectory(mirror(START_1_EXIT_COMMUNITY_PATH)) 
+            makeTrajectory(mirror(START_1_EXIT_COMMUNITY_PATH))
         };
         leave1ToGamePiece1Traj = new SwerveTrajectory[] {
             makeTrajectory(START_1_TO_GAME_PIECE_1_PATH),
-            makeTrajectory(mirror(START_1_TO_GAME_PIECE_1_PATH)) 
+            makeTrajectory(mirror(START_1_TO_GAME_PIECE_1_PATH))
         };
-        leave3Traj = new SwerveTrajectory[] { 
+        leave3Traj = new SwerveTrajectory[] {
             makeTrajectory(START_3_EXIT_COMMUNITY_PATH),
-            makeTrajectory(mirror(START_3_EXIT_COMMUNITY_PATH)) 
+            makeTrajectory(mirror(START_3_EXIT_COMMUNITY_PATH))
         };
-        leave3ToGamePiece4Traj = new SwerveTrajectory[] { 
+        leave3ToGamePiece4Traj = new SwerveTrajectory[] {
             makeTrajectory(START_3_TO_GAME_PIECE_4_PATH),
-            makeTrajectory(mirror(START_3_TO_GAME_PIECE_4_PATH)) 
+            makeTrajectory(mirror(START_3_TO_GAME_PIECE_4_PATH))
         };
         gamePiece1ToScoreCube1Traj = new SwerveTrajectory[] {
             makeTrajectory(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH),
-            makeTrajectory(mirror(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH)) 
+            makeTrajectory(mirror(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH))
         };
         gamePiece4ToScoreCube3Traj = new SwerveTrajectory[] {
             makeTrajectory(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH),
-            makeTrajectory(mirror(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH)) 
+            makeTrajectory(mirror(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH))
         };
         //start1ToPiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_GAME_PIECE_1_PATH),
         //        makeTrajectory(mirror(START_1_TO_GAME_PIECE_1_PATH)) };
@@ -262,7 +264,11 @@ public class AutoRoutes {
     // ----------------
     // Commands being used in auto route selector
     // ----------------
- 
+
+    public Command balanceChargeStationCmd() {
+        return arm.moveSequentially(Position.TRAVEL).andThen(BalanceChargeStationCommands.autoBalanceCommand(swerve));
+    }
+
     public Command scoreConeStayCmd() {
         return arm.moveSequentially(Arm.Position.UPPER_CONE)
                   .andThen(new WaitCommand(1))
@@ -367,7 +373,7 @@ public class AutoRoutes {
 
 
     // ----------------
-    // Helper Metods 
+    // Helper Metods
     // ----------------
     private static int trajectoryIndex() {
         return DriverStation.getAlliance() == Alliance.Red ? 1 : 0;
@@ -420,7 +426,7 @@ public class AutoRoutes {
 
     private void setStartingPose(Pose2d startPose) {
         swerve.getPoseEstimator()
-              .addVisionMeasurement(startPose, System.nanoTime() * Math.pow(10.0, -6),
+              .addVisionMeasurement(startPose, System.nanoTime() * 1e-9,
                       VecBuilder.fill(0, 0, 0));
     }
 
@@ -462,7 +468,7 @@ public class AutoRoutes {
         S3_P4_E,
         GAME_PIECE_4
     };
-    
+
     // Start points are in front of CONE nodes (-x, -x, +x)
     private static final Pose2d START_POINT_2 = new Pose2d(1.81, 2.189, DEGREES_180);
 

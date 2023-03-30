@@ -34,7 +34,7 @@ public class SwerveDrivePidBalanceCommand extends CommandBase {
         double pitch = swerve.getGyroPitchDegrees();
         double pitchVelocity = swerve.getGyroPitchVelocity();
 
-        if (Math.abs(pitch) < 5 && Math.abs(pitchVelocity) < 2) {
+        if (Math.abs(pitch) < 3 && Math.abs(pitchVelocity) < 2) {
             triggerCycleCount++;
         } else {
             triggerCycleCount = 0;
