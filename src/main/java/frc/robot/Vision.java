@@ -18,6 +18,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,7 +27,7 @@ public class Vision extends SubsystemBase {
     private final AprilTagFieldLayout      aprilTagFieldLayout;
     private final PhotonPoseEstimator      photonPoseEstimator;
     private final SwerveDrivePoseEstimator swervePoseEstimator;
-    private boolean                        poseSet = true;
+    private boolean                        poseSet;
 
     public Vision(SwerveDrivePoseEstimator poseEstimator) {
         try {
@@ -77,14 +78,17 @@ public class Vision extends SubsystemBase {
                     swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                             pose.timestampSeconds, VecBuilder.fill(stdDev, stdDev, stdDev));
                 } else {
-                    swervePoseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(),
-                            pose.timestampSeconds, VecBuilder.fill(0, 0, 0));
-                    poseSet = true;
+                    setInitialPose(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
                 }
             } catch (ConcurrentModificationException e) {
                 // ignore
             }
         }
+    }
+
+    public void setInitialPose(Pose2d pose, double timestampSeconds) {
+        swervePoseEstimator.addVisionMeasurement(pose, timestampSeconds, VecBuilder.fill(0, 0, 0));
+        poseSet = true;
     }
 
     public boolean isPoseSet() {

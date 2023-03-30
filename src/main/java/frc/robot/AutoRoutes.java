@@ -184,7 +184,7 @@ public class AutoRoutes {
     private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
     private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.80, DEGREES_180);
     private static final Pose2d S3_COM_C = new Pose2d(6.90, 5.90, DEGREES_210);
-    private static final Pose2d S3_COM_D = new Pose2d(7.50, 5.50, DEGREES_255);
+    private static final Pose2d S3_COM_D = new Pose2d(7.50, 5.50, DEGREES_240);
     // @format:on
 
     // Start 3 Exit Community path
@@ -364,8 +364,7 @@ public class AutoRoutes {
 
     private Command setStartPose(Pose2d pose) {
         return print("setStartPose: " + pose).andThen(new InstantCommand(() -> {
-            swerve.getPoseEstimator()
-                  .addVisionMeasurement(pose, WPIUtilJNI.now() * 1e-6, VecBuilder.fill(0, 0, 0));
+            vision.setInitialPose(pose, WPIUtilJNI.now() * 1e-6);
         }));
     }
 

@@ -25,7 +25,8 @@
           "style": "Box/Image",
           "width": 0.8999999761581421
         },
-        "image": "C:\\Users\\frost\\OneDrive\\Documents\\GitHub\\2023-Charged-Up\\Field Image.png",
+        "height": 8.020000457763672,
+        "image": "C:\\robotics\\github\\2023-Charged-Up\\Field Image.png",
         "temp": {
           "style": "Line"
         },
@@ -34,6 +35,7 @@
           "style": "Line",
           "weight": 0.5
         },
+        "width": 16.540000915527344,
         "window": {
           "visible": true
         }
