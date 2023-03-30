@@ -5,6 +5,7 @@ import java.util.Arrays;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -27,6 +28,9 @@ import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class AutoRoutes {
+    // Field diagram:
+    // https://firstfrc.blob.core.windows.net/frc2023/FieldAssets/2023LayoutMarkingDiagram.pdf
+
     private static final double FIELD_LENGTH = 16.54;
     private static final double FIELD_WIDTH  = 8.02;
 
@@ -69,6 +73,13 @@ public class AutoRoutes {
     private static final Pose2d GAME_PIECE_4 = new Pose2d(6.90, 4.40, DEGREES_255);
 
     private static final Pose2d CHARGING_STATION_CENTER = new Pose2d(3.90, 2.75, DEGREES_0);
+
+    private static final Translation2d GAME_PIECE_1_T = new Translation2d(7.04, 0.92);
+    private static final Translation2d GAME_PIECE_2_T = new Translation2d(7.04, 2.14);
+    private static final Translation2d GAME_PIECE_3_T = new Translation2d(7.04, 3.36);
+    private static final Translation2d GAME_PIECE_4_T = new Translation2d(7.04, 4.58);
+
+    private static final Translation2d CHARGING_STATION_CENTER_T = new Translation2d(3.90, 2.75);
     // @format:on
 
     /**
@@ -87,10 +98,30 @@ public class AutoRoutes {
      * wall of opponents loading area
      */
     // @format:off
-    private static final Pose2d START_POINT_1  = new Pose2d(1.81, 0.513, DEGREES_180);
+    private static final Pose2d START_POINT_1  = new Pose2d(1.81, 0.51, DEGREES_180);
     private static final Pose2d START_POINT_2A = new Pose2d(1.81, 2.18, DEGREES_180);
-    private static final Pose2d START_POINT_2B = new Pose2d(1.81, 3.3, DEGREES_180);
-    private static final Pose2d START_POINT_3  = new Pose2d(1.81, 4.983, DEGREES_180);
+    private static final Pose2d START_POINT_2B = new Pose2d(1.81, 3.30, DEGREES_180);
+    private static final Pose2d START_POINT_3  = new Pose2d(1.81, 4.98, DEGREES_180);
+
+    private static final Translation2d SCORE_CONE_1A_T  = new Translation2d(1.81, 0.51);
+    private static final Translation2d SCORE_CUBE_1_T  = new Translation2d(1.86, 1.07);
+    private static final Translation2d SCORE_CONE_1B_T  = new Translation2d(1.81, 1.63);
+    private static final Translation2d SCORE_CONE_2A_T = new Translation2d(1.81, 2.19);
+    private static final Translation2d SCORE_CUBE_2_T = new Translation2d(1.86, 2.75);
+    private static final Translation2d SCORE_CONE_2B_T = new Translation2d(1.81, 3.31);
+    private static final Translation2d SCORE_CONE_3A_T = new Translation2d(1.81, 3.87);
+    private static final Translation2d SCORE_CUBE_3_T = new Translation2d(1.86, 4.42);
+    private static final Translation2d SCORE_CONE_3B_T = new Translation2d(1.81, 4.98);
+
+    private static final Pose2d SCORE_CONE_1A  = makePose(SCORE_CONE_1A_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CUBE_1  = makePose(SCORE_CUBE_1_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CONE_1B  = makePose(SCORE_CONE_1B_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CONE_2A  = makePose(SCORE_CONE_2A_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CUBE_2  = makePose(SCORE_CUBE_2_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CONE_2B  = makePose(SCORE_CONE_2B_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CONE_3A  = makePose(SCORE_CONE_3A_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CUBE_3  = makePose(SCORE_CUBE_3_T, 0, 0, DEGREES_180);
+    private static final Pose2d SCORE_CONE_3B  = makePose(SCORE_CONE_3B_T, 0, 0, DEGREES_180);
     // @format:on
 
     /**
@@ -111,21 +142,21 @@ public class AutoRoutes {
     // Defined Paths
     // -------------
 
+    // Way point positions for starting position 1 to piece 1
     // @format:off
-    private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
-    private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
+    private static final Pose2d S1_P1_A = new Pose2d(2.10, 0.80, DEGREES_180);
+    private static final Pose2d S1_P1_B = new Pose2d(4.70, 0.80, DEGREES_180);
+    private static final Pose2d S1_P1_C = new Pose2d(5.20, 2.80, DEGREES_150);
+    private static final Pose2d S1_P1_D = new Pose2d(6.00, 0.90, DEGREES_30);
+    private static final Pose2d S1_P1_E = new Pose2d(6.30, 0.92, DEGREES_0);
     // @format:on
 
-    // Way point positions for Starting Position 1 to Game Piece 1 route
+    // Waypoints for start 1 exit community (in addition to S1_P1)
     // @format:off
-    private static final Pose2d S1_P1_A = new Pose2d(2.1, 0.8, DEGREES_180);
-    private static final Pose2d S1_P1_B = new Pose2d(4.7, 0.8, DEGREES_180);
-    private static final Pose2d S1_P1_C = new Pose2d(5.2, 2.8, DEGREES_150);
-    private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_30);
-    private static final Pose2d S1_P1_E = new Pose2d(6.3, 0.919, DEGREES_0);
+    private static final Pose2d S1_EXIT_C     = new Pose2d(5.20, 0.80, DEGREES_180);
+    private static final Pose2d S1_EXIT_POINT = new Pose2d(6.00, 0.92, DEGREES_180);
     // @format:on
 
-    // Start 1 Exit Community path
     // @format:off
     private static final Pose2d[] START_1_EXIT_COMMUNITY_PATH = {
         START_POINT_1,
@@ -136,9 +167,8 @@ public class AutoRoutes {
     };
     // @format:on
 
-    // Start 1 to Game Piece 1 path
     // @format:off
-    private static final Pose2d[] START_1_TO_GAME_PIECE_1_PATH = {
+    private static final Pose2d[] START_1_TO_PIECE_1_PATH = {
         START_POINT_1,
         S1_P1_A,
         S1_P1_B,
@@ -152,9 +182,9 @@ public class AutoRoutes {
     // Way point positions for Starting Position 3 Exit Community
     // @format:off
     private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
-    private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.8, DEGREES_180);
-    private static final Pose2d S3_COM_C = new Pose2d(6.9, 5.9, DEGREES_210);
-    private static final Pose2d S3_COM_D = new Pose2d(7.5, 5.5, DEGREES_255);
+    private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.80, DEGREES_180);
+    private static final Pose2d S3_COM_C = new Pose2d(6.90, 5.90, DEGREES_210);
+    private static final Pose2d S3_COM_D = new Pose2d(7.50, 5.50, DEGREES_255);
     // @format:on
 
     // Start 3 Exit Community path
@@ -170,7 +200,7 @@ public class AutoRoutes {
 
     // Start 3 to Game Piece 4 path
     // @format:off
-    private static final Pose2d[] START_3_TO_GAME_PIECE_4_PATH = {
+    private static final Pose2d[] START_3_TO_PIECE_4_PATH = {
         START_POINT_3,
         S3_COM_A,
         S3_COM_B,
@@ -182,7 +212,7 @@ public class AutoRoutes {
 
     // Game Piece 1 to Score Cube 1 path
     // @format:off
-    private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = {
+    private static final Pose2d[] PIECE_1_TO_SCORE_CUBE_1_PATH = {
         GAME_PIECE_1,
         S1_P1_E,
         S1_P1_D,
@@ -195,7 +225,7 @@ public class AutoRoutes {
 
     // Game Piece 4 to Score Cube 3 path
     // @format:off
-    private static final Pose2d[] GAME_PIECE_4_TO_SCORE_CUBE_3_PATH = {
+    private static final Pose2d[] PIECE_4_TO_SCORE_CUBE_3_PATH = {
         GAME_PIECE_4,
         S3_COM_D,
         S3_COM_C,
@@ -223,11 +253,11 @@ public class AutoRoutes {
 
     // Index 0 is blue, index 1 is red (mirrored)
     private final SwerveTrajectory[] leave1Traj;
-    private final SwerveTrajectory[] leave1ToGamePiece1Traj;
     private final SwerveTrajectory[] leave3Traj;
-    private final SwerveTrajectory[] leave3ToGamePiece4Traj;
-    private final SwerveTrajectory[] gamePiece1ToScoreCube1Traj;
-    private final SwerveTrajectory[] gamePiece4ToScoreCube3Traj;
+    private final SwerveTrajectory[] leave1ToPiece1Traj;
+    private final SwerveTrajectory[] leave3ToPiece4Traj;
+    private final SwerveTrajectory[] piece1ToScoreCube1Traj;
+    private final SwerveTrajectory[] piece4ToScoreCube3Traj;
 
     public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw,
             Vision vision) {
@@ -240,20 +270,18 @@ public class AutoRoutes {
         // Define all trajectories used by auto routes
         leave1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_EXIT_COMMUNITY_PATH),
                 makeTrajectory(mirror(START_1_EXIT_COMMUNITY_PATH)) };
-        leave1ToGamePiece1Traj = new SwerveTrajectory[] {
-                makeTrajectory(START_1_TO_GAME_PIECE_1_PATH),
-                makeTrajectory(mirror(START_1_TO_GAME_PIECE_1_PATH)) };
+        leave1ToPiece1Traj = new SwerveTrajectory[] { makeTrajectory(START_1_TO_PIECE_1_PATH),
+                makeTrajectory(mirror(START_1_TO_PIECE_1_PATH)) };
         leave3Traj = new SwerveTrajectory[] { makeTrajectory(START_3_EXIT_COMMUNITY_PATH),
                 makeTrajectory(mirror(START_3_EXIT_COMMUNITY_PATH)) };
-        leave3ToGamePiece4Traj = new SwerveTrajectory[] {
-                makeTrajectory(START_3_TO_GAME_PIECE_4_PATH),
-                makeTrajectory(mirror(START_3_TO_GAME_PIECE_4_PATH)) };
-        gamePiece1ToScoreCube1Traj = new SwerveTrajectory[] {
-                makeTrajectory(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH),
-                makeTrajectory(mirror(GAME_PIECE_1_TO_SCORE_CUBE_1_PATH)) };
-        gamePiece4ToScoreCube3Traj = new SwerveTrajectory[] {
-                makeTrajectory(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH),
-                makeTrajectory(mirror(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH)) };
+        leave3ToPiece4Traj = new SwerveTrajectory[] { makeTrajectory(START_3_TO_PIECE_4_PATH),
+                makeTrajectory(mirror(START_3_TO_PIECE_4_PATH)) };
+        piece1ToScoreCube1Traj = new SwerveTrajectory[] {
+                makeTrajectory(PIECE_1_TO_SCORE_CUBE_1_PATH),
+                makeTrajectory(mirror(PIECE_1_TO_SCORE_CUBE_1_PATH)) };
+        piece4ToScoreCube3Traj = new SwerveTrajectory[] {
+                makeTrajectory(PIECE_4_TO_SCORE_CUBE_3_PATH),
+                makeTrajectory(mirror(PIECE_4_TO_SCORE_CUBE_3_PATH)) };
     }
 
     // -------------------
@@ -368,22 +396,22 @@ public class AutoRoutes {
 
     private Command leave1ToPiece1Traj() {
         return print("leave1ToGamePiece1").andThen(
-                followTrajectory(leave1ToGamePiece1Traj[trajIndex()]));
+                followTrajectory(leave1ToPiece1Traj[trajIndex()]));
     }
 
     private Command leave3ToPiece4Traj() {
         return print("leave3ToGamePiece4").andThen(
-                followTrajectory(leave3ToGamePiece4Traj[trajIndex()]));
+                followTrajectory(leave3ToPiece4Traj[trajIndex()]));
     }
 
     private Command piece1ToCubeScore1Traj() {
         return print("gamePiece1ToCubeScore1").andThen(
-                followTrajectory(gamePiece1ToScoreCube1Traj[trajIndex()]));
+                followTrajectory(piece1ToScoreCube1Traj[trajIndex()]));
     }
 
     private Command piece4ToCubeScore3Traj() {
         return print("gamePiece4ToCubeScore3").andThen(
-                followTrajectory(gamePiece4ToScoreCube3Traj[trajIndex()]));
+                followTrajectory(piece4ToScoreCube3Traj[trajIndex()]));
     }
 
     // ----------------
@@ -396,6 +424,11 @@ public class AutoRoutes {
 
     private static SwerveTrajectory makeTrajectory(Pose2d[] poses) {
         return SwerveTrajectoryGenerator.calculateTrajectory(poses);
+    }
+
+    private static Pose2d makePose(Translation2d original, double xOffset, double yOffset,
+            Rotation2d heading) {
+        return new Pose2d(original.getX() + xOffset, original.getY() + yOffset, heading);
     }
 
     private static Pose2d[] mirror(Pose2d[] path) {
@@ -417,7 +450,7 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { START_3_TO_GAME_PIECE_4_PATH };
+        Pose2d[][] paths = { START_3_TO_PIECE_4_PATH };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);
