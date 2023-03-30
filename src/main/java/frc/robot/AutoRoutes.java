@@ -30,6 +30,7 @@ public class AutoRoutes {
     private static final double FIELD_LENGTH = 16.54;
     private static final double FIELD_WIDTH  = 8.02;
 
+    // @format:off
     private static final Rotation2d DEGREES_0   = new Rotation2d();
     private static final Rotation2d DEGREES_15  = Rotation2d.fromDegrees(15);
     private static final Rotation2d DEGREES_30  = Rotation2d.fromDegrees(30);
@@ -43,110 +44,182 @@ public class AutoRoutes {
     private static final Rotation2d DEGREES_150 = Rotation2d.fromDegrees(150);
     private static final Rotation2d DEGREES_165 = Rotation2d.fromDegrees(165);
     private static final Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
+    private static final Rotation2d DEGREES_195 = Rotation2d.fromDegrees(195);
     private static final Rotation2d DEGREES_210 = Rotation2d.fromDegrees(210);
+    private static final Rotation2d DEGREES_225 = Rotation2d.fromDegrees(225);
+    private static final Rotation2d DEGREES_240 = Rotation2d.fromDegrees(240);
     private static final Rotation2d DEGREES_255 = Rotation2d.fromDegrees(255);
+    private static final Rotation2d DEGREES_270 = Rotation2d.fromDegrees(270);
+    private static final Rotation2d DEGREES_285 = Rotation2d.fromDegrees(285);
+    private static final Rotation2d DEGREES_300 = Rotation2d.fromDegrees(300);
+    private static final Rotation2d DEGREES_315 = Rotation2d.fromDegrees(315);
+    private static final Rotation2d DEGREES_330 = Rotation2d.fromDegrees(330);
+    private static final Rotation2d DEGREES_345 = Rotation2d.fromDegrees(345);
+    // @format:on
 
     // ----------------
-    // Defined Paths
+    // Common Positions
     // ----------------
+
+    // Game piece 4 is closest to substations, 1 is farthest
+    // @format:off
+    private static final Pose2d GAME_PIECE_1 = new Pose2d(6.79, 0.92, DEGREES_0);
+    private static final Pose2d GAME_PIECE_2 = new Pose2d(6.79, 2.14, DEGREES_0);
+    private static final Pose2d GAME_PIECE_3 = new Pose2d(6.79, 3.36, DEGREES_0);
+    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.90, 4.40, DEGREES_255);
+
+    private static final Pose2d CHARGING_STATION_CENTER = new Pose2d(3.90, 2.75, DEGREES_0);
+    // @format:on
+
+    /**
+     * Start positions
+     * <p>
+     * START_POINT_1 is aligned with cone scoring position closest to outside
+     * wall by judges tables
+     * <p>
+     * START_POINT_2A is aligned with cone scoring position at Grid 2 closest to
+     * outside wall by judges tables
+     * <p>
+     * START_POINT_2B is aligned with cone scoring position at Grid 2 closest to
+     * inside wall of opponents loading area
+     * <p>
+     * START_POINT_3 is aligned with cone scoring position closest to inside
+     * wall of opponents loading area
+     */
+    // @format:off
+    private static final Pose2d START_POINT_1  = new Pose2d(1.81, 0.513, DEGREES_180);
+    private static final Pose2d START_POINT_2A = new Pose2d(1.81, 2.18, DEGREES_180);
+    private static final Pose2d START_POINT_2B = new Pose2d(1.81, 3.3, DEGREES_180);
+    private static final Pose2d START_POINT_3  = new Pose2d(1.81, 4.983, DEGREES_180);
+    // @format:on
+
+    /**
+     * Cube score positions
+     * <p>
+     * SCORE_POINT_CUBE_1 is cube scoring position next to START_POINT_1, but 2
+     * inches back in x-axis
+     * <p>
+     * SCORE_POINT_CUBE_3 is cube scoring position next to START_POINT_3, but 2
+     * inches back in x-axis
+     */
+    // @format:off
+    private static final Pose2d SCORE_POINT_CUBE_1 = new Pose2d(1.86, 0.97, DEGREES_180);
+    private static final Pose2d SCORE_POINT_CUBE_3 = new Pose2d(1.86, 4.42, DEGREES_180);
+    // @format:on
+
+    // -------------
+    // Defined Paths
+    // -------------
 
     // @format:off
+    private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
+    private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
+    // @format:on
 
-    // Define common positions
-    private static final Pose2d GAME_PIECE_1 = new Pose2d(6.791, 0.919, DEGREES_0);
-    private static final Pose2d GAME_PIECE_2 = new Pose2d(6.791, 2.138, DEGREES_0);
-    private static final Pose2d GAME_PIECE_3 = new Pose2d(6.791, 3.358, DEGREES_0);
-    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.9, 4.4, DEGREES_255);
-
-    // Define charge station points, counter-clockwise, starting from bottom
-    // left of blue
-    private static final Pose2d CS_EDGE_1 = new Pose2d(2.9, 1.5, DEGREES_0);
-    private static final Pose2d CS_EDGE_2 = new Pose2d(4.8, 4.0, DEGREES_0);
-    private static final Pose2d CS_EDGE_3 = new Pose2d(4.8, 1.5, DEGREES_0);
-    private static final Pose2d CS_EDGE_4 = new Pose2d(2.9, 4.0, DEGREES_0);
-    private static final Pose2d CS_CENTER = new Pose2d(3.9, 2.75, DEGREES_0);
-
-    // Start positions
-    // START_POINT_1 is aligned with cone scoring position closest to outside
-    // wall by judges tables
-    private static final Pose2d START_POINT_1 = new Pose2d(1.81, 0.513, DEGREES_180);
-    // START_POINT_2A is aligned with cone scoring position at Station 2
-    // closest to outside wall by judges tables
-    private static final Pose2d START_POINT_2A = new Pose2d(1.81, 2.18, DEGREES_180);
-    // START_POINT_2B is aligned with cone scoring position at Station 2
-    // closest to inside wall of opponents loading area
-    private static final Pose2d START_POINT_2B = new Pose2d(1.81, 3.3, DEGREES_180);
-    // START_POINT_3 is aligned with cone scoring position closest to inside
-    // wall of opponents loading area
-    private static final Pose2d START_POINT_3 = new Pose2d(1.81, 4.983, DEGREES_180);
-
-    // Score positions
-    // SCORE_POINT_CUBE_1 is cube scoring position next to START_POINT_1,
-    // but 2 inches back in x-axis
-    private static final Pose2d SCORE_POINT_CUBE_1 = new Pose2d(1.86, 0.97, DEGREES_180);
-    // Score positions
-    // SCORE_POINT_CUBE_3 is cube scoring position next to START_POINT_3,
-    // but 2 inches back in x-axis
-    private static final Pose2d SCORE_POINT_CUBE_3 = new Pose2d(1.86, 4.42, DEGREES_180);
+    // remove
+    // Appear to be unused
+    // Way point positions for Starting Position 3 to Game Piece 4 route
+    // @format:off
+    // private static final Pose2d S3_P4_A = new Pose2d(0, 0, DEGREES_180);
+    // private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_180);
+    // private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_180);
+    // private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
+    // private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58, DEGREES_180);
+    // @format:on
+    // remove
 
     // Way point positions for Starting Position 1 to Game Piece 1 route
+    // @format:off
     private static final Pose2d S1_P1_A = new Pose2d(2.1, 0.8, DEGREES_180);
     private static final Pose2d S1_P1_B = new Pose2d(4.7, 0.8, DEGREES_180);
     private static final Pose2d S1_P1_C = new Pose2d(5.2, 2.8, DEGREES_150);
     private static final Pose2d S1_P1_D = new Pose2d(6.0, 0.9, DEGREES_30);
     private static final Pose2d S1_P1_E = new Pose2d(6.3, 0.919, DEGREES_0);
-    
+    // @format:on
 
-    private static final Pose2d S1_EXIT_C     = new Pose2d(5.2, 0.8, DEGREES_180);
-    private static final Pose2d S1_EXIT_POINT = new Pose2d(6.0, 0.919, DEGREES_180);
+    // Start 1 Exit Community path
+    // @format:off
+    private static final Pose2d[] START_1_EXIT_COMMUNITY_PATH = {
+        START_POINT_1,
+        S1_P1_A,
+        S1_P1_B,
+        S1_EXIT_C,
+        S1_EXIT_POINT
+    };
+    // @format:on
+
+    // Start 1 to Game Piece 1 path
+    // @format:off
+    private static final Pose2d[] START_1_TO_GAME_PIECE_1_PATH = {
+        START_POINT_1,
+        S1_P1_A,
+        S1_P1_B,
+        S1_P1_C,
+        S1_P1_D,
+        S1_P1_E,
+        GAME_PIECE_1
+    };
+    // @format:on
 
     // Way point positions for Starting Position 3 Exit Community
+    // @format:off
     private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
     private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.8, DEGREES_180);
     private static final Pose2d S3_COM_C = new Pose2d(6.9, 5.9, DEGREES_210);
     private static final Pose2d S3_COM_D = new Pose2d(7.5, 5.5, DEGREES_255);
-
-    // Way point positions for Starting Position 3 to Game Piece 4 route
-    private static final Pose2d S3_P4_A = new Pose2d(0, 0, DEGREES_180);
-    private static final Pose2d S3_P4_B = new Pose2d(2.94, 4.58, DEGREES_180);
-    private static final Pose2d S3_P4_C = new Pose2d(4.83, 4.58, DEGREES_180);
-    private static final Pose2d S3_P4_D = new Pose2d(6.5, 4.58, DEGREES_180);
-    private static final Pose2d S3_P4_E = new Pose2d(6.82, 4.58, DEGREES_180);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-    // ----------------
-    // Defined Paths
-    // ----------------
-
-    // Start 1 Exit Community path
-    private static final Pose2d[] START_1_EXIT_COMMUNITY_PATH = { START_POINT_1, S1_P1_A, S1_P1_B,
-            S1_EXIT_C, S1_EXIT_POINT };
-
-    // Start 1 to Game Piece 1 path
-
-    private static final Pose2d[] START_1_TO_GAME_PIECE_1_PATH = { START_POINT_1, S1_P1_A, S1_P1_B,
-            S1_P1_C, S1_P1_D, S1_P1_E, GAME_PIECE_1 };
+    // @format:on
 
     // Start 3 Exit Community path
-
-    private static final Pose2d[] START_3_EXIT_COMMUNITY_PATH = { START_POINT_3, S3_COM_A, S3_COM_B,
-            S3_COM_C, S3_COM_D };
+    // @format:off
+    private static final Pose2d[] START_3_EXIT_COMMUNITY_PATH = {
+        START_POINT_3,
+        S3_COM_A,
+        S3_COM_B,
+        S3_COM_C,
+        S3_COM_D
+    };
+    // @format:on
 
     // Start 3 to Game Piece 4 path
-
-    private static final Pose2d[] START_3_TO_GAME_PIECE_4_PATH = { START_POINT_3, S3_COM_A,
-            S3_COM_B, S3_COM_C, S3_COM_D, GAME_PIECE_4 };
+    // @format:off
+    private static final Pose2d[] START_3_TO_GAME_PIECE_4_PATH = {
+        START_POINT_3,
+        S3_COM_A,
+        S3_COM_B,
+        S3_COM_C,
+        S3_COM_D,
+        GAME_PIECE_4
+    };
+    // @format:on
 
     // Game Piece 1 to Score Cube 1 path
-
-    private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = { GAME_PIECE_1, S1_P1_E,
-            S1_P1_D, S1_P1_C, S1_P1_B, S1_P1_A, SCORE_POINT_CUBE_1};
+    // @format:off
+    private static final Pose2d[] GAME_PIECE_1_TO_SCORE_CUBE_1_PATH = {
+        GAME_PIECE_1,
+        S1_P1_E,
+        S1_P1_D,
+        S1_P1_C,
+        S1_P1_B,
+        S1_P1_A,
+        SCORE_POINT_CUBE_1
+    };
+    // @format:on
 
     // Game Piece 4 to Score Cube 3 path
-
-    private static final Pose2d[] GAME_PIECE_4_TO_SCORE_CUBE_3_PATH = { GAME_PIECE_4, S3_COM_D,
-            S3_COM_C, S3_COM_B, S3_COM_A, SCORE_POINT_CUBE_3 };
-
+    // @format:off
+    private static final Pose2d[] GAME_PIECE_4_TO_SCORE_CUBE_3_PATH = {
+        GAME_PIECE_4,
+        S3_COM_D,
+        S3_COM_C,
+        S3_COM_B,
+        S3_COM_A,
+        SCORE_POINT_CUBE_3
+    };
     // @format:on
+
+    // --------------------
+    // End of defined paths
+    // --------------------
 
     static {
         if (RobotBase.isSimulation()) {
@@ -167,6 +240,9 @@ public class AutoRoutes {
     private final SwerveTrajectory[] leave3ToGamePiece4Traj;
     private final SwerveTrajectory[] gamePiece1ToScoreCube1Traj;
     private final SwerveTrajectory[] gamePiece4ToScoreCube3Traj;
+
+    // remove
+    // private final SwerveTrajectory[] start1ToPiece1Traj;
     // private final SwerveTrajectory[] piece1ToStart1Traj;
     // private final SwerveTrajectory[] start3ToPiece4Traj;
     // private final SwerveTrajectory[] piece4ToStart3Traj;
@@ -174,6 +250,7 @@ public class AutoRoutes {
     // private final SwerveTrajectory[] score3ToStart3Traj;
     // private final SwerveTrajectory[] start1ToScore1Traj;
     // private final SwerveTrajectory[] score1ToStart1Traj;
+    // remove
 
     public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw,
             Vision vision) {
@@ -200,6 +277,8 @@ public class AutoRoutes {
         gamePiece4ToScoreCube3Traj = new SwerveTrajectory[] {
                 makeTrajectory(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH),
                 makeTrajectory(mirror(GAME_PIECE_4_TO_SCORE_CUBE_3_PATH)) };
+
+        // remove
         // start1ToPiece1Traj = new SwerveTrajectory[] {
         // makeTrajectory(START_1_TO_GAME_PIECE_1_PATH),
         // makeTrajectory(mirror(START_1_TO_GAME_PIECE_1_PATH)) };
@@ -224,108 +303,119 @@ public class AutoRoutes {
         // score1ToStart1Traj = new SwerveTrajectory[] {
         // makeTrajectory(SCORE_1_TO_START_1),
         // makeTrajectory(mirror(SCORE_1_TO_START_1)) };
+        // remove
     }
 
-    // ----------------
-    // Commands being used in auto route selector
-    // ----------------
+    // -------------------
+    // Autonomous commands
+    // -------------------
 
     public Command scoreConeStayCmd() {
-        return scoreConeHighCmd().andThen(arm.moveSequentially(Arm.Position.TRAVEL));
+        return scoreConeHigh().andThen(armToTravel());
     }
 
     public Command leave1Cmd() {
-        return new PrintCommand("leave1").andThen(armToTravelCmd())
-                                         .alongWith(new WaitCommand(0.25).andThen(
-                                                 makeTrajectoryCommand(
-                                                         leave1Traj[trajectoryIndex()])));
+        return print("leave1").andThen(armToTravel())
+                              .alongWith(wait(0.25).andThen(
+                                      followTrajectory(leave1Traj[trajIndex()])));
     }
 
     public Command scoreLeave1Cmd() {
-        return new InstantCommand(() -> setStartingPose(START_POINT_1)).andThen(scoreConeHighCmd())
-                                                                       .andThen(leave1Cmd());
+        return setStartPose(START_POINT_1).andThen(scoreConeHigh())
+                                          .andThen(leave1Cmd());
     }
 
-    public Command scoreLeave1ToGamePiece1Cmd() {
-        return new InstantCommand(() -> setStartingPose(START_POINT_1)).andThen(scoreConeHighCmd())
-                                                                       .andThen(
-                                                                               armToTravelCmd().alongWith(
-                                                                                       leave1ToGamePiece1Cmd()))
-                                                                       .andThen(pickupCubeCmd());
+    public Command scoreConeLeave1PickupCube1Cmd() {
+        return setStartPose(START_POINT_1).andThen(scoreConeHigh())
+                                          .andThen(armToTravel().alongWith(leave1ToPiece1Traj()))
+                                          .andThen(pickupCube());
     }
 
-    public Command scoreLeave1ToGamePiece1ScoreCubeCmd() {
-        return scoreLeave1ToGamePiece1Cmd().andThen(gamePiece1ToCubeScore1Cmd());
+    public Command scoreConeLeave1PickupCube1ScoreCmd() {
+        return scoreConeLeave1PickupCube1Cmd().andThen(piece1ToCubeScore1Traj());
     }
 
     public Command leave3Cmd() {
-        return new PrintCommand("leave3").andThen(armToTravelCmd())
-                                         .alongWith(new WaitCommand(0.25).andThen(
-                                                 makeTrajectoryCommand(
-                                                         leave3Traj[trajectoryIndex()])));
+        return print("leave3").andThen(armToTravel())
+                              .alongWith(new WaitCommand(0.25).andThen(
+                                      followTrajectory(leave3Traj[trajIndex()])));
     }
 
     public Command scoreLeave3Cmd() {
-        return new InstantCommand(() -> setStartingPose(START_POINT_3)).andThen(scoreConeHighCmd())
-                                                                       .andThen(leave3Cmd());
+        return setStartPose(START_POINT_3).andThen(scoreConeHigh())
+                                          .andThen(leave3Cmd());
     }
 
     public Command scoreLeave3ToGamePiece4Cmd() {
-        return new InstantCommand(() -> setStartingPose(START_POINT_3)).andThen(scoreConeHighCmd())
-                                                                       .andThen(
-                                                                               armToTravelCmd().alongWith(
-                                                                                       leave3ToGamePiece4Cmd()))
-                                                                       .andThen(pickupCubeCmd());
+        return setStartPose(START_POINT_3).andThen(scoreConeHigh())
+                                          .andThen(armToTravel().alongWith(leave3ToPiece4Traj()))
+                                          .andThen(pickupCube());
     }
 
     public Command scoreLeave3ToGamePiece4ScoreCubeCmd() {
-        return scoreLeave3ToGamePiece4Cmd().andThen(gamePiece4ToCubeScore3Cmd());
+        return scoreLeave3ToGamePiece4Cmd().andThen(piece4ToCubeScore3Traj());
     }
 
-    // ----------------
-    // Commands that are used by (make up) auto route commands
-    // ----------------
-    private Command makeTrajectoryCommand(SwerveTrajectory trajectory) {
+    // ----------------------------------
+    // Commands that form larger commands
+    // ----------------------------------
+
+    private static Command wait(double timeSeconds) {
+        return new WaitCommand(timeSeconds);
+    }
+
+    private static Command print(String msg) {
+        return new PrintCommand(msg);
+    }
+
+    private Command followTrajectory(SwerveTrajectory trajectory) {
         return new SwerveTrajectoryCommand(swerve, trajectory, vision);
     }
 
-    public Command scoreConeHighCmd() {
-        return new PrintCommand("scoreConeHigh").andThen(
-                ScoreCommands.scoreConeHigh(arm, wrist, claw));
+    private Command setStartPose(Pose2d pose) {
+        return print("setStartPose: " + pose).andThen(new InstantCommand(() -> {
+            swerve.getPoseEstimator()
+                  .addVisionMeasurement(pose, WPIUtilJNI.now() * 1e-6, VecBuilder.fill(0, 0, 0));
+        }));
     }
 
-    public Command pickupCubeCmd() {
-        return new PrintCommand("pickupCube").andThen(ScoreCommands.pickupCubeCommand(arm, claw));
+    private Command scoreConeHigh() {
+        return print("scoreConeHigh").andThen(ScoreCommands.scoreConeHigh(arm, wrist, claw));
     }
 
-    private Command armToTravelCmd() {
-        return new PrintCommand("armToTravel").andThen(ScoreCommands.moveToTravel(arm));
+    private Command pickupCube() {
+        return print("pickupCube").andThen(ScoreCommands.pickupCubeCommand(arm, claw));
     }
 
-    public Command leave1ToGamePiece1Cmd() {
-        return new PrintCommand("leave1ToGamePiece1").andThen(
-                makeTrajectoryCommand(leave1ToGamePiece1Traj[trajectoryIndex()]));
+    private Command armToTravel() {
+        return print("armToTravel").andThen(ScoreCommands.moveToTravel(arm));
     }
 
-    public Command leave3ToGamePiece4Cmd() {
-        return new PrintCommand("leave3ToGamePiece4").andThen(
-                makeTrajectoryCommand(leave3ToGamePiece4Traj[trajectoryIndex()]));
+    private Command leave1ToPiece1Traj() {
+        return print("leave1ToGamePiece1").andThen(
+                followTrajectory(leave1ToGamePiece1Traj[trajIndex()]));
     }
 
-    public Command gamePiece1ToCubeScore1Cmd() {
-        return new PrintCommand("gamePiece1ToCubeScore1").andThen(
-                makeTrajectoryCommand(gamePiece1ToScoreCube1Traj[trajectoryIndex()]));
+    private Command leave3ToPiece4Traj() {
+        return print("leave3ToGamePiece4").andThen(
+                followTrajectory(leave3ToGamePiece4Traj[trajIndex()]));
     }
 
-    public Command gamePiece4ToCubeScore3Cmd() {
-        return new PrintCommand("gamePiece4ToCubeScore3").andThen(
-                makeTrajectoryCommand(gamePiece4ToScoreCube3Traj[trajectoryIndex()]));
+    private Command piece1ToCubeScore1Traj() {
+        return print("gamePiece1ToCubeScore1").andThen(
+                followTrajectory(gamePiece1ToScoreCube1Traj[trajIndex()]));
+    }
+
+    private Command piece4ToCubeScore3Traj() {
+        return print("gamePiece4ToCubeScore3").andThen(
+                followTrajectory(gamePiece4ToScoreCube3Traj[trajIndex()]));
     }
 
     // ----------------
-    // Helper Metods
+    // Helper Methods
     // ----------------
-    private static int trajectoryIndex() {
+
+    private static int trajIndex() {
         return DriverStation.getAlliance() == Alliance.Red ? 1 : 0;
     }
 
@@ -356,10 +446,6 @@ public class AutoRoutes {
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);
-        SwerveTrajectory[] redTrajectories = Arrays.stream(paths)
-                                                   .map(AutoRoutes::mirror)
-                                                   .map(SwerveTrajectoryGenerator::calculateTrajectory)
-                                                   .toArray(SwerveTrajectory[]::new);
         Field2d field = new Field2d();
         field.getObject("temp")
              .setPose(new Pose2d());
@@ -368,15 +454,7 @@ public class AutoRoutes {
             for (SwerveTrajectory trajectory : blueTrajectories) {
                 simulateTrajectory(field, trajectory);
             }
-            // for (SwerveTrajectory trajectory : redTrajectories) {
-            // simulateTrajectory(field, trajectory);
-            // }
         }
-    }
-
-    private void setStartingPose(Pose2d startPose) {
-        swerve.getPoseEstimator()
-              .addVisionMeasurement(startPose, WPIUtilJNI.now() * 1e-6, VecBuilder.fill(0, 0, 0));
     }
 
     private static void simulateTrajectory(Field2d field, SwerveTrajectory trajectory) {
@@ -400,183 +478,277 @@ public class AutoRoutes {
         }
     }
 
-    // ---------------
-    // ANYTHING BELOW THIS IS NOT NEEDED AT THIS TIME
-    // BUT MAY BE NEEDED AS MORE AUTO ROUTES ARE ADDED
-    // ---------------
+    // ----------------
+    // Currently unused
+    // ----------------
 
-    // @format:off
-
+    // remove
     // Start 3 Piece 4 Drive to piece
-
-    private static final Pose2d[] START_3_TO_PIECE_4 = {
-        START_POINT_3,
-        S3_P4_A,
-        S3_P4_B,
-        S3_P4_C,
-        S3_P4_D,
-        S3_P4_E,
-        GAME_PIECE_4
-    };
-
-    // Start points are in front of CONE nodes (-x, -x, +x)
-    private static final Pose2d START_POINT_2 = new Pose2d(1.81, 2.189, DEGREES_180);
-
-    private static final Pose2d SCORE_POINT_1 = new Pose2d(1.75, 1.631, DEGREES_180);
-    private static final Pose2d SCORE_POINT_2 = new Pose2d(1.75, 2.189, DEGREES_180);
-    private static final Pose2d SCORE_POINT_3 = new Pose2d(1.75, 3.84, DEGREES_180);
-
-    private static final Pose2d START_TO_SCORE_1 = new Pose2d(START_POINT_1.getX(), SCORE_POINT_1.getY(), DEGREES_180);
-    private static final Pose2d START_TO_SCORE_2 = new Pose2d(START_POINT_2.getX(), SCORE_POINT_2.getY(), DEGREES_180);
-    private static final Pose2d START_TO_SCORE_3 = new Pose2d(START_POINT_3.getX(), SCORE_POINT_3.getY(), DEGREES_180);
-
-    // private static final Pose2d GAME_PIECE_4 = new Pose2d(6.791, 4.577,
-    // DEGREES_180);
-    // Center of Charge Station From Start 2
-    private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
-    private static final Pose2d S2_CS_B = new Pose2d(2.94, 2.75, DEGREES_0);
-    private static final Pose2d S2_CS_C = new Pose2d(3.88, 2.75, DEGREES_0);
-
-    private static final Pose2d[] START_2_TO_CHARGE_STATION = {
-        S2_CS_A,
-        S2_CS_B,
-        S2_CS_C
-    };
-
-    // Go over charge station from start 2
-    private static final Pose2d S2_OCS_A = new Pose2d(1.49, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_B = new Pose2d(2.94, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_C = new Pose2d(4.19, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_D = new Pose2d(5.52, 2.75, DEGREES_0);
-    private static final Pose2d S2_OCS_E = new Pose2d(5.52, 2.75, DEGREES_180);
-    /*
-     * Define specific routes Eventually maybe add mid points to have not a
-     * sharp rotation We do not want to have each one rotating
-     */
-
-    // Temporarily turn off the formatter so we can have nice route lists.
-
-    private static final Pose2d[] START_3_TO_SCORE_3 = {
-        START_POINT_3,
-        START_TO_SCORE_3,
-        SCORE_POINT_3
-    };
-
-    private static final Pose2d[] SCORE_3_TO_START_3 = reverse(START_3_TO_SCORE_3);
-
-    private static final Pose2d[] START_1_TO_SCORE_1 = {
-        START_POINT_1,
-        START_TO_SCORE_1,
-        SCORE_POINT_1
-    };
-
-    private static final Pose2d[] SCORE_1_TO_START_1 = reverse(START_1_TO_SCORE_1);
-
-    // Piece 1 Start 1 Drive back to start
-    private static final Pose2d[] PIECE_1_TO_START_1 = { GAME_PIECE_1,
-        S1_P1_E,
-        S1_P1_D,
-        S1_P1_C,
-        S1_P1_B,
-        S1_P1_A,
-        START_POINT_1
-    };
-
-    // Piece 4 Start 3 Drive back to start
-    private static final Pose2d[] PIECE_4_TO_START_3 = {
-        GAME_PIECE_4,
-        S3_P4_E,
-        S3_P4_D,
-        S3_P4_C,
-        S3_P4_B,
-        S3_P4_A,
-        START_POINT_3
-    };
-
-    private static final Pose2d[] START_2_OVER_CHARGE_STATION = {
-        S2_OCS_A,
-        S2_OCS_B,
-        S2_OCS_C,
-        S2_OCS_D,
-        S2_OCS_E
-    };
-
+    // @format:off
+    // private static final Pose2d[] START_3_TO_PIECE_4 = {
+    //     START_POINT_3,
+    //     S3_P4_A,
+    //     S3_P4_B,
+    //     S3_P4_C,
+    //     S3_P4_D,
+    //     S3_P4_E,
+    //     GAME_PIECE_4
+    // };
     // @format:on
+    // remove
+
+    // remove
+    // This is a copy of START_POINT_2A
+    // @format:off
+    // private static final Pose2d START_POINT_2 = new Pose2d(1.81, 2.189, DEGREES_180);
+    // @format:on
+    // remove
+
+    // remove
+    // These points appear to be impossible to reach (x is too small)
+    // @format:off
+    // private static final Pose2d SCORE_POINT_1 = new Pose2d(1.75, 1.631, DEGREES_180);
+    // private static final Pose2d SCORE_POINT_2 = new Pose2d(1.75, 2.189, DEGREES_180);
+    // private static final Pose2d SCORE_POINT_3 = new Pose2d(1.75, 3.84, DEGREES_180);
+    // @format:on
+    // remove
+
+    // remove
+    // These points seem to be from when we started 18 inches back and drove up
+    // @format:off
+    // private static final Pose2d START_TO_SCORE_1 = new Pose2d(START_POINT_1.getX(), SCORE_POINT_1.getY(), DEGREES_180);
+    // private static final Pose2d START_TO_SCORE_2 = new Pose2d(START_POINT_2.getX(), SCORE_POINT_2.getY(), DEGREES_180);
+    // private static final Pose2d START_TO_SCORE_3 = new Pose2d(START_POINT_3.getX(), SCORE_POINT_3.getY(), DEGREES_180);
+    // @format:off
+    // remove
+
+    // remove
+    // This is a bad position for GAME_PIECE_4
+    // @format:off
+    // private static final Pose2d GAME_PIECE_4 = new Pose2d(6.791, 4.577, DEGREES_180);
+    // @format:on
+    // remove
+
+    // remove
+    // We can't use odometry to get up the charge station, so this is invalid
+    // Center of Charge Station From Start 2
+    // @format:off
+    // private static final Pose2d S2_CS_A = new Pose2d(1.49, 2.75, DEGREES_0);
+    // private static final Pose2d S2_CS_B = new Pose2d(2.94, 2.75, DEGREES_0);
+    // private static final Pose2d S2_CS_C = new Pose2d(3.88, 2.75, DEGREES_0);
+    // @format:on
+    // remove
+
+    // remove
+    // @format:off
+    // private static final Pose2d[] START_2_TO_CHARGE_STATION = {
+    //     S2_CS_A,
+    //     S2_CS_B,
+    //     S2_CS_C
+    // };
+    // @format:on
+    // remove
+
+    // remove
+    // Same thing, can't go over charge station with odometry
+    // Go over charge station from start 2
+    // @format:off
+    // private static final Pose2d S2_OCS_A = new Pose2d(1.49, 2.75, DEGREES_0);
+    // private static final Pose2d S2_OCS_B = new Pose2d(2.94, 2.75, DEGREES_0);
+    // private static final Pose2d S2_OCS_C = new Pose2d(4.19, 2.75, DEGREES_0);
+    // private static final Pose2d S2_OCS_D = new Pose2d(5.52, 2.75, DEGREES_0);
+    // private static final Pose2d S2_OCS_E = new Pose2d(5.52, 2.75, DEGREES_180);
+    // @format:on
+    // remove
+
+    // remove
+    // This appears to be an old route
+    // @format:off
+    // private static final Pose2d[] START_3_TO_SCORE_3 = {
+    //     START_POINT_3,
+    //     START_TO_SCORE_3,
+    //     SCORE_POINT_3
+    // };
+    // private static final Pose2d[] SCORE_3_TO_START_3 = reverse(START_3_TO_SCORE_3);
+    // @format:on
+    // remove
+
+    // remove
+    // This appears to be an old route
+    // @format:off
+    // private static final Pose2d[] START_1_TO_SCORE_1 = {
+    //     START_POINT_1,
+    //     START_TO_SCORE_1,
+    //     SCORE_POINT_1
+    // };
+    // private static final Pose2d[] SCORE_1_TO_START_1 = reverse(START_1_TO_SCORE_1);
+    // @format:on
+    // remove
+
+    // remove
+    // This appears to be an old route
+    // Piece 1 Start 1 Drive back to start
+    // @format:off
+    // private static final Pose2d[] PIECE_1_TO_START_1 = { GAME_PIECE_1,
+    //     S1_P1_E,
+    //     S1_P1_D,
+    //     S1_P1_C,
+    //     S1_P1_B,
+    //     S1_P1_A,
+    //     START_POINT_1
+    // };
+    // @format:on
+    // remove
+
+    // remove
+    // This appears to be an old route
+    // Piece 4 Start 3 Drive back to start
+    // @format:off
+    // private static final Pose2d[] PIECE_4_TO_START_3 = {
+    //     GAME_PIECE_4,
+    //     S3_P4_E,
+    //     S3_P4_D,
+    //     S3_P4_C,
+    //     S3_P4_B,
+    //     S3_P4_A,
+    //     START_POINT_3
+    // };
+    // @format:on
+    // remove
+
+    // remove
+    // Can't use odometry over the charge station
+    // @format:off
+    // private static final Pose2d[] START_2_OVER_CHARGE_STATION = {
+    //     S2_OCS_A,
+    //     S2_OCS_B,
+    //     S2_OCS_C,
+    //     S2_OCS_D,
+    //     S2_OCS_E
+    // };
+    // @format:on
+    // remove
+
+    // remove
+    // Not used
+    // public Command start3Score3() {
+    // return makeTrajectoryCommand(start3ToScore3Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command score3Start3() {
+    // return makeTrajectoryCommand(score3ToStart3Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command start1Score1() {
+    // return makeTrajectoryCommand(start1ToScore1Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command score1Start1() {
+    // return makeTrajectoryCommand(score1ToStart1Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command start1Piece1() {
+    // return makeTrajectoryCommand(start1ToPiece1Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command piece1Start1() {
+    // return makeTrajectoryCommand(piece1ToStart1Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command start3Piece4() {
+    // return makeTrajectoryCommand(start3ToPiece4Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command piece4Start3() {
+    // return makeTrajectoryCommand(piece4ToStart3Traj[trajectoryIndex()]);
+    // }
+    // remove
+
+    // Will probably use (helper)
+    // public Command scoreCubeHigh() {
+    // return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
+    // }
+
+    // remove
+    // Not used or planned
+    // public Command scoreCubeLeave1() {
+    // return scoreCubeHigh().andThen(leave1());
+    // }
+    // remove
+
+    // remove
+    // Not used or planned
+    // public Command scoreCubeLeave3() {
+    // return scoreCubeHigh().andThen(leave3());
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command scoreCubePickupCubeReturn1() {
+    // return scoreCubeHigh().andThen(start1Piece1())
+    // .andThen(pickupCube())
+    // .andThen(piece1Start1());
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command scoreConeLeave1() {
+    // return scoreConeHigh().andThen(leave1());
+    // }
+    // remove
+
+    // remove
+    // Not used
+    // public Command scoreConeLeave3() {
+    // return scoreConeHigh().andThen(leave3());
+    // }
+    // remove
+
+    // remove
+    // Not used or planned
+    // public Command scoreConePickupConeReturn1() {
+    // return scoreConeHigh().andThen(start1Piece1())
+    // .andThen(pickupCone())
+    // .andThen(piece1Start1());
+    // }
+    // remove
+
+    // remove
+    // Not used or planned
+    // public Command scoreConePickupConeReturn3() {
+    // return scoreConeHigh().andThen(start3Piece4())
+    // .andThen(pickupCone())
+    // .andThen(piece4Start3());
+    // }
+    // remove
+
+    // remove
+    // Not used (helper)
+    // private Command pickupCone() {
+    // return ScoreCommands.pickupConeCommand(arm, claw);
+    // }
+    // remove
 }
-
-// I am pretty sure that little if any of this is being
-// Do we use?
-// public Command start3Score3() {
-// return makeTrajectoryCommand(start3ToScore3Traj[trajectoryIndex()]);
-// }
-
-// public Command score3Start3() {
-// return makeTrajectoryCommand(score3ToStart3Traj[trajectoryIndex()]);
-// }
-
-// public Command start1Score1() {
-// return makeTrajectoryCommand(start1ToScore1Traj[trajectoryIndex()]);
-// }
-
-// public Command score1Start1() {
-// return makeTrajectoryCommand(score1ToStart1Traj[trajectoryIndex()]);
-// }
-
-// // public Command start1Piece1() {
-// // return makeTrajectoryCommand(start1ToPiece1Traj[trajectoryIndex()]);
-// // }
-
-// public Command piece1Start1() {
-// return makeTrajectoryCommand(piece1ToStart1Traj[trajectoryIndex()]);
-// }
-
-// public Command start3Piece4() {
-// return makeTrajectoryCommand(start3ToPiece4Traj[trajectoryIndex()]);
-// }
-
-// public Command piece4Start3() {
-// return makeTrajectoryCommand(piece4ToStart3Traj[trajectoryIndex()]);
-// }
-
-// public Command scoreCubeHigh() {
-// return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
-// }
-
-// public Command scoreCubeLeave1() {
-// return scoreCubeHigh().andThen(leave1());
-// }
-
-// public Command scoreCubeLeave3() {
-// return scoreCubeHigh().andThen(leave3());
-// }
-
-// public Command scoreCubePickupCubeReturn1() {
-// return scoreCubeHigh().andThen(start1Piece1())
-// .andThen(pickupCube())
-// .andThen(piece1Start1());
-// }
-
-// public Command scoreConeLeave1() {
-// return scoreConeHigh().andThen(leave1());
-// }
-
-// public Command scoreConeLeave3() {
-// return scoreConeHigh().andThen(leave3());
-// }
-
-// public Command scoreConePickupConeReturn1() {
-// return scoreConeHigh().andThen(start1Piece1())
-// .andThen(pickupCone())
-// .andThen(piece1Start1());
-// }
-
-// public Command scoreConePickupConeReturn3() {
-// return scoreConeHigh().andThen(start3Piece4())
-// .andThen(pickupCone())
-// .andThen(piece4Start3());
-// }
-
-// private Command pickupCone() {
-// return ScoreCommands.pickupConeCommand(arm, claw);
-// }
-// USED

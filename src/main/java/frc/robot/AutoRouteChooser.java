@@ -26,9 +26,9 @@ public class AutoRouteChooser {
         positionChooser.addOption("Leave community (1)", routes::leave1Cmd);
         positionChooser.addOption("Score cone, leave (1)", routes::scoreLeave1Cmd);
         positionChooser.addOption("Score cone, leave (1) to GP 1",
-                routes::scoreLeave1ToGamePiece1Cmd);
+                routes::scoreConeLeave1PickupCube1Cmd);
         positionChooser.addOption("Score cone, leave (1) to GP 1, Score Cube 1",
-                routes::scoreLeave1ToGamePiece1ScoreCubeCmd);
+                routes::scoreConeLeave1PickupCube1ScoreCmd);
         positionChooser.addOption("Leave community (3)", routes::leave3Cmd);
         positionChooser.addOption("Score cone, leave (3)", routes::scoreLeave3Cmd);
         positionChooser.addOption("Score cone, leave (3) to GP 4",
