@@ -77,10 +77,7 @@ public class Arm {
         return base.setAngleCommandPos(position)
                    .alongWith(elbow.setAngleCommandPos(position))
                    .alongWith(wrist.setAngleCommandPos(position))
-                   .beforeStarting(() -> {
-                       System.out.println("beforeStarting " + position);
-                       targetPosition = position;
-                   })
+                   .beforeStarting(() -> targetPosition = position)
                    .finallyDo(i -> {
                        if (!i) {
                            lastPosition = targetPosition;

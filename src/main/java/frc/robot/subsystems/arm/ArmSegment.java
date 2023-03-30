@@ -341,10 +341,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
         @Override
         public void initialize() {
-            System.out.println(
-                    "ArmSegmentPositionCommand initialize " + destinationPos + " " + name);
             setDestinationJointAngle(destinationPos);
-            System.out.println("after setDestinationJointAngle " + destinationPos + " " + name);
         }
 
         @Override

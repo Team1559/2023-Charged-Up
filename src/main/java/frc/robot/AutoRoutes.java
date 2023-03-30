@@ -287,7 +287,8 @@ public class AutoRoutes {
                                           .andThen(startArmToTravel())
                                           .andThen(leave1ToPiece1Traj())
                                           .andThen(pickupCube())
-                                          .andThen(piece1ToCubeScore1Traj());
+                                          .andThen(piece1ToCubeScore1Traj())
+                                          .andThen(scoreCubeHigh());
     }
 
     public Command leave3Cmd() {
@@ -313,7 +314,8 @@ public class AutoRoutes {
                                           .andThen(startArmToTravel())
                                           .andThen(leave3ToPiece4Traj())
                                           .andThen(pickupCube())
-                                          .andThen(piece4ToCubeScore3Traj());
+                                          .andThen(piece4ToCubeScore3Traj())
+                                          .andThen(scoreCubeHigh());
     }
 
     // ----------------------------------
@@ -341,6 +343,10 @@ public class AutoRoutes {
 
     private Command scoreConeHigh() {
         return print("scoreConeHigh").andThen(ScoreCommands.scoreConeHigh(arm, wrist, claw));
+    }
+
+    public Command scoreCubeHigh() {
+        return print("scoreCubeHigh").andThen(ScoreCommands.scoreCubeHigh(arm, wrist, claw));
     }
 
     private Command pickupCube() {
@@ -446,13 +452,4 @@ public class AutoRoutes {
             e.printStackTrace();
         }
     }
-
-    // ----------------
-    // Currently unused
-    // ----------------
-
-    // Will probably use (helper)
-    // public Command scoreCubeHigh() {
-    // return ScoreCommands.scoreCubeHigh(arm, wrist, claw);
-    // }
 }
