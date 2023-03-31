@@ -228,8 +228,7 @@ public final class Constants {
         }
 
         public static class Auto {
-                public static final double MAXIMUM_LINEAR_VELOCITY  = 0.50
-                                * Swerve.MAXIMUM_LINEAR_VELOCITY;
+                public static final double MAXIMUM_LINEAR_VELOCITY  = 1.5;
                 public static final double MAXIMUM_ANGULAR_VELOCITY = 1 * Math.PI;
 
                 public static final double ACCELERATION_TIME            = 0.5;
