@@ -154,10 +154,12 @@ public abstract class ArmSegment extends SubsystemBase {
     public double calculateAccelCompensation(Translation2d totalCenterOfMass) {
         short[] accels = new short[3];
         imu.getBiasedAccelerometer(accels);
-        double accel = accels[0] / 16384.0;
+        double accel = accels[0] / 16384.0 * GRAVITY_ACCELERATION;
+        SmartDashboard.putNumber(name + "AccelX", accel);
         double torqueRequired = -accel * getHigherMass() * totalCenterOfMass.getAngle()
                                                                             .getSin();
-        return torqueRequired / stallTorque;
+        SmartDashboard.putNumber(name + "AccelCompTorque", torqueRequired);
+        return torqueRequired * 1.0 / stallTorque;
     }
 
     public double calculateKG(Translation2d totalCenterOfMass) {
