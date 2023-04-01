@@ -24,7 +24,7 @@ public class Arm {
         TRAVEL(100.4, -122.5, -78, false),
         GAME_START(100, -149, -27, false),
         PICKUP_CONE(100.4, -146, -33, false),
-        PICKUP_CUBE(100.4, -138, -47, false);
+        PICKUP_CUBE(100.4, -140, -45, false);
 
         public final double base;
         public final double elbow;
