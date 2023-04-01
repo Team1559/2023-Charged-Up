@@ -19,6 +19,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -54,6 +55,7 @@ public abstract class ArmSegment extends SubsystemBase {
     private double       speed;
     private double       stopAccelPoint;
     private double       decelPoint;
+    private MedianFilter accelFilter;
 
     public ArmSegment(String name, int motorID, int cancoderID, Pigeon2 imu, double kp, double ki,
             double kd, double izone, double gearRatio, double efficiency, double maxVelocity,
@@ -70,6 +72,7 @@ public abstract class ArmSegment extends SubsystemBase {
         this.centerOfMass = centerOfMass;
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
         this.imu = imu;
+        this.accelFilter = new MedianFilter(13);
 
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
@@ -155,9 +158,10 @@ public abstract class ArmSegment extends SubsystemBase {
         short[] accels = new short[3];
         imu.getBiasedAccelerometer(accels);
         double accel = accels[0] / 16384.0 * GRAVITY_ACCELERATION;
+        double filteredAccel = accelFilter.calculate(accel);
         SmartDashboard.putNumber(name + "AccelX", accel);
-        double torqueRequired = -accel * getHigherMass() * totalCenterOfMass.getAngle()
-                                                                            .getSin();
+        double torqueRequired = -filteredAccel * getHigherMass() * totalCenterOfMass.getAngle()
+                                                                                    .getSin();
         SmartDashboard.putNumber(name + "AccelCompTorque", torqueRequired);
         return torqueRequired * 1.0 / stallTorque;
     }
