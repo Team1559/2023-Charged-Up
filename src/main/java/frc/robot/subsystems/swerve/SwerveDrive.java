@@ -78,7 +78,8 @@ public class SwerveDrive extends SubsystemBase {
         field2d = new Field2d();
         SmartDashboard.putData(field2d);
 
-        gyro.configFactoryDefault();
+        
+        // gyro.configFactoryDefault();
     }
 
     public void setStates(SwerveModuleState... states) {
@@ -142,7 +143,7 @@ public class SwerveDrive extends SubsystemBase {
         // Else: command 0
         boolean setpointSet = !Double.isNaN(rPIDSetpoint);
         boolean rotating = Math.abs(gyroDataArray[0]) >= 5;
-        if (DriverStation.isTeleop() || !VISION_ENABLED) {
+        if (DriverStation.isTeleopEnabled() || !VISION_ENABLED) {
             rPIDSetpoint = Double.NaN;
             // vr = vr;
         } else if (setpointSet || !rotating) {
@@ -238,6 +239,14 @@ public class SwerveDrive extends SubsystemBase {
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
+    public double getGyroPitchDegrees() {
+        return -gyro.getPitch();
+    }
+
+    public double getGyroPitchVelocity() {
+        return -gyroDataArray[1];
+    }
+
     /**
      * @return the {@link SwerveDrivePoseEstimator} used to calculate odometry
      */
@@ -307,7 +316,8 @@ public class SwerveDrive extends SubsystemBase {
                                                        .getDegrees());
         SmartDashboard.putNumber("Yaw", gyro.getYaw());
         SmartDashboard.putNumber("Roll", gyro.getRoll());
-        SmartDashboard.putNumber("Pitch", gyro.getPitch());
+        SmartDashboard.putNumber("Pitch", getGyroPitchDegrees());
+        SmartDashboard.putNumber("Pitch velocty", getGyroPitchVelocity());
     }
 
     /**

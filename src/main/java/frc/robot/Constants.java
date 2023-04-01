@@ -115,7 +115,7 @@ public final class Constants {
         public static final double MODULE_STEER_KP = 0.22;
         public static final double MODULE_STEER_KD = 0.1;
 
-        public static final double ROTATION_KP             = 12;
+        public static final double ROTATION_KP             = 10;
         public static final double ENCODER_STDDEV          = 0.01;
         public static final double ROTATION_SNAP_THRESHOLD = 5;
     }

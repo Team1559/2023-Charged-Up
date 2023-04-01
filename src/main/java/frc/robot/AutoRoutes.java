@@ -20,9 +20,12 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.lib.SwerveTrajectory;
 import frc.lib.SwerveTrajectoryGenerator;
 
+import frc.robot.commands.BalanceChargeStationCommands;
 import frc.robot.commands.ScoreCommands;
+import frc.robot.commands.SwerveDriveRotate180Command;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.subsystems.arm.Arm;
+import frc.robot.subsystems.arm.Arm.Position;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -307,6 +310,22 @@ public class AutoRoutes {
     // Autonomous commands
     // -------------------
 
+    // @format:off
+    // ----------------
+    // Commands being used in auto route selector
+    // ----------------
+    
+    public Command balanceChargeStationCmd() {
+        return arm.moveSequentially(Position.TRAVEL).andThen(BalanceChargeStationCommands.autoBalanceCommand(swerve));
+    }
+
+    public Command goOverChargeStationThenBalanceCmd() {
+        return arm.moveSequentially(Position.TRAVEL)
+        .andThen(BalanceChargeStationCommands.driveOverChargeStation(swerve))
+        .andThen(rotate180(true))
+        .andThen(BalanceChargeStationCommands.autoBalanceCommand(swerve));
+    }
+
     public Command scoreConeStayCmd() {
         return scoreConeHigh().andThen(moveToTravelImmediate());
     }
@@ -381,6 +400,10 @@ public class AutoRoutes {
 
     private Command followTrajectory(SwerveTrajectory trajectory) {
         return new SwerveTrajectoryCommand(swerve, trajectory, vision);
+    }
+
+    private Command rotate180(boolean turnRight) {
+        return new PrintCommand("rotate180").alongWith(new SwerveDriveRotate180Command(swerve, turnRight));
     }
 
     private Command setStartPose(Pose2d pose) {

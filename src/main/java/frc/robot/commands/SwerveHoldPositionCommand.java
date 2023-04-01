@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -20,5 +21,10 @@ public class SwerveHoldPositionCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         swerve.stopDriving();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return DriverStation.isDisabled();
     }
 }
