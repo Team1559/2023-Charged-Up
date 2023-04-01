@@ -4,12 +4,14 @@ import static frc.robot.Constants.Arm.*;
 import static frc.robot.Constants.Wiring.ARM_MOTOR_ID_BASE;
 import static frc.robot.Constants.Wiring.BASE_CANCODER_ID;
 
+import com.ctre.phoenix.sensors.Pigeon2;
+
 import frc.robot.subsystems.arm.Arm.Position;
 
 public class ArmBase extends ArmSegment {
 
-    public ArmBase() {
-        super("Base", ARM_MOTOR_ID_BASE, BASE_CANCODER_ID, kP_BASE, kI_BASE, kD_BASE, kIZ_BASE,
+    public ArmBase(Pigeon2 imu) {
+        super("Base", ARM_MOTOR_ID_BASE, BASE_CANCODER_ID, imu, kP_BASE, kI_BASE, kD_BASE, kIZ_BASE,
                 INV_GEAR_RATIO_BASE, BASE_SEGMENT_EFFICIENCY, MAXIMUM_VELOCITY_BASE,
                 ACCELERATION_BASE, DECELERATION_BASE, BASE_SEGMENT_MASS, BASE_SEGMENT_LENGTH,
                 BASE_SEGMENT_CENTER_OF_MASS, false, LOWER_BASE_LIMIT, UPPER_BASE_LIMIT,
