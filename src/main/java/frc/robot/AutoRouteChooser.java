@@ -21,20 +21,20 @@ public class AutoRouteChooser {
     }
 
     private void addOptions() {
-        positionChooser.setDefaultOption("Do Nothing (1)", NullCommand::new);
-        positionChooser.addOption("Score cone, stay", routes::scoreConeStayCmd);
-        positionChooser.addOption("Leave community (1)", routes::leave1Cmd);
-        positionChooser.addOption("Score cone, leave (1)", routes::scoreLeave1Cmd);
-        positionChooser.addOption("Score cone, leave (1) to GP 1",
-                routes::scoreLeave1ToGamePiece1Cmd);
-        positionChooser.addOption("Score cone, leave (1) to GP 1, Score Cube 1",
-                routes::scoreLeave1ToGamePiece1ScoreCubeCmd);
-        positionChooser.addOption("Leave community (3)", routes::leave3Cmd);
-        positionChooser.addOption("Score cone, leave (3)", routes::scoreLeave3Cmd);
-        positionChooser.addOption("Score cone, leave (3) to GP 4",
-                routes::scoreLeave3ToGamePiece4Cmd);
-        positionChooser.addOption("Score cone, leave (3) to GP 4, Score Cube 3",
-                routes::scoreLeave3ToGamePiece4ScoreCubeCmd);
+        positionChooser.setDefaultOption("Do nothing", NullCommand::new);
+        positionChooser.addOption("Score cone", routes::scoreConeStayCmd);
+        positionChooser.addOption("Leave (1)", routes::leave1Cmd);
+        positionChooser.addOption("Score cone, leave (1)", routes::scoreConeLeave1Cmd);
+        positionChooser.addOption("Score cone, leave (1), pickup cube (1)",
+                routes::scoreConeLeave1PickupCube1Cmd);
+        positionChooser.addOption("Score cone, leave (1), pickup cube (1), score (1)",
+                routes::scoreConeLeave1PickupCube1ScoreCmd);
+        positionChooser.addOption("Leave (3)", routes::leave3Cmd);
+        positionChooser.addOption("Score cone, leave (3)", routes::scoreConeLeave3Cmd);
+        positionChooser.addOption("Score cone, leave (3), pickup cube (4)",
+                routes::scoreConeLeave3PickupCube4Cmd);
+        positionChooser.addOption("Score cone, leave (3), pickup cube (4), score (3)",
+                routes::scoreConeLeave3PickupCube4ScoreCmd);
     }
 
     public Command getSelectedCommand() {

@@ -41,5 +41,6 @@
         "",
         "frc.lib",
         "frc.robot"
-    ]
+    ],
+    "editor.detectIndentation": false
 }

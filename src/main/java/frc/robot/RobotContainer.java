@@ -113,6 +113,8 @@ public class RobotContainer {
         autoRouteChooser = new AutoRouteChooser(autoRoutes);
 
         configureBindings();
+
+        Class c = AutoRoutes.class;
     }
 
     /**
@@ -128,33 +130,38 @@ public class RobotContainer {
      * joysticks}.
      */
     private enum Piece {
-        CONE,
-        CUBE
+        NOT_PRESSED,
+        PRESSED
     }
 
     private Piece selectModifier() {
-        return controller1.getLeftBumper() ? Piece.CUBE : Piece.CONE;
+        return controller1.getLeftBumper() ? Piece.PRESSED : Piece.NOT_PRESSED;
     }
 
     private void configureBindings() {
         if (ARM_ENABLED) {
             controller1.yButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeHigh(arm, wrist)),
-                            Map.entry(Piece.CUBE, ScoreCommands.moveToCubeHigh(arm, wrist))),
+                    Map.ofEntries(
+                            Map.entry(Piece.NOT_PRESSED, ScoreCommands.moveToConeHigh(arm, wrist)),
+                            Map.entry(Piece.PRESSED, ScoreCommands.moveToCubeHigh(arm, wrist))),
                     this::selectModifier));
             controller1.xButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeMid(arm, wrist)),
-                            Map.entry(Piece.CUBE, ScoreCommands.moveToCubeMid(arm, wrist))),
+                    Map.ofEntries(
+                            Map.entry(Piece.NOT_PRESSED, ScoreCommands.moveToConeMid(arm, wrist)),
+                            Map.entry(Piece.PRESSED, ScoreCommands.moveToCubeMid(arm, wrist))),
                     this::selectModifier));
             controller1.bButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToConeLow(arm, wrist)),
-                            Map.entry(Piece.CUBE, ScoreCommands.moveToCubeLow(arm, wrist))),
+                    Map.ofEntries(
+                            Map.entry(Piece.NOT_PRESSED, ScoreCommands.moveToConeLow(arm, wrist)),
+                            Map.entry(Piece.PRESSED, ScoreCommands.moveToCubeLow(arm, wrist))),
                     this::selectModifier));
-            controller1.aButton.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.moveToTravel(arm)),
-                            Map.entry(Piece.CUBE, arm.moveToPosition(Arm.Position.TRAVEL))),
-                    this::selectModifier));
-            // controller1.aButton.onTrue(ScoreCommands.moveToTravel(arm));
+            controller1.aButton.onTrue(
+                    new SelectCommand(
+                            Map.ofEntries(
+                                    Map.entry(Piece.NOT_PRESSED,
+                                            arm.moveToPosition(Arm.Position.TRAVEL)),
+                                    Map.entry(Piece.PRESSED, ScoreCommands.moveToTravel(arm))),
+                            this::selectModifier));
             controller1.startButton.onTrue(arm.armPanicCommand());
         }
 
@@ -167,8 +174,10 @@ public class RobotContainer {
 
         if (GRABBER_ENABLED && ARM_ENABLED) {
             controller1.rightBumper.onTrue(new SelectCommand(
-                    Map.ofEntries(Map.entry(Piece.CONE, ScoreCommands.pickupConeCommand(arm, claw)),
-                            Map.entry(Piece.CUBE, ScoreCommands.pickupCubeCommand(arm, claw))),
+                    Map.ofEntries(
+                            Map.entry(Piece.NOT_PRESSED,
+                                    ScoreCommands.pickupConeCommand(arm, claw)),
+                            Map.entry(Piece.PRESSED, ScoreCommands.pickupCubeCommand(arm, claw))),
                     this::selectModifier));
         }
 
@@ -181,7 +190,7 @@ public class RobotContainer {
 
         CommandScheduler.getInstance()
                         .schedule(new RunCommand(() -> SmartDashboard.putBoolean("Cube modifier",
-                                selectModifier() == Piece.CUBE)));
+                                selectModifier() == Piece.PRESSED)));
     }
 
     /**
@@ -190,11 +199,12 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new WaitCommand(.5).andThen(arm.moveSequentially(Arm.Position.TRAVEL))
-                                  .andThen(autoRouteChooser.getSelectedCommand());
+        return autoRouteChooser.getSelectedCommand();
     }
 
     public void swerveInit() {
-        swerve.initialize();
+        if (CHASSIS_ENABLED) {
+            swerve.initialize();
+        }
     }
 }

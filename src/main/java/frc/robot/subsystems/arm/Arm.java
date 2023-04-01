@@ -77,10 +77,7 @@ public class Arm {
         return base.setAngleCommandPos(position)
                    .alongWith(elbow.setAngleCommandPos(position))
                    .alongWith(wrist.setAngleCommandPos(position))
-                   .beforeStarting(() -> {
-                       System.out.println("beforeStarting " + position);
-                       targetPosition = position;
-                   })
+                   .beforeStarting(() -> targetPosition = position)
                    .finallyDo(i -> {
                        if (!i) {
                            lastPosition = targetPosition;
@@ -99,7 +96,8 @@ public class Arm {
                 Map.ofEntries(Map.entry(true, moveToLocations(Position.WAYPOINT, position)),
                         Map.entry(false, moveToPosition(position))),
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position)
-                                   .withTimeout(10);
+                                   .andThen(new WaitCommand(0.5))
+                                   .withTimeout(7);
     }
 
     public void armPanic() {

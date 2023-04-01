@@ -257,9 +257,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
     public void armPanic() {
         motor.neutralOutput();
-        isSetPointCommanded = false;
-        setpointJointAngle = getJointAngle();
-        target = setpointJointAngle;
+        forgetEverything();
     }
 
     protected abstract double getTargetAngle(Arm.Position position);
@@ -282,12 +280,18 @@ public abstract class ArmSegment extends SubsystemBase {
         return isAtPosition;
     }
 
+    private void forgetEverything() {
+        isSetPointCommanded = false;
+        setpointJointAngle = getJointAngle();
+        target = setpointJointAngle;
+        speed = 0;
+        accel = 0;
+    }
+
     @Override
     public void periodic() {
         if (DriverStation.isDisabled()) {
-            isSetPointCommanded = false;
-            setpointJointAngle = getJointAngle();
-            target = setpointJointAngle;
+            forgetEverything();
         }
         double velo = 0;
         if (isSetPointCommanded) {
@@ -354,10 +358,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
         @Override
         public void initialize() {
-            System.out.println(
-                    "ArmSegmentPositionCommand initialize " + destinationPos + " " + name);
             setDestinationJointAngle(destinationPos);
-            System.out.println("after setDestinationJointAngle " + destinationPos + " " + name);
         }
 
         @Override
