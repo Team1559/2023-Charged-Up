@@ -71,7 +71,8 @@ public class AutoRoutes {
     private static final Pose2d GAME_PIECE_1 = new Pose2d(6.79, 0.92, DEGREES_360);
     private static final Pose2d GAME_PIECE_2 = new Pose2d(6.79, 2.14, DEGREES_0);
     private static final Pose2d GAME_PIECE_3 = new Pose2d(6.79, 3.36, DEGREES_0);
-    private static final Pose2d GAME_PIECE_4 = new Pose2d(7.05, 4.35, DEGREES_255);
+    //private static final Pose2d GAME_PIECE_4 = new Pose2d(7.05, 4.35, DEGREES_255);
+    private static final Pose2d GAME_PIECE_4 = new Pose2d(7.4, 5.1, DEGREES_240);
 
     private static final Pose2d CHARGING_STATION_CENTER = new Pose2d(3.90, 2.75, DEGREES_0);
 
@@ -184,16 +185,24 @@ public class AutoRoutes {
     private static final Pose2d S3_COM_A = new Pose2d(2.26, 4.72, DEGREES_180);
     private static final Pose2d S3_COM_B = new Pose2d(4.25, 4.80, DEGREES_180);
     private static final Pose2d S3_COM_C = new Pose2d(6.90, 5.90, DEGREES_210);
-    private static final Pose2d S3_COM_D = new Pose2d(7.80, 5.50, DEGREES_240);
+    private static final Pose2d S3_COM_D = new Pose2d(7.80, 5.50, DEGREES_255);
 
-    private static final Pose2d S3_COM_E = new Pose2d(6.50, 4.3, DEGREES_225);
-    private static final Pose2d S3_COM_E1 = new Pose2d(6.30, 4.5, DEGREES_210);
-    private static final Pose2d S3_COM_F = new Pose2d(6.10, 4.60, DEGREES_195);
-    private static final Pose2d S3_COM_F1 = new Pose2d(5.9, 4.65, DEGREES_210);
-    private static final Pose2d S3_COM_G = new Pose2d(5.70, 4.70, DEGREES_195);
-    private static final Pose2d S3_COM_G1 = new Pose2d(5.50, 4.75, DEGREES_195);
-    private static final Pose2d S3_COM_H = new Pose2d(5.30, 4.80, DEGREES_180);
-    private static final Pose2d S3_COM_I = new Pose2d(2.4, 4.72, DEGREES_180);
+    //private static final Pose2d S3_COM_E = new Pose2d(6.50, 4.3, DEGREES_225);
+    //private static final Pose2d S3_COM_E1 = new Pose2d(6.30, 4.5, DEGREES_210);
+    //private static final Pose2d S3_COM_F = new Pose2d(6.10, 4.60, DEGREES_195);
+    //private static final Pose2d S3_COM_F1 = new Pose2d(5.9, 4.65, DEGREES_210);
+    //private static final Pose2d S3_COM_G = new Pose2d(5.70, 4.70, DEGREES_195);
+    //private static final Pose2d S3_COM_G1 = new Pose2d(5.50, 4.75, DEGREES_195);
+    //private static final Pose2d S3_COM_H = new Pose2d(5.30, 4.80, DEGREES_180);
+    //private static final Pose2d S3_COM_I = new Pose2d(2.4, 4.72, DEGREES_180);
+    private static final Pose2d S3_COM_E = new Pose2d(7.1, 4.6, DEGREES_225);
+    private static final Pose2d S3_COM_F = new Pose2d(6.9, 4.4, DEGREES_210);
+    private static final Pose2d S3_COM_G = new Pose2d(6.6, 4.3, DEGREES_180);
+    private static final Pose2d S3_COM_H = new Pose2d(6.3, 4.45, DEGREES_165);
+    private static final Pose2d S3_COM_I = new Pose2d(6.05, 4.65, DEGREES_150);
+    private static final Pose2d S3_COM_J = new Pose2d(5.8, 4.75, DEGREES_165);
+    private static final Pose2d S3_COM_K = new Pose2d(5.3, 4.8, DEGREES_180);
+    private static final Pose2d S3_COM_L = new Pose2d(2.4, 4.72, DEGREES_180);
     // @format:on
 
     // Start 3 Exit Community path
@@ -213,8 +222,7 @@ public class AutoRoutes {
         START_POINT_3,
         S3_COM_A,
         S3_COM_B,
-        S3_COM_C,
-        S3_COM_D
+        S3_COM_C
     };
     // @format:on
 
@@ -233,17 +241,31 @@ public class AutoRoutes {
 
     // Game Piece 4 to Score Cube 3 path
     // @format:off
+    //private static final Pose2d[] PIECE_4_TO_SCORE_CUBE_3_PATH = {
+    //    S3_COM_D,
+    //    GAME_PIECE_4,
+    //    S3_COM_E,
+    //    S3_COM_E1,
+    //    S3_COM_F,
+    //    S3_COM_F1,
+    //    S3_COM_G,
+    //    S3_COM_G1,
+    //    S3_COM_H,
+    //    S3_COM_I,
+    //    SCORE_POINT_CUBE_3
+    //};
     private static final Pose2d[] PIECE_4_TO_SCORE_CUBE_3_PATH = {
+        S3_COM_C,
         S3_COM_D,
         GAME_PIECE_4,
         S3_COM_E,
-        S3_COM_E1,
         S3_COM_F,
-        S3_COM_F1,
         S3_COM_G,
-        S3_COM_G1,
         S3_COM_H,
         S3_COM_I,
+        S3_COM_J,
+        S3_COM_K,
+        S3_COM_L,
         SCORE_POINT_CUBE_3
     };
 
@@ -477,7 +499,7 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { PIECE_1_TO_SCORE_CUBE_1_PATH };
+        Pose2d[][] paths = { PIECE_4_TO_SCORE_CUBE_3_PATH };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);
