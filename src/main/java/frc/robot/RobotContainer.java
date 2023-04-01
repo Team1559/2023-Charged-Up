@@ -8,8 +8,12 @@ import static frc.robot.Constants.FeatureFlags.ARM_ENABLED;
 import static frc.robot.Constants.FeatureFlags.CHASSIS_ENABLED;
 import static frc.robot.Constants.FeatureFlags.GRABBER_ENABLED;
 import static frc.robot.Constants.FeatureFlags.VISION_ENABLED;
+import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
+import static frc.robot.Constants.Wiring.PIGEON_IMU;
 
 import java.util.Map;
+
+import com.ctre.phoenix.sensors.Pigeon2;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -63,11 +67,12 @@ public class RobotContainer {
     public RobotContainer() {
         controller0 = new DTXboxController(0);
         controller1 = new DTXboxController(1);
+        Pigeon2 imu = new Pigeon2(PIGEON_IMU, CANIVORE_BUS_ID);
 
         if (ARM_ENABLED) {
-            base = new ArmBase();
-            elbow = new ArmElbow();
-            armWrist = new ArmWrist();
+            base = new ArmBase(imu);
+            elbow = new ArmElbow(imu);
+            armWrist = new ArmWrist(imu);
             base.setHigherSegment(elbow);
             elbow.setLowerSegment(base);
             elbow.setHigherSegment(armWrist);
@@ -81,7 +86,7 @@ public class RobotContainer {
         }
 
         if (CHASSIS_ENABLED) {
-            swerve = new SwerveDrive();
+            swerve = new SwerveDrive(imu);
         } else {
             swerve = null;
         }

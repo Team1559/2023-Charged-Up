@@ -10,8 +10,6 @@ import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_Y;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
 import static frc.robot.Constants.Swerve.ROTATION_KP;
-import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
-import static frc.robot.Constants.Wiring.PIGEON_IMU;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
@@ -48,7 +46,7 @@ public class SwerveDrive extends SubsystemBase {
     private double                         lastVY;
     private double                         lastVR;
 
-    public SwerveDrive() {
+    public SwerveDrive(Pigeon2 gyro) {
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
@@ -59,7 +57,7 @@ public class SwerveDrive extends SubsystemBase {
             modules[i] = new SwerveModule(i);
             modulePositions[i] = modules[i].getCurrentPosition();
         }
-        gyro = new Pigeon2(PIGEON_IMU, CANIVORE_BUS_ID);
+        this.gyro = gyro;
 
         // Control software
         kinematics = new SwerveDriveKinematics(new Translation2d(MODULE_X, MODULE_Y),

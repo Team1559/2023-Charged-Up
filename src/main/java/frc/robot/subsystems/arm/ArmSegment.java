@@ -16,6 +16,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,6 +34,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
     private final TalonFX  motor;
     private final CANCoder canCoder;
+    private Pigeon2        imu;
 
     private final Translation2d centerOfMass;
     private final double        mass;
@@ -53,8 +55,8 @@ public abstract class ArmSegment extends SubsystemBase {
     private double       stopAccelPoint;
     private double       decelPoint;
 
-    public ArmSegment(String name, int motorID, int cancoderID, double kp, double ki, double kd,
-            double izone, double gearRatio, double efficiency, double maxVelocity,
+    public ArmSegment(String name, int motorID, int cancoderID, Pigeon2 imu, double kp, double ki,
+            double kd, double izone, double gearRatio, double efficiency, double maxVelocity,
             double acceleration, double deceleration, double mass, double length,
             Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
             double closedLoopErrorValue) {
@@ -67,6 +69,7 @@ public abstract class ArmSegment extends SubsystemBase {
         this.length = length;
         this.centerOfMass = centerOfMass;
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
+        this.imu = imu;
 
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
@@ -148,6 +151,15 @@ public abstract class ArmSegment extends SubsystemBase {
         return centerOfMassCalc;
     }
 
+    public double calculateAccelCompensation(Translation2d totalCenterOfMass) {
+        short[] accels = new short[3];
+        imu.getBiasedAccelerometer(accels);
+        double accel = accels[0] / 16384.0;
+        double torqueRequired = -accel * getHigherMass() * totalCenterOfMass.getAngle()
+                                                                            .getSin();
+        return torqueRequired / stallTorque;
+    }
+
     public double calculateKG(Translation2d totalCenterOfMass) {
         double torqueRequired = getHigherMass() * GRAVITY_ACCELERATION
                 * totalCenterOfMass.getNorm();
@@ -167,8 +179,9 @@ public abstract class ArmSegment extends SubsystemBase {
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
-        return (kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
-                                                                          .getCos());
+        double accelComp = calculateAccelCompensation(totalCenterOfMass);
+        return (accelComp + kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
+                                                                                      .getCos());
     }
 
     public Arm.Position getTargetPosition() {
