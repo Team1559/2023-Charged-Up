@@ -109,7 +109,7 @@ public final class Constants {
                 / 360;
         public static final double TICKS_TO_DEGREES = 1 / DEGREES_TO_TICKS;
 
-        public static final double[] CANCODER_OFFSETS = { 70.9, 44.5, 92.9, 180.7 };
+        public static final double[] CANCODER_OFFSETS = { 73.3, 44.5, 93.2, 181.4 };
 
         public static final double MODULE_DRIVE_KP = 0.05;
         public static final double MODULE_STEER_KP = 0.22;
