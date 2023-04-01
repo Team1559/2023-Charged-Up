@@ -13,7 +13,8 @@ public class SwerveDrivePidBalanceCommand extends CommandBase {
     private double            integralAccumulator;
     private int               triggerCycleCount;
 
-    public SwerveDrivePidBalanceCommand(SwerveDrive swerve, double kP, double kI, double kD, int cycleThreshold) {
+    public SwerveDrivePidBalanceCommand(SwerveDrive swerve, double kP, double kI, double kD,
+            int cycleThreshold) {
         addRequirements(swerve);
         this.swerve = swerve;
         this.kP = kP;
@@ -40,7 +41,11 @@ public class SwerveDrivePidBalanceCommand extends CommandBase {
             triggerCycleCount = 0;
         }
 
-        integralAccumulator += pitch;
+        if (Math.abs(pitch) < 5) {
+            integralAccumulator += pitch;
+        } else {
+            integralAccumulator = 0;
+        }
         double outputVelocity = pitch * kP + integralAccumulator * kI + pitchVelocity * kD;
         swerve.driveVelocity(outputVelocity, 0, 0);
     }

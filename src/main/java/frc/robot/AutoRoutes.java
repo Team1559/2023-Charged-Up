@@ -22,6 +22,7 @@ import frc.lib.SwerveTrajectoryGenerator;
 
 import frc.robot.commands.BalanceChargeStationCommands;
 import frc.robot.commands.ScoreCommands;
+import frc.robot.commands.SwerveDriveRotate180Command;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.subsystems.arm.Arm;
 import frc.robot.subsystems.arm.Arm.Position;
@@ -264,9 +265,16 @@ public class AutoRoutes {
     // ----------------
     // Commands being used in auto route selector
     // ----------------
-
+    
     public Command balanceChargeStationCmd() {
         return arm.moveSequentially(Position.TRAVEL).andThen(BalanceChargeStationCommands.autoBalanceCommand(swerve));
+    }
+
+    public Command goOverChargeStationThenBalanceCmd() {
+        return arm.moveSequentially(Position.TRAVEL)
+        .andThen(BalanceChargeStationCommands.driveOverChargeStation(swerve))
+        .andThen(rotate180(true))
+        .andThen(BalanceChargeStationCommands.autoBalanceCommand(swerve));
     }
 
     public Command scoreConeStayCmd() {
@@ -278,7 +286,7 @@ public class AutoRoutes {
 
     public Command leave1Cmd() {
         return new PrintCommand("leave1")
-                .andThen(makeTrajectoryCommand(leave1Traj[trajectoryIndex()]));
+                .alongWith(makeTrajectoryCommand(leave1Traj[trajectoryIndex()]));
     }
 
     public Command scoreLeave1Cmd() {
@@ -304,7 +312,7 @@ public class AutoRoutes {
     }
 
     public Command leave3Cmd() {
-        return new PrintCommand("leave3").andThen(
+        return new PrintCommand("leave3").alongWith(
                 makeTrajectoryCommand(leave3Traj[trajectoryIndex()]));
     }
 
@@ -336,39 +344,43 @@ public class AutoRoutes {
         return new SwerveTrajectoryCommand(swerve, trajectory, vision);
     }
 
-    public Command scoreConeHighCmd() {
-        return new PrintCommand("scoreConeHigh")
-                .andThen(ScoreCommands.scoreConeHigh(arm, wrist, claw));
+    private Command rotate180(boolean turnRight) {
+        return new PrintCommand("rotate180").alongWith(new SwerveDriveRotate180Command(swerve, turnRight));
     }
 
-    public Command pickupCubeCmd() {
+    private Command scoreConeHighCmd() {
+        return new PrintCommand("scoreConeHigh")
+                .alongWith(ScoreCommands.scoreConeHigh(arm, wrist, claw));
+    }
+
+    private Command pickupCubeCmd() {
         return new PrintCommand("pickupCube")
-                .andThen(ScoreCommands.pickupCubeCommand(arm, claw));
+                .alongWith(ScoreCommands.pickupCubeCommand(arm, claw));
     }
 
     private Command armToTravelCmd() {
         return new PrintCommand("armToTravel")
-                .andThen(ScoreCommands.moveToTravel(arm));
+                .alongWith(ScoreCommands.moveToTravel(arm));
     }
 
-    public Command leave1ToGamePiece1Cmd() {
+    private Command leave1ToGamePiece1Cmd() {
         return new PrintCommand("leave1ToGamePiece1")
-                .andThen(makeTrajectoryCommand(leave1ToGamePiece1Traj[trajectoryIndex()]));
+                .alongWith(makeTrajectoryCommand(leave1ToGamePiece1Traj[trajectoryIndex()]));
     }
 
-    public Command leave3ToGamePiece4Cmd() {
+    private Command leave3ToGamePiece4Cmd() {
         return new PrintCommand("leave3ToGamePiece4")
-                .andThen(makeTrajectoryCommand(leave3ToGamePiece4Traj[trajectoryIndex()]));
+                .alongWith(makeTrajectoryCommand(leave3ToGamePiece4Traj[trajectoryIndex()]));
     }
 
-    public Command gamePiece1ToCubeScore1Cmd() {
+    private Command gamePiece1ToCubeScore1Cmd() {
         return new PrintCommand("gamePiece1ToCubeScore1")
-                .andThen(makeTrajectoryCommand(gamePiece1ToScoreCube1Traj[trajectoryIndex()]));
+                .alongWith(makeTrajectoryCommand(gamePiece1ToScoreCube1Traj[trajectoryIndex()]));
     }
 
-    public Command gamePiece4ToCubeScore3Cmd() {
+    private Command gamePiece4ToCubeScore3Cmd() {
         return new PrintCommand("gamePiece4ToCubeScore3")
-                .andThen(makeTrajectoryCommand(gamePiece4ToScoreCube3Traj[trajectoryIndex()]));
+                .alongWith(makeTrajectoryCommand(gamePiece4ToScoreCube3Traj[trajectoryIndex()]));
     }
 
 

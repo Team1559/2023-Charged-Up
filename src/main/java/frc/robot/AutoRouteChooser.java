@@ -9,8 +9,6 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 import frc.lib.NullCommand;
 
-import frc.robot.commands.BalanceChargeStationCommands;
-
 public class AutoRouteChooser {
     private final AutoRoutes                         routes;
     private final SendableChooser<Supplier<Command>> positionChooser;
@@ -38,6 +36,7 @@ public class AutoRouteChooser {
         positionChooser.addOption("Score cone, leave (3) to GP 4, Score Cube 3",
                 routes::scoreLeave3ToGamePiece4ScoreCubeCmd);
         positionChooser.addOption("Auto balance", routes::balanceChargeStationCmd);
+        positionChooser.addOption("Go over and balance", routes::goOverChargeStationThenBalanceCmd);
     }
 
     public Command getSelectedCommand() {

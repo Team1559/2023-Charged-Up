@@ -10,15 +10,19 @@ public class BalanceChargeStationCommands {
     private BalanceChargeStationCommands() {}
 
     public static Command autoBalanceCommand(SwerveDrive swerve) {
-        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 0.5))
+        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 0.5, 10))
                                                 .andThen(holdPositionUntilStable(swerve))
                                                 .andThen(balanceWithPID(swerve))
                                                 .andThen(new SwerveHoldPositionCommand(swerve));
     }
 
     public static Command driveOverChargeStation(SwerveDrive swerve) {
-        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 1.5))
-                                                .andThen(driveUntilLevel(swerve));
+        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 1.5, -3))
+                                                .andThen(driveUntilLevel(swerve))
+                                                .andThen(new SwerveDriveForwardCommand(swerve, 2,
+                                                        () -> {
+                                                            return false;
+                                                        }).withTimeout(0.25));
 
     }
 
@@ -37,13 +41,14 @@ public class BalanceChargeStationCommands {
         }).withTimeout(5);
     }
 
-    private static Command driveUntilTippingDown(SwerveDrive swerve, double velocity) {
+    private static Command driveUntilTippingDown(SwerveDrive swerve, double velocity,
+            double pitch) {
         return new SwerveDriveForwardCommand(swerve, velocity, new BooleanSupplier() {
             private int triggerCycleCount;
 
             @Override
             public boolean getAsBoolean() {
-                if (swerve.getGyroPitchDegrees() <= 10) {
+                if (swerve.getGyroPitchDegrees() <= pitch) {
                     triggerCycleCount++;
                 } else {
                     triggerCycleCount = 0;
@@ -59,14 +64,14 @@ public class BalanceChargeStationCommands {
 
     private static Command balanceWithPID(SwerveDrive swerve) {
         // 1 consecutive second
-        return new SwerveDrivePidBalanceCommand(swerve, 0.03, 0, 0, 50).withTimeout(10);
+        return new SwerveDrivePidBalanceCommand(swerve, 0.03, 0.001, 0, 50).withTimeout(10);
     }
 
     private static Command driveUntilLevel(SwerveDrive swerve) {
-        return new SwerveDriveForwardCommand(swerve, 2, new BooleanSupplier() {
+        return new SwerveDriveForwardCommand(swerve, 1.5, new BooleanSupplier() {
             @Override
             public boolean getAsBoolean() {
-                return Math.abs(swerve.getGyroPitchDegrees()) < 2;
+                return Math.abs(swerve.getGyroPitchDegrees()) < 3;
             }
         }).withTimeout(2);
     }
