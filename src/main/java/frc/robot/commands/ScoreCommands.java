@@ -82,7 +82,8 @@ public class ScoreCommands {
     public static Command pickupConeCommand(Arm arm, GrabberClaw claw) {
         return arm.moveSequentially(Arm.Position.TRAVEL)
                   .andThen(claw.openClawCommand())
-                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE))
+                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE)
+                              .withTimeout(2))
                   .andThen(claw.closeClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
     }
