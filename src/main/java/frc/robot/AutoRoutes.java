@@ -36,30 +36,30 @@ public class AutoRoutes {
 
     // @format:off
     private static final Rotation2d DEGREES_0   = new Rotation2d();
-    private static final Rotation2d DEGREES_15  = Rotation2d.fromDegrees(15);
-    private static final Rotation2d DEGREES_30  = Rotation2d.fromDegrees(30);
-    private static final Rotation2d DEGREES_45  = Rotation2d.fromDegrees(45);
-    private static final Rotation2d DEGREES_60  = Rotation2d.fromDegrees(60);
-    private static final Rotation2d DEGREES_75  = Rotation2d.fromDegrees(75);
-    private static final Rotation2d DEGREES_90  = Rotation2d.fromDegrees(90);
-    private static final Rotation2d DEGREES_105 = Rotation2d.fromDegrees(105);
-    private static final Rotation2d DEGREES_120 = Rotation2d.fromDegrees(120);
-    private static final Rotation2d DEGREES_135 = Rotation2d.fromDegrees(135);
-    private static final Rotation2d DEGREES_150 = Rotation2d.fromDegrees(150);
-    private static final Rotation2d DEGREES_165 = Rotation2d.fromDegrees(165);
-    private static final Rotation2d DEGREES_180 = Rotation2d.fromDegrees(180);
-    private static final Rotation2d DEGREES_195 = Rotation2d.fromDegrees(195);
-    private static final Rotation2d DEGREES_210 = Rotation2d.fromDegrees(210);
-    private static final Rotation2d DEGREES_225 = Rotation2d.fromDegrees(225);
-    private static final Rotation2d DEGREES_240 = Rotation2d.fromDegrees(240);
-    private static final Rotation2d DEGREES_255 = Rotation2d.fromDegrees(255);
-    private static final Rotation2d DEGREES_270 = Rotation2d.fromDegrees(270);
-    private static final Rotation2d DEGREES_285 = Rotation2d.fromDegrees(285);
-    private static final Rotation2d DEGREES_300 = Rotation2d.fromDegrees(300);
-    private static final Rotation2d DEGREES_315 = Rotation2d.fromDegrees(315);
-    private static final Rotation2d DEGREES_330 = Rotation2d.fromDegrees(330);
-    private static final Rotation2d DEGREES_345 = Rotation2d.fromDegrees(345);
-    private static final Rotation2d DEGREES_360 = Rotation2d.fromDegrees(360);
+    private static final Rotation2d             DEGREES_15  = Rotation2d.fromDegrees(15);
+    private static final Rotation2d             DEGREES_30  = Rotation2d.fromDegrees(30);
+    private static final Rotation2d             DEGREES_45  = Rotation2d.fromDegrees(45);
+    private static final Rotation2d             DEGREES_60  = Rotation2d.fromDegrees(60);
+    private static final Rotation2d             DEGREES_75  = Rotation2d.fromDegrees(75);
+    private static final Rotation2d             DEGREES_90  = Rotation2d.fromDegrees(90);
+    private static final Rotation2d             DEGREES_105 = Rotation2d.fromDegrees(105);
+    private static final Rotation2d             DEGREES_120 = Rotation2d.fromDegrees(120);
+    private static final Rotation2d             DEGREES_135 = Rotation2d.fromDegrees(135);
+    private static final Rotation2d             DEGREES_150 = Rotation2d.fromDegrees(150);
+    private static final Rotation2d             DEGREES_165 = Rotation2d.fromDegrees(165);
+    private static final Rotation2d             DEGREES_180 = Rotation2d.fromDegrees(180);
+    private static final Rotation2d             DEGREES_195 = Rotation2d.fromDegrees(195);
+    private static final Rotation2d             DEGREES_210 = Rotation2d.fromDegrees(210);
+    private static final Rotation2d             DEGREES_225 = Rotation2d.fromDegrees(225);
+    private static final Rotation2d             DEGREES_240 = Rotation2d.fromDegrees(240);
+    private static final Rotation2d             DEGREES_255 = Rotation2d.fromDegrees(255);
+    private static final Rotation2d             DEGREES_270 = Rotation2d.fromDegrees(270);
+    private static final Rotation2d             DEGREES_285 = Rotation2d.fromDegrees(285);
+    private static final Rotation2d             DEGREES_300 = Rotation2d.fromDegrees(300);
+    private static final Rotation2d             DEGREES_315 = Rotation2d.fromDegrees(315);
+    private static final Rotation2d             DEGREES_330 = Rotation2d.fromDegrees(330);
+    private static final Rotation2d             DEGREES_345 = Rotation2d.fromDegrees(345);
+    private static final Rotation2d             DEGREES_360 = Rotation2d.fromDegrees(360);
     // @format:on
 
     // ----------------
@@ -71,7 +71,7 @@ public class AutoRoutes {
     private static final Pose2d GAME_PIECE_1 = new Pose2d(6.79, 0.92, DEGREES_360);
     private static final Pose2d GAME_PIECE_2 = new Pose2d(6.79, 2.14, DEGREES_0);
     private static final Pose2d GAME_PIECE_3 = new Pose2d(6.79, 3.36, DEGREES_0);
-    private static final Pose2d GAME_PIECE_4 = new Pose2d(6.90, 4.30, DEGREES_240);
+    private static final Pose2d GAME_PIECE_4 = new Pose2d(7.05, 4.35, DEGREES_255);
 
     private static final Pose2d CHARGING_STATION_CENTER = new Pose2d(3.90, 2.75, DEGREES_0);
 
@@ -186,9 +186,12 @@ public class AutoRoutes {
     private static final Pose2d S3_COM_C = new Pose2d(6.90, 5.90, DEGREES_210);
     private static final Pose2d S3_COM_D = new Pose2d(7.80, 5.50, DEGREES_240);
 
-    private static final Pose2d S3_COM_E = new Pose2d(6.50, 4.50, DEGREES_225);
-    private static final Pose2d S3_COM_F = new Pose2d(6.10, 4.60, DEGREES_210);
+    private static final Pose2d S3_COM_E = new Pose2d(6.50, 4.3, DEGREES_225);
+    private static final Pose2d S3_COM_E1 = new Pose2d(6.30, 4.5, DEGREES_210);
+    private static final Pose2d S3_COM_F = new Pose2d(6.10, 4.60, DEGREES_195);
+    private static final Pose2d S3_COM_F1 = new Pose2d(5.9, 4.65, DEGREES_210);
     private static final Pose2d S3_COM_G = new Pose2d(5.70, 4.70, DEGREES_195);
+    private static final Pose2d S3_COM_G1 = new Pose2d(5.50, 4.75, DEGREES_195);
     private static final Pose2d S3_COM_H = new Pose2d(5.30, 4.80, DEGREES_180);
     private static final Pose2d S3_COM_I = new Pose2d(2.4, 4.72, DEGREES_180);
     // @format:on
@@ -230,20 +233,24 @@ public class AutoRoutes {
 
     // Game Piece 4 to Score Cube 3 path
     // @format:off
-    private static final Pose2d[] PIECE_4_TO_PREP_SCORE_CUBE_3_PATH = {
+    private static final Pose2d[] PIECE_4_TO_SCORE_CUBE_3_PATH = {
         S3_COM_D,
         GAME_PIECE_4,
         S3_COM_E,
+        S3_COM_E1,
         S3_COM_F,
+        S3_COM_F1,
         S3_COM_G,
+        S3_COM_G1,
         S3_COM_H,
-        S3_COM_I
-    };
-
-    private static final Pose2d[] GO_TO_SCORE_CUBE_3_PATH ={
-        S3_COM_A,
+        S3_COM_I,
         SCORE_POINT_CUBE_3
     };
+
+    // private static final Pose2d[] GO_TO_SCORE_CUBE_3_PATH ={
+    //     S3_COM_A,
+        
+    //  };
     // @format:on
 
     // --------------------
@@ -268,8 +275,7 @@ public class AutoRoutes {
     private final SwerveTrajectory[] leave1ToPiece1Traj;
     private final SwerveTrajectory[] leave3ToPiece4Traj;
     private final SwerveTrajectory[] piece1ToScoreCube1Traj;
-    private final SwerveTrajectory[] piece4ToPrepScoreCube3Traj;
-    private final SwerveTrajectory[] scoreCube3Traj;
+    private final SwerveTrajectory[] piece4ToScoreCube3Traj;
 
     public AutoRoutes(SwerveDrive swerve, Arm arm, GrabberWrist wrist, GrabberClaw claw,
             Vision vision) {
@@ -291,11 +297,9 @@ public class AutoRoutes {
         piece1ToScoreCube1Traj = new SwerveTrajectory[] {
                 makeTrajectory(PIECE_1_TO_SCORE_CUBE_1_PATH),
                 makeTrajectory(mirror(PIECE_1_TO_SCORE_CUBE_1_PATH)) };
-        piece4ToPrepScoreCube3Traj = new SwerveTrajectory[] {
-                makeTrajectory(PIECE_4_TO_PREP_SCORE_CUBE_3_PATH),
-                makeTrajectory(mirror(PIECE_4_TO_PREP_SCORE_CUBE_3_PATH)) };
-        scoreCube3Traj = new SwerveTrajectory[] { makeTrajectory(GO_TO_SCORE_CUBE_3_PATH),
-                makeTrajectory(mirror(GO_TO_SCORE_CUBE_3_PATH)) };
+        piece4ToScoreCube3Traj = new SwerveTrajectory[] {
+                makeTrajectory(PIECE_4_TO_SCORE_CUBE_3_PATH),
+                makeTrajectory(mirror(PIECE_4_TO_SCORE_CUBE_3_PATH)) };
     }
 
     // -------------------
@@ -307,7 +311,7 @@ public class AutoRoutes {
     }
 
     public Command leave1Cmd() {
-        return setStartPose(START_POINT_1).andThen(startArmToTravel())
+        return setStartPose(START_POINT_1).andThen(moveArmToTravel())
                                           .andThen(leave1Traj());
     }
 
@@ -326,15 +330,16 @@ public class AutoRoutes {
 
     public Command scoreConeLeave1PickupCube1ScoreCmd() {
         return setStartPose(START_POINT_1).andThen(scoreConeHigh())
-                                          .andThen(moveToTravelImmediate())
-                                          .andThen(leave1ToPiece1Traj())
+                                          .andThen(moveToTravelImmediate().alongWith(
+                                                  leave1ToPiece1Traj()))
                                           .andThen(pickupCube())
-                                          .andThen(piece1ToCubeScore1Traj())
-                                          .andThen(scoreCubeHigh());
+                                          .andThen(piece1ToCubeScore1Traj().alongWith(
+                                                  waitCmd(2.0).andThen(scoreCubeHigh())))
+                                          .andThen(moveArmToTravel());
     }
 
     public Command leave3Cmd() {
-        return setStartPose(START_POINT_3).andThen(startArmToTravel())
+        return setStartPose(START_POINT_3).andThen(moveArmToTravel())
                                           .andThen(leave3Traj());
     }
 
@@ -353,20 +358,18 @@ public class AutoRoutes {
 
     public Command scoreConeLeave3PickupCube4ScoreCmd() {
         return setStartPose(START_POINT_3).andThen(scoreConeHigh())
-                                          .andThen(moveToTravelImmediate())
-                                          .andThen(leave3ToPiece4Traj())
-                                          .andThen(pickupCube().alongWith(
-                                                  piece4ToPrepCubeScore3Traj()))
-                                          .andThen(scoreCube3TrajCommand().alongWith(
-                                                  scoreCubeHigh()))
-                                          .andThen(startArmToTravel());
+                                          .andThen(moveToTravelImmediate().alongWith(
+                                                  leave3ToPiece4Traj()))
+                                          .andThen(piece4ToCubeScore3Traj().alongWith(
+                                                  pickupCube().andThen(scoreCubeHigh())))
+                                          .andThen(moveArmToTravel());
     }
 
     // ----------------------------------
     // Commands that form larger commands
     // ----------------------------------
 
-    private static Command wait(double timeSeconds) {
+    private static Command waitCmd(double timeSeconds) {
         return new WaitCommand(timeSeconds);
     }
 
@@ -396,7 +399,7 @@ public class AutoRoutes {
         return print("pickupCube").andThen(ScoreCommands.pickupCubeCommand(arm, claw));
     }
 
-    private Command startArmToTravel() {
+    private Command moveArmToTravel() {
         return print("armToTravel").andThen(ScoreCommands.moveToTravel(arm))
                                    .withTimeout(0.25);
     }
@@ -429,13 +432,9 @@ public class AutoRoutes {
                 followTrajectory(piece1ToScoreCube1Traj[trajIndex()]));
     }
 
-    private Command piece4ToPrepCubeScore3Traj() {
-        return print("piece4ToPrepCubeScore3").andThen(
-                followTrajectory(piece4ToPrepScoreCube3Traj[trajIndex()]));
-    }
-
-    private Command scoreCube3TrajCommand() {
-        return print("scoreCube3").andThen(followTrajectory(scoreCube3Traj[trajIndex()]));
+    private Command piece4ToCubeScore3Traj() {
+        return print("piece4ToCubeScore3").andThen(
+                followTrajectory(piece4ToScoreCube3Traj[trajIndex()]));
     }
 
     // ----------------
@@ -478,7 +477,7 @@ public class AutoRoutes {
     }
 
     private static void simulateTrajectories() {
-        Pose2d[][] paths = { PIECE_4_TO_PREP_SCORE_CUBE_3_PATH };
+        Pose2d[][] paths = { PIECE_1_TO_SCORE_CUBE_1_PATH };
         SwerveTrajectory[] blueTrajectories = Arrays.stream(paths)
                                                     .map(SwerveTrajectoryGenerator::calculateTrajectory)
                                                     .toArray(SwerveTrajectory[]::new);

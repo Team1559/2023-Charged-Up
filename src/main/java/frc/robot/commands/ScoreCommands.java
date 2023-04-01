@@ -62,9 +62,9 @@ public class ScoreCommands {
     }
 
     public static Command scoreCubeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
-        return ScoreCommands.moveToCubeHigh(arm, wrist)
-                            .alongWith(zeroWrist(wrist))
-                            .andThen(claw.openClawCommand());
+        return arm.moveSequentially(Arm.Position.UPPER_CUBE)
+                  .alongWith(zeroWrist(wrist))
+                  .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
