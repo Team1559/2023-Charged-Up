@@ -10,10 +10,16 @@ public class BalanceChargeStationCommands {
     private BalanceChargeStationCommands() {}
 
     public static Command autoBalanceCommand(SwerveDrive swerve) {
-        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve))
+        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 0.5))
                                                 .andThen(holdPositionUntilStable(swerve))
                                                 .andThen(balanceWithPID(swerve))
                                                 .andThen(new SwerveHoldPositionCommand(swerve));
+    }
+
+    public static Command driveOverChargeStation(SwerveDrive swerve) {
+        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 1.5))
+                                                .andThen(driveUntilLevel(swerve));
+
     }
 
     private static Command driveUntilOnTippedStation(SwerveDrive swerve) {
@@ -31,8 +37,8 @@ public class BalanceChargeStationCommands {
         }).withTimeout(5);
     }
 
-    private static Command driveUntilTippingDown(SwerveDrive swerve) {
-        return new SwerveDriveForwardCommand(swerve, 0.5, new BooleanSupplier() {
+    private static Command driveUntilTippingDown(SwerveDrive swerve, double velocity) {
+        return new SwerveDriveForwardCommand(swerve, velocity, new BooleanSupplier() {
             private int triggerCycleCount;
 
             @Override
@@ -54,5 +60,14 @@ public class BalanceChargeStationCommands {
     private static Command balanceWithPID(SwerveDrive swerve) {
         // 1 consecutive second
         return new SwerveDrivePidBalanceCommand(swerve, 0.03, 0, 0, 50).withTimeout(10);
+    }
+
+    private static Command driveUntilLevel(SwerveDrive swerve) {
+        return new SwerveDriveForwardCommand(swerve, 2, new BooleanSupplier() {
+            @Override
+            public boolean getAsBoolean() {
+                return Math.abs(swerve.getGyroPitchDegrees()) < 2;
+            }
+        }).withTimeout(2);
     }
 }
