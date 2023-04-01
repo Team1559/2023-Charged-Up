@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -25,10 +26,10 @@ public final class Constants {
     // LEAVE THESE AT TOP OF FILE
     // NEVER DISABLE THESE IN MASTER BRANCH
     public static class FeatureFlags {
-        public static final boolean CHASSIS_ENABLED = true;
-        public static final boolean ARM_ENABLED     = true;
-        public static final boolean GRABBER_ENABLED = true;
-        public static final boolean VISION_ENABLED  = true;
+        public static final boolean CHASSIS_ENABLED = RobotBase.isReal();
+        public static final boolean ARM_ENABLED     = RobotBase.isReal();
+        public static final boolean GRABBER_ENABLED = RobotBase.isReal();
+        public static final boolean VISION_ENABLED  = RobotBase.isReal();
     }
 
     public static final double FALCON_TICKS_PER_REV   = 2048;
@@ -120,19 +121,17 @@ public final class Constants {
     }
 
     public static class Vision {
-        public static final String       CAMERA_NAME         = "Limelight 2P";
+        public static final String       CAMERA_NAME_FRONT   = "Limelight_2P_Front";
+        public static final String       CAMERA_NAME_BACK    = "Limelight_2P_Back";
         public static final PoseStrategy POSE_STRATEGY       = PoseStrategy.LOWEST_AMBIGUITY;
         public static final double       AMBIGUITY_THRESHOLD = 0.2;
 
         // offsets are in meters
-        public static final double CAMERA_X     = .31;
-        public static final double CAMERA_Y     = -.265;
-        public static final double CAMERA_Z     = .34;
-        public static final double CAMERA_ANGLE = Math.toRadians(0);
-
-        public static final Transform3d ROBOT_TO_CAMERA = new Transform3d(
-                new Translation3d(CAMERA_X, CAMERA_Y, CAMERA_Z),
-                new Rotation3d(0, 0, CAMERA_ANGLE));
+        public static final Transform3d ROBOT_TO_CAMERA_FRONT = new Transform3d(
+                new Translation3d(0.31, -0.265, 0.34), new Rotation3d(0, 0, Math.toRadians(0)));
+        // x=-15.5 y=-7.5 z=22.3
+        public static final Transform3d ROBOT_TO_CAMERA_BACK = new Transform3d(
+                new Translation3d(-0.394, -0.19, 0.566), new Rotation3d(0, 0, Math.toRadians(180)));
     }
 
     public static class Arm {
@@ -160,12 +159,12 @@ public final class Constants {
         public static final double DECELERATION_ELBOW = 1.2 / CYCLES_PER_SECOND;
         public static final double DECELERATION_BASE  = 0.8 / CYCLES_PER_SECOND;
 
-        public static final double ZERO_ANGLE          = 0;
+        public static final double ZERO_ANGLE          = 0D;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
         public static final double kP_BASE  = 1.5;
         public static final double kD_BASE  = 1.0;
-        public static final double kI_BASE  = 0.0015;
+        public static final double kI_BASE  = 0.0025; // 0.0015;
         public static final double kIZ_BASE = 30;
 
         public static final double kP_ELBOW  = 0.7;
@@ -210,7 +209,7 @@ public final class Constants {
     }
 
     public static class Grabber {
-        public static final double ZERO_ANGLE                        = 79D;
+        public static final double ZERO_ANGLE                        = 103D;
         public static final double SERVO_RANGE                       = 180D;
         public static final double TELEOP_ANGULAR_VELOCITY           = 120D;
         public static final double TELEOP_ANGULAR_VELOCITY_PER_CYCLE = TELEOP_ANGULAR_VELOCITY / 50;
@@ -223,7 +222,7 @@ public final class Constants {
     }
 
     public static class Auto {
-        public static final double MAXIMUM_LINEAR_VELOCITY  = 0.50 * Swerve.MAXIMUM_LINEAR_VELOCITY;
+        public static final double MAXIMUM_LINEAR_VELOCITY  = 2;
         public static final double MAXIMUM_ANGULAR_VELOCITY = 1 * Math.PI;
 
         public static final double ACCELERATION_TIME            = 0.5;
