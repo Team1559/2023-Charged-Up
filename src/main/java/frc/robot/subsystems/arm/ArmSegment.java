@@ -163,6 +163,9 @@ public abstract class ArmSegment extends SubsystemBase {
     }
 
     public double calculateFeedForward(double velocity, double acceleration) {
+        if (name.equalsIgnoreCase("base") && setpointJointAngle >= 90) {
+            return 0.0;
+        }
         Translation2d totalCenterOfMass = getRelativeCenterOfMass();
         double kG = calculateKG(totalCenterOfMass);
         double kV = calculateKV(totalCenterOfMass);

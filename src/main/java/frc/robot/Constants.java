@@ -201,7 +201,7 @@ public final class Constants {
         public static final double LOWER_ELBOW_LIMIT     = -154.0;
         public static final double UPPER_ELBOW_LIMIT     = 0.0;
         public static final double LOWER_BASE_LIMIT      = 50.0;
-        public static final double UPPER_BASE_LIMIT      = 94.0;
+        public static final double UPPER_BASE_LIMIT      = 100.5;
 
         public static final double BASE_CLOSED_LOOP_ERROR  = 1;
         public static final double ELBOW_CLOSED_LOOP_ERROR = 1;
