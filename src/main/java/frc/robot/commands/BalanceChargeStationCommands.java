@@ -53,6 +53,6 @@ public class BalanceChargeStationCommands {
 
     private static Command balanceWithPID(SwerveDrive swerve) {
         // 1 consecutive second
-        return new SwerveDrivePidBalanceCommand(swerve, 0, 0, 0, 50).withTimeout(10);
+        return new SwerveDrivePidBalanceCommand(swerve, 0.03, 0, 0, 50).withTimeout(10);
     }
 }
