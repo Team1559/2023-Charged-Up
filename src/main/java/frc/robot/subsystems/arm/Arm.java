@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Arm {
     public enum Position {
-        LOWER_CONE(87, -118, -34, false),
+        LOWER_CONE(101, -136, 5, false),
         MIDDLE_CONE(76, -46, -66, true),
         UPPER_CONE(55, -26, -20, true),
 
@@ -21,7 +21,7 @@ public class Arm {
 
         WAYPOINT(94, -68, -52, false),
 
-        TRAVEL(99.5, -122.5, -78, false),
+        TRAVEL(101, -122.5, -78, false),
         GAME_START(99.5, -149, -27, false),
         PICKUP_CONE(99.5, -144, -39, false),
         PICKUP_CUBE(99.5, -140, -52, false);
