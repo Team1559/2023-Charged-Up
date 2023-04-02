@@ -115,7 +115,7 @@ public final class Constants {
         public static final double MODULE_STEER_KP = 0.22;
         public static final double MODULE_STEER_KD = 0.1;
 
-        public static final double ROTATION_KP             = 10;
+        public static final double ROTATION_KP             = 6;
         public static final double ENCODER_STDDEV          = 0.01;
         public static final double ROTATION_SNAP_THRESHOLD = 5;
     }
@@ -151,34 +151,34 @@ public final class Constants {
         public static final double MAXIMUM_VELOCITY_BASE     = 120D / CYCLES_PER_SECOND;
         public static final double MINIMUM_TARGET_DISTANCE   = 0.5;
 
-        public static final double ACCELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
+        public static final double ACCELERATION_WRIST = 1.8 / CYCLES_PER_SECOND;
         public static final double ACCELERATION_ELBOW = 2.4 / CYCLES_PER_SECOND;
         public static final double ACCELERATION_BASE  = 1.8 / CYCLES_PER_SECOND;
 
-        public static final double DECELERATION_WRIST = 2.4 / CYCLES_PER_SECOND;
+        public static final double DECELERATION_WRIST = 1.8 / CYCLES_PER_SECOND;
         public static final double DECELERATION_ELBOW = 1.2 / CYCLES_PER_SECOND;
         public static final double DECELERATION_BASE  = 0.8 / CYCLES_PER_SECOND;
 
         public static final double ZERO_ANGLE          = 0D;
         public static final double MAXIMUM_ANGLE_ERROR = 0.5;
 
-        public static final double kP_BASE  = 1.5;
+        public static final double kP_BASE  = 0.8;
         public static final double kD_BASE  = 1.0;
-        public static final double kI_BASE  = 0.0015;
+        public static final double kI_BASE  = 0.002;
         public static final double kIZ_BASE = 30;
 
-        public static final double kP_ELBOW  = 0.7;
+        public static final double kP_ELBOW  = 0.56;
         public static final double kD_ELBOW  = 0.2;
-        public static final double kI_ELBOW  = 0.0015;
+        public static final double kI_ELBOW  = 0.002;
         public static final double kIZ_ELBOW = 55;
 
-        public static final double kP_WRIST  = 1;
+        public static final double kP_WRIST  = 0.7;
         public static final double kD_WRIST  = 0;
-        public static final double kI_WRIST  = 0.1;
+        public static final double kI_WRIST  = 0.15;
         public static final double kIZ_WRIST = 3;
 
         public static final double BASE_SEGMENT_EFFICIENCY  = 0.3; // 0.3;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 1.0; // 0.8;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.85; // 0.8;
         public static final double WRIST_SEGMENT_EFFICIENCY = 1.0; // 0.7;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);

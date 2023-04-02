@@ -190,6 +190,7 @@ public abstract class ArmSegment extends SubsystemBase {
         double kV = calculateKV(totalCenterOfMass);
         double kA = calculateKA(totalCenterOfMass);
         double accelComp = calculateAccelCompensation(totalCenterOfMass);
+        accelComp = 0;
         return (accelComp + kV * velocity + kA * acceleration + kG * totalCenterOfMass.getAngle()
                                                                                       .getCos());
     }
@@ -356,6 +357,7 @@ public abstract class ArmSegment extends SubsystemBase {
 
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
+        SmartDashboard.putNumber(name + " error", motor.getClosedLoopError());
     }
 
     private class ArmSegmentPositionCommand extends CommandBase {

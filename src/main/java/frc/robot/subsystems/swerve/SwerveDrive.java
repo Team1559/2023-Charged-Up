@@ -76,7 +76,7 @@ public class SwerveDrive extends SubsystemBase {
         field2d = new Field2d();
         SmartDashboard.putData(field2d);
 
-        
+
         // gyro.configFactoryDefault();
     }
 
@@ -155,6 +155,9 @@ public class SwerveDrive extends SubsystemBase {
                 vr = 0;
             } else if (Math.abs(vr) > MAXIMUM_ANGULAR_VELOCITY) {
                 vr = Math.copySign(MAXIMUM_ANGULAR_VELOCITY, vr);
+            }
+            if (Math.abs(vr) > 6) {
+                vr = Math.copySign(6, vr);
             }
         } else {
             vr = 0;
@@ -301,6 +304,9 @@ public class SwerveDrive extends SubsystemBase {
     public void periodic() {
         if (DriverStation.isDisabled()) {
             rPIDSetpoint = Double.NaN;
+            lastVX = 0;
+            lastVY = 0;
+            lastVR = 0;
         }
 
         updatePositions();

@@ -30,6 +30,11 @@ public class SwerveDriveForwardCommand extends CommandBase {
     }
 
     @Override
+    public void end(boolean interrupted) {
+        swerve.stopDriving();
+    }
+
+    @Override
     public boolean isFinished() {
         return isFinished.getAsBoolean();
     }

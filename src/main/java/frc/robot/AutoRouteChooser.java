@@ -35,8 +35,8 @@ public class AutoRouteChooser {
                 routes::scoreConeLeave3PickupCube4Cmd);
         positionChooser.addOption("Score cone, leave (3), pickup cube (4), score (3)",
                 routes::scoreConeLeave3PickupCube4ScoreCmd);
-        positionChooser.addOption("Auto balance", routes::balanceChargeStationCmd);
-        positionChooser.addOption("Go over and balance", routes::goOverChargeStationThenBalanceCmd);
+        positionChooser.addOption("Auto balance", routes::scoreCone2BalanceCmd);
+        positionChooser.addOption("Go over and balance", routes::scoreCone2CrossBalanceCmd);
     }
 
     public Command getSelectedCommand() {

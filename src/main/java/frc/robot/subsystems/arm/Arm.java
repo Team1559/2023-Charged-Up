@@ -12,18 +12,18 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class Arm {
     public enum Position {
         LOWER_CONE(100.4, -136, 5, false),
-        MIDDLE_CONE(66, -22, -90, true),
-        UPPER_CONE(54, -21, -15, true),
+        MIDDLE_CONE(84, -105, 52, true),
+        UPPER_CONE(52, -18, -15, true),
 
         LOWER_CUBE(83, -119, -38, false),
         MIDDLE_CUBE(70, -59, -71, true),
         UPPER_CUBE(49, -16, -62, true),
 
-        WAYPOINT(94, -68, -52, false),
+        WAYPOINT(94, -68, -10, false),
 
         TRAVEL(100.4, -122.5, -78, false),
         GAME_START(100, -149, -27, false),
-        PICKUP_CONE(100.4, -146, -33, false),
+        PICKUP_CONE(100.4, -145, -35, false),
         PICKUP_CUBE(100.4, -140, -45, false);
 
         public final double base;

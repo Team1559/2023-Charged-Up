@@ -20,7 +20,8 @@ public class SwerveDriveRotate180Command extends CommandBase {
     public void initialize() {
         target = normalize(swerve.getEstimatedPose()
                                  .getRotation()
-                                 .unaryMinus());
+                                 .getDegrees()
+                + 180);
 
     }
 
@@ -38,16 +39,17 @@ public class SwerveDriveRotate180Command extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return swerve.getEstimatedPose()
-                     .getRotation()
-                     .minus(target)
-                     .getDegrees() < 5;
+        return Math.abs(swerve.getEstimatedPose()
+                              .getRotation()
+                              .minus(target)
+                              .getDegrees()) <= 5;
     }
 
-    private static Rotation2d normalize(Rotation2d r) {
-        double normal = r.plus(Rotation2d.fromDegrees(0))
-                         .getDegrees();
-        normal = 180 * Math.round(normal / 180);
+    private static Rotation2d normalize(double r) {
+        double normal = Rotation2d.fromDegrees(r)
+                                  .plus(Rotation2d.fromDegrees(0))
+                                  .getDegrees();
+        normal = 180D * Math.round(normal / 180D);
         return Rotation2d.fromDegrees(normal);
     }
 }

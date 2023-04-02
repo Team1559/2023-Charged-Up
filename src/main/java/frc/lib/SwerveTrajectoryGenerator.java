@@ -17,6 +17,10 @@ public class SwerveTrajectoryGenerator {
     private SwerveTrajectoryGenerator() {}
 
     public static SwerveTrajectory calculateTrajectory(Pose2d... waypoints) {
+        return calculateTrajectory(MAXIMUM_LINEAR_VELOCITY, waypoints);
+    }
+
+    public static SwerveTrajectory calculateTrajectory(double maxVelocity, Pose2d... waypoints) {
         // Generate the coordinates of the path
         Pose2d[] path = injectAndSmooth(waypoints);
 
@@ -24,7 +28,8 @@ public class SwerveTrajectoryGenerator {
         double[] velocities = new double[path.length];
         double[] distances = new double[path.length];
         double[] predictedVelocities = new double[path.length];
-        calculateVelocities(path, curvatures, velocities, predictedVelocities, distances);
+        calculateVelocities(path, curvatures, velocities, predictedVelocities, distances,
+                maxVelocity);
 
         double[] times = new double[path.length];
         double[] accelerations = new double[path.length];
@@ -62,7 +67,7 @@ public class SwerveTrajectoryGenerator {
     }
 
     private static void calculateVelocities(Pose2d[] path, double[] curvatures, double[] velocities,
-            double[] predictedVelocities, double[] distances) {
+            double[] predictedVelocities, double[] distances, double maxVelocity) {
         // Compute the commanded velocities and cumulative distances
         for (int i = 1; i < path.length - 1; i++) {
             distances[i] = distances[i - 1] + path[i].minus(path[i - 1])
@@ -74,11 +79,10 @@ public class SwerveTrajectoryGenerator {
                 velocities[i] = 0;
             } else {
                 velocities[i] = Math.min(
-                        VELOCITY_PROPORTION / Math.pow(curvatures[i], VELOCITY_POWER),
-                        MAXIMUM_LINEAR_VELOCITY);
+                        VELOCITY_PROPORTION / Math.pow(curvatures[i], VELOCITY_POWER), maxVelocity);
             }
         }
-        velocities[0] = MAXIMUM_LINEAR_VELOCITY;
+        velocities[0] = maxVelocity;
         distances[path.length - 1] = distances[path.length - 2]
                 + path[path.length - 1].minus(path[path.length - 2])
                                        .getTranslation()
