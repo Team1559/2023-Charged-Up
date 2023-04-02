@@ -164,7 +164,7 @@ public final class Constants {
 
         public static final double kP_BASE  = 1.5;
         public static final double kD_BASE  = 1.0;
-        public static final double kI_BASE  = 0.0025; // 0.0015;
+        public static final double kI_BASE  = 0.0015;
         public static final double kIZ_BASE = 30;
 
         public static final double kP_ELBOW  = 0.7;

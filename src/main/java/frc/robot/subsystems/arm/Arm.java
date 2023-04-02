@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class Arm {
     public enum Position {
         LOWER_CONE(100.4, -136, 5, false),
-        MIDDLE_CONE(91, -78, -18, true),
+        MIDDLE_CONE(66, -22, -90, true),
         UPPER_CONE(54, -21, -15, true),
 
         LOWER_CUBE(83, -119, -38, false),

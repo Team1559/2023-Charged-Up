@@ -72,7 +72,7 @@ public abstract class ArmSegment extends SubsystemBase {
         this.centerOfMass = centerOfMass;
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
         this.imu = imu;
-        this.accelFilter = new MedianFilter(13);
+        this.accelFilter = new MedianFilter(5);
 
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
@@ -160,8 +160,9 @@ public abstract class ArmSegment extends SubsystemBase {
         double accel = accels[0] / 16384.0 * GRAVITY_ACCELERATION;
         double filteredAccel = accelFilter.calculate(accel);
         SmartDashboard.putNumber(name + "AccelX", accel);
-        double torqueRequired = -filteredAccel * getHigherMass() * totalCenterOfMass.getAngle()
-                                                                                    .getSin();
+        double torqueRequired = -filteredAccel * getHigherMass() * totalCenterOfMass.getNorm()
+                * totalCenterOfMass.getAngle()
+                                   .getSin();
         SmartDashboard.putNumber(name + "AccelCompTorque", torqueRequired);
         return torqueRequired * 1.0 / stallTorque;
     }
