@@ -11,37 +11,34 @@ import frc.lib.NullCommand;
 
 public class AutoRouteChooser {
     private final AutoRoutes                         routes;
-    private final SendableChooser<Supplier<Command>> positionChooser;
+    private final SendableChooser<Supplier<Command>> chooser;
 
     public AutoRouteChooser(AutoRoutes routes) {
         this.routes = routes;
-        this.positionChooser = new SendableChooser<>();
+        this.chooser = new SendableChooser<>();
         addOptions();
-        SmartDashboard.putData("Auto Start Position", positionChooser);
+        SmartDashboard.putData("Auto Route", chooser);
     }
 
     private void addOptions() {
-        positionChooser.setDefaultOption("Do nothing", NullCommand::new);
-        positionChooser.addOption("Score cone", routes::scoreConeStayCmd);
-        positionChooser.addOption("Leave (1)", routes::leave1Cmd);
-        positionChooser.addOption("Score cone, leave (1)", routes::scoreConeLeave1Cmd);
-        positionChooser.addOption("Score cone, leave (1), pickup cube (1)",
-                routes::scoreConeLeave1PickupCube1Cmd);
-        positionChooser.addOption("Score cone, leave (1), pickup cube (1), Return",
-                routes::scoreConeLeave1PickupCube1ReturnCmd);
-        positionChooser.addOption("Leave (3)", routes::leave3Cmd);
-        positionChooser.addOption("Score cone, leave (3)", routes::scoreConeLeave3Cmd);
-        positionChooser.addOption("Score cone, leave (3), pickup cube (4)",
+        chooser.addOption("(?) Sit and wait", NullCommand::new);
+        chooser.setDefaultOption("(?) Score cone", routes::scoreConeStayCmd);
+        chooser.addOption("(1) Leave", routes::leave1Cmd);
+        chooser.addOption("(1) Score cone, leave", routes::scoreConeLeave1Cmd);
+        chooser.addOption("(1) Score cone, leave, balance", routes::scoreConeLeave1BalanceCmd);
+        chooser.addOption("(2) Score cone, balance", routes::scoreCone2BalanceCmd);
+        chooser.addOption("(3) Leave", routes::leave3Cmd);
+        chooser.addOption("(3) Score cone, leave", routes::scoreConeLeave3Cmd);
+        chooser.addOption("(3) Score cone, leave, balance", routes::scoreConeLeave3BalanceCmd);
+        chooser.addOption("(3) Score cone, leave, pickup cube",
                 routes::scoreConeLeave3PickupCube4Cmd);
-        positionChooser.addOption("Score cone, leave (3), pickup cube (4), score (3)",
-                routes::scoreConeLeave3PickupCube4ScoreCmd);
-        positionChooser.addOption("Auto balance", routes::scoreCone2BalanceCmd);
-        positionChooser.addOption("Go over and balance", routes::scoreCone2CrossBalanceCmd);
+        chooser.addOption("(3) Score cone, leave, pickup cube, return",
+                routes::scoreConeLeave3PickupCube4ReturnCmd);
     }
 
     public Command getSelectedCommand() {
-        return positionChooser.getSelected()
-                              .get()
-                              .beforeStarting(new PrintCommand("Auto started"));
+        return chooser.getSelected()
+                      .get()
+                      .beforeStarting(new PrintCommand("Auto started"));
     }
 }

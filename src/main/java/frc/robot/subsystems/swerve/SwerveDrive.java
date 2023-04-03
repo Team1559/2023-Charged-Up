@@ -67,7 +67,7 @@ public class SwerveDrive extends SubsystemBase {
                 new Pose2d(0, 0, getGyroAngle()),
                 VecBuilder.fill(ENCODER_STDDEV, ENCODER_STDDEV, ENCODER_STDDEV),
                 VecBuilder.fill(2, 2, 2));
-        rController = new PIDController(ROTATION_KP, 0, 0);
+        rController = new PIDController(ROTATION_KP, 0.01, 0.2);
         rController.enableContinuousInput(-Math.PI, Math.PI);
         rController.setTolerance(Math.toRadians(1));
         rPIDSetpoint = Double.NaN;
@@ -75,9 +75,6 @@ public class SwerveDrive extends SubsystemBase {
 
         field2d = new Field2d();
         SmartDashboard.putData(field2d);
-
-
-        // gyro.configFactoryDefault();
     }
 
     public void setStates(SwerveModuleState... states) {
@@ -101,6 +98,10 @@ public class SwerveDrive extends SubsystemBase {
         for (int i = 0; i < modules.length; i++) {
             modules[i].stopDriving();
         }
+        lastVX = 0;
+        lastVY = 0;
+        lastVR = 0;
+        rPIDSetpoint = Double.NaN;
     }
 
     public void setAngle(Rotation2d angle) {
