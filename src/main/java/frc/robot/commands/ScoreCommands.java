@@ -44,54 +44,51 @@ public class ScoreCommands {
 
     public static Command scoreConeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeHigh(arm, wrist)
-                            .alongWith(zeroWrist(wrist))
                             .andThen(new WaitCommand(.6))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreConeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeMid(arm, wrist)
-                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreConeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToConeLow(arm, wrist)
-                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeHigh(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return arm.moveSequentially(Arm.Position.UPPER_CUBE)
-                  .alongWith(zeroWrist(wrist))
                   .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeMid(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeMid(arm, wrist)
-                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command scoreCubeLow(Arm arm, GrabberWrist wrist, GrabberClaw claw) {
         return ScoreCommands.moveToCubeLow(arm, wrist)
-                            .alongWith(zeroWrist(wrist))
                             .andThen(claw.openClawCommand());
     }
 
     public static Command pickupConeCommand(Arm arm, GrabberClaw claw) {
         return arm.moveSequentially(Arm.Position.TRAVEL)
-                  .andThen(claw.openClawCommand())
-                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE))
+                  .alongWith(claw.openClawCommand())
+                  .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE)
+                              .withTimeout(2))
+                  .andThen(new WaitCommand(0.019))
                   .andThen(claw.closeClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
     }
 
     public static Command pickupCubeCommand(Arm arm, GrabberClaw claw) {
         return arm.moveSequentially(Arm.Position.TRAVEL)
-                  .andThen(claw.openClawCommand())
+                  .alongWith(claw.openClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.PICKUP_CUBE)
                               .withTimeout(2))
+                  .andThen(new WaitCommand(0.019))
                   .andThen(claw.closeClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
     }

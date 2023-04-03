@@ -25,6 +25,6 @@ public class SwerveHoldPositionCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return DriverStation.isDisabled();
+        return false;
     }
 }

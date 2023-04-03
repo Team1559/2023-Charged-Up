@@ -10,7 +10,7 @@ public class BalanceChargeStationCommands {
     private BalanceChargeStationCommands() {}
 
     public static Command autoBalanceCommand(SwerveDrive swerve) {
-        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 0.5, 10))
+        return driveUntilOnTippedStation(swerve).andThen(driveUntilTippingDown(swerve, 0.5, 9.5))
                                                 .andThen(holdPositionUntilStable(swerve))
                                                 .andThen(balanceWithPID(swerve))
                                                 .andThen(new SwerveHoldPositionCommand(swerve));
@@ -27,7 +27,7 @@ public class BalanceChargeStationCommands {
     }
 
     private static Command driveUntilOnTippedStation(SwerveDrive swerve) {
-        return new SwerveDriveForwardCommand(swerve, 1, new BooleanSupplier() {
+        return new SwerveDriveForwardCommand(swerve, 2, new BooleanSupplier() {
             private double maxPitch;
 
             @Override
@@ -59,12 +59,12 @@ public class BalanceChargeStationCommands {
     }
 
     private static Command holdPositionUntilStable(SwerveDrive swerve) {
-        return new SwerveHoldPositionCommand(swerve).withTimeout(2);
+        return new SwerveHoldPositionCommand(swerve).withTimeout(0.75);
     }
 
     private static Command balanceWithPID(SwerveDrive swerve) {
         // 1 consecutive second
-        return new SwerveDrivePidBalanceCommand(swerve, 0.03, 0.001, 0, 50).withTimeout(10);
+        return new SwerveDrivePidBalanceCommand(swerve, 0.025, 0.002, 0, 25).withTimeout(5);
     }
 
     private static Command driveUntilLevel(SwerveDrive swerve) {

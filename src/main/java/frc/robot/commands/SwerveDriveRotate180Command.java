@@ -18,36 +18,40 @@ public class SwerveDriveRotate180Command extends CommandBase {
 
     @Override
     public void initialize() {
-        target = normalize(swerve.getEstimatedPose()
+        target = snap(swerve.getEstimatedPose()
                                  .getRotation()
-                                 .unaryMinus());
-
+                                 .getDegrees()
+                + 180);
     }
 
     @Override
     public void execute() {
-        Rotation2d setpoint = swerve.getEstimatedPose()
-                                    .getRotation()
-                                    .plus(Rotation2d.fromDegrees(turnRight ? -90 : 90));
-        double diff = target.getDegrees() - setpoint.getDegrees();
-        if (turnRight && diff < 0 || !turnRight && diff > 0) {
-            setpoint = target;
-        }
-        swerve.setRSetpoint(setpoint);
+        // Rotation2d setpoint = swerve.getEstimatedPose()
+        //                             .getRotation()
+        //                             .plus(Rotation2d.fromDegrees(turnRight ? -90 : 90));
+        // double diff = target.getDegrees() - setpoint.getDegrees();
+        // if ((turnRight ^ (diff > 0))) {
+        //     setpoint = target;
+        // }
+        swerve.setRSetpoint(target);
+        swerve.driveVelocity(0, 0, 0); // need to drive to activate PID
     }
 
     @Override
     public boolean isFinished() {
-        return swerve.getEstimatedPose()
-                     .getRotation()
-                     .minus(target)
-                     .getDegrees() < 5;
+        return Math.abs(swerve.getEstimatedPose()
+                              .getRotation()
+                              .minus(target)
+                              .getDegrees()) <= 5;
     }
 
-    private static Rotation2d normalize(Rotation2d r) {
-        double normal = r.plus(Rotation2d.fromDegrees(0))
-                         .getDegrees();
-        normal = 180 * Math.round(normal / 180);
-        return Rotation2d.fromDegrees(normal);
+    @Override
+    public void end(boolean interrupted) {
+        swerve.stopDriving();
+    }
+
+    private static Rotation2d snap(double r) {
+        double normal = 180D * Math.round(r / 180D);
+        return Rotation2d.fromDegrees(normal % 360);
     }
 }

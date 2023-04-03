@@ -10,8 +10,6 @@ import static frc.robot.Constants.Swerve.MAX_ACCEL_PER_CYCLE_Y;
 import static frc.robot.Constants.Swerve.MODULE_X;
 import static frc.robot.Constants.Swerve.MODULE_Y;
 import static frc.robot.Constants.Swerve.ROTATION_KP;
-import static frc.robot.Constants.Wiring.CANIVORE_BUS_ID;
-import static frc.robot.Constants.Wiring.PIGEON_IMU;
 
 import com.ctre.phoenix.sensors.Pigeon2;
 
@@ -48,7 +46,7 @@ public class SwerveDrive extends SubsystemBase {
     private double                         lastVY;
     private double                         lastVR;
 
-    public SwerveDrive() {
+    public SwerveDrive(Pigeon2 gyro) {
         setSubsystem("Swerve Drive");
         setName(getSubsystem());
 
@@ -59,7 +57,7 @@ public class SwerveDrive extends SubsystemBase {
             modules[i] = new SwerveModule(i);
             modulePositions[i] = modules[i].getCurrentPosition();
         }
-        gyro = new Pigeon2(PIGEON_IMU, CANIVORE_BUS_ID);
+        this.gyro = gyro;
 
         // Control software
         kinematics = new SwerveDriveKinematics(new Translation2d(MODULE_X, MODULE_Y),
@@ -69,7 +67,7 @@ public class SwerveDrive extends SubsystemBase {
                 new Pose2d(0, 0, getGyroAngle()),
                 VecBuilder.fill(ENCODER_STDDEV, ENCODER_STDDEV, ENCODER_STDDEV),
                 VecBuilder.fill(2, 2, 2));
-        rController = new PIDController(ROTATION_KP, 0, 0);
+        rController = new PIDController(ROTATION_KP, 0.01, 0.2);
         rController.enableContinuousInput(-Math.PI, Math.PI);
         rController.setTolerance(Math.toRadians(1));
         rPIDSetpoint = Double.NaN;
@@ -77,9 +75,6 @@ public class SwerveDrive extends SubsystemBase {
 
         field2d = new Field2d();
         SmartDashboard.putData(field2d);
-
-        
-        // gyro.configFactoryDefault();
     }
 
     public void setStates(SwerveModuleState... states) {
@@ -103,6 +98,10 @@ public class SwerveDrive extends SubsystemBase {
         for (int i = 0; i < modules.length; i++) {
             modules[i].stopDriving();
         }
+        lastVX = 0;
+        lastVY = 0;
+        lastVR = 0;
+        rPIDSetpoint = Double.NaN;
     }
 
     public void setAngle(Rotation2d angle) {
@@ -157,6 +156,9 @@ public class SwerveDrive extends SubsystemBase {
                 vr = 0;
             } else if (Math.abs(vr) > MAXIMUM_ANGULAR_VELOCITY) {
                 vr = Math.copySign(MAXIMUM_ANGULAR_VELOCITY, vr);
+            }
+            if (Math.abs(vr) > 6) {
+                vr = Math.copySign(6, vr);
             }
         } else {
             vr = 0;
@@ -303,6 +305,9 @@ public class SwerveDrive extends SubsystemBase {
     public void periodic() {
         if (DriverStation.isDisabled()) {
             rPIDSetpoint = Double.NaN;
+            lastVX = 0;
+            lastVY = 0;
+            lastVR = 0;
         }
 
         updatePositions();

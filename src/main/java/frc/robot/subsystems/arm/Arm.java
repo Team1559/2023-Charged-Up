@@ -11,20 +11,20 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class Arm {
     public enum Position {
-        LOWER_CONE(101, -136, 5, false),
-        MIDDLE_CONE(76, -46, -66, true),
-        UPPER_CONE(55, -26, -20, true),
+        LOWER_CONE(100.4, -136, 5, false),
+        MIDDLE_CONE(84, -105, 52, true),
+        UPPER_CONE(50, -15, -15, true),
 
         LOWER_CUBE(83, -119, -38, false),
         MIDDLE_CUBE(70, -59, -71, true),
-        UPPER_CUBE(49, -17, -62, true),
+        UPPER_CUBE(49, -16, -62, true),
 
-        WAYPOINT(94, -68, -52, false),
+        WAYPOINT(94, -68, -10, false),
 
-        TRAVEL(101, -122.5, -78, false),
-        GAME_START(99.5, -149, -27, false),
-        PICKUP_CONE(99.5, -144, -39, false),
-        PICKUP_CUBE(99.5, -140, -52, false);
+        TRAVEL(100.4, -122.5, -78, false),
+        GAME_START(100, -149, -27, false),
+        PICKUP_CONE(100.4, -145, -35, false),
+        PICKUP_CUBE(100.4, -140, -45, false);
 
         public final double base;
         public final double elbow;
@@ -97,7 +97,7 @@ public class Arm {
                         Map.entry(false, moveToPosition(position))),
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position)
                                    .andThen(new WaitCommand(0.5))
-                                   .withTimeout(7);
+                                   .withTimeout(5);
     }
 
     public void armPanic() {

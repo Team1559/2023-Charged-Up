@@ -49,7 +49,7 @@ public class SwerveTeleopDriveCommand extends CommandBase {
             vy *= SLOW_MODE_RATIO;
             vr *= SLOW_MODE_RATIO;
         }
-        
+
         swerve.driveVelocity(vx, vy, vr);
     }
 }

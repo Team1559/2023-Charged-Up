@@ -81,7 +81,7 @@ public class Vision extends SubsystemBase {
                                                 .getTranslation()
                                                 .toTranslation2d()
                                                 .getNorm();
-                    if (stdDev > 5) {
+                    if (stdDev > 9) {
                         break front;
                     }
                     if (poseSet) {
@@ -126,7 +126,7 @@ public class Vision extends SubsystemBase {
                                                 .getTranslation()
                                                 .toTranslation2d()
                                                 .getNorm();
-                    if (stdDev > 5) {
+                    if (stdDev > 9) {
                         break back;
                     }
                     if (poseSet) {
