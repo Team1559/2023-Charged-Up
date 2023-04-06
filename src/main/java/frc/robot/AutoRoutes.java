@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.util.Arrays;
 
-import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -26,7 +25,6 @@ import frc.robot.commands.SwerveDriveForwardCommand;
 import frc.robot.commands.SwerveDriveRotate180Command;
 import frc.robot.commands.SwerveTrajectoryCommand;
 import frc.robot.subsystems.arm.Arm;
-import frc.robot.subsystems.arm.Arm.Position;
 import frc.robot.subsystems.grabber.GrabberClaw;
 import frc.robot.subsystems.grabber.GrabberWrist;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -332,6 +330,10 @@ public class AutoRoutes {
     // ----------------
     // Commands being used in auto route selector
     // ----------------
+
+    public Command justBalanceCmd() {
+        return armToTravelImmediate().andThen(balanceChargeStation());
+    }
 
     public Command scoreCone2BalanceCmd() {
         return setStartPose(SCORE_CONE_2B).andThen(scoreConeHigh())

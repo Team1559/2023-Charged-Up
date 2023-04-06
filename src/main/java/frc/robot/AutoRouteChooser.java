@@ -34,6 +34,7 @@ public class AutoRouteChooser {
                 routes::scoreConeLeave3PickupCube4Cmd);
         chooser.addOption("(3) Score cone, leave, pickup cube, return",
                 routes::scoreConeLeave3PickupCube4ReturnCmd);
+        chooser.addOption("Test balance", routes::justBalanceCmd);
     }
 
     public Command getSelectedCommand() {
