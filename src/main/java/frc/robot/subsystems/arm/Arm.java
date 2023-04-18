@@ -74,6 +74,10 @@ public class Arm {
     }
 
     public Command moveToPosition(Position position) {
+        return moveToPositionNoResetKP(position);
+    }
+
+    public Command moveToPositionNoResetKP(Position position) {
         return base.setAngleCommandPos(position)
                    .alongWith(elbow.setAngleCommandPos(position))
                    .alongWith(wrist.setAngleCommandPos(position))
@@ -98,6 +102,14 @@ public class Arm {
                 this::needWaypoint).beforeStarting(() -> destinationPosition = position)
                                    .andThen(new WaitCommand(0.5))
                                    .withTimeout(5);
+    }
+
+    public Command increaseElbowKP() {
+        return new InstantCommand(elbow::increaseKP);
+    }
+
+    public Command resetElbowKP() {
+        return new InstantCommand(elbow::resetKP);
     }
 
     public void armPanic() {

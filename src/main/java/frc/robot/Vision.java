@@ -51,6 +51,8 @@ public class Vision extends SubsystemBase {
 
     @Override
     public void periodic() {
+        SmartDashboard.putBoolean("Limelight OK",
+                cameraFront.isConnected() && cameraBack.isConnected());
         front: do {
             Optional<EstimatedRobotPose> estimatedPoseFront = poseEstimatorFront.update();
             PhotonPipelineResult cameraResult = cameraFront.getLatestResult();
@@ -141,7 +143,6 @@ public class Vision extends SubsystemBase {
             }
         } while (false);
         SmartDashboard.putBoolean("Apriltag", false);
-
     }
 
     public void setInitialPose(Pose2d pose, double timestampSeconds) {

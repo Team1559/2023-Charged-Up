@@ -77,19 +77,14 @@ public class ScoreCommands {
         return arm.moveSequentially(Arm.Position.TRAVEL)
                   .alongWith(claw.openClawCommand())
                   .andThen(arm.moveToPosition(Arm.Position.PICKUP_CONE)
-                              .withTimeout(2))
-                  .andThen(new WaitCommand(0.019))
-                  .andThen(claw.closeClawCommand())
-                  .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
+                              .withTimeout(2));
     }
 
     public static Command pickupCubeCommand(Arm arm, GrabberClaw claw) {
         return arm.moveSequentially(Arm.Position.TRAVEL)
                   .alongWith(claw.openClawCommand())
+                  .andThen(arm.increaseElbowKP())
                   .andThen(arm.moveToPosition(Arm.Position.PICKUP_CUBE)
-                              .withTimeout(2))
-                  .andThen(new WaitCommand(0.019))
-                  .andThen(claw.closeClawCommand())
-                  .andThen(arm.moveToPosition(Arm.Position.TRAVEL));
+                              .withTimeout(2));
     }
 }

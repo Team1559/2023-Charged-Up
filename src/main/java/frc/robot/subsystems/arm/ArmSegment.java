@@ -8,6 +8,7 @@ import static frc.robot.Constants.GRAVITY_ACCELERATION;
 import static frc.robot.Constants.Arm.MAXIMUM_ANGLE_ERROR;
 import static frc.robot.Constants.Arm.MINIMUM_TARGET_DISTANCE;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.DemandType;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -45,6 +46,7 @@ public abstract class ArmSegment extends SubsystemBase {
     private final double        maxSpeed;
     private final double        acceleration;
     private final double        deceleration;
+    private final double        defaultKP;
 
     private Arm.Position targetPosition;
     private Arm.Position lastPosition;
@@ -73,6 +75,7 @@ public abstract class ArmSegment extends SubsystemBase {
         this.stallTorque = gearRatio * FALCON_STALL_TORQUE;
         this.imu = imu;
         this.accelFilter = new MedianFilter(5);
+        this.defaultKP = kp;
 
         motor = new TalonFX(motorID);
         motor.configFactoryDefault();
@@ -261,9 +264,20 @@ public abstract class ArmSegment extends SubsystemBase {
     }
 
     private void setJointAngleOnMotor(double angle, double velocity, double acceleration) {
-        double FF = calculateFeedForward(velocity, acceleration);
-        motor.set(TalonFXControlMode.Position, angleToTick(angle), DemandType.ArbitraryFeedForward,
-                FF);
+        if (tickToAngle(motor.getClosedLoopError()) > 2 && name.equalsIgnoreCase("elbow")
+                && (targetPosition == Arm.Position.PICKUP_CONE
+                        || targetPosition == Arm.Position.PICKUP_CUBE)) {
+            motor.config_kP(0, defaultKP * 1.5);
+        } else if (name.equalsIgnoreCase("elbow")) {
+            motor.config_kP(0, defaultKP);
+        }
+        if (angle >= 100 && name.equalsIgnoreCase("base")) {
+            motor.set(TalonFXControlMode.PercentOutput, 0.10);
+        } else {
+            double FF = calculateFeedForward(velocity, acceleration);
+            motor.set(TalonFXControlMode.Position, angleToTick(angle),
+                    DemandType.ArbitraryFeedForward, FF);
+        }
     }
 
     public void armPanic() {
@@ -297,6 +311,22 @@ public abstract class ArmSegment extends SubsystemBase {
         target = setpointJointAngle;
         speed = 0;
         accel = 0;
+    }
+
+    public void increaseKP() {
+        // motor.config_kP(0, 1.5 * defaultKP);
+    }
+
+    public void resetKP() {
+        // int count = 0;
+        // while (motor.config_kP(0, defaultKP) != ErrorCode.OK && count < 50) {
+        // count++;
+        // try {
+        // Thread.sleep(1);
+        // } catch (InterruptedException e) {
+        // // ignore
+        // }
+        // }
     }
 
     @Override
@@ -358,6 +388,7 @@ public abstract class ArmSegment extends SubsystemBase {
         SmartDashboard.putNumber(name + " angle: ", getJointAngle());
         SmartDashboard.putNumber(name + " setpoint: ", setpointJointAngle);
         SmartDashboard.putNumber(name + " error", motor.getClosedLoopError());
+        SmartDashboard.putNumber(name + " current", motor.getSupplyCurrent());
     }
 
     private class ArmSegmentPositionCommand extends CommandBase {
@@ -376,6 +407,11 @@ public abstract class ArmSegment extends SubsystemBase {
         @Override
         public boolean isFinished() {
             return isAtPosition(destinationPos);
+        }
+
+        @Override
+        public void end(boolean interrupted) {
+            SmartDashboard.putNumber(name + " finish", getJointAngle());
         }
     }
 }
