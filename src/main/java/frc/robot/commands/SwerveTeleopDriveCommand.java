@@ -25,7 +25,7 @@ public class SwerveTeleopDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        swerve.setFieldRelative();
+        swerve.setRobotRelative();
     }
 
     @Override
