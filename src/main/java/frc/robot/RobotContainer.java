@@ -112,8 +112,6 @@ public class RobotContainer {
         autoRouteChooser = new AutoRouteChooser(autoRoutes);
 
         configureBindings();
-
-        Class c = AutoRoutes.class;
     }
 
     /**

@@ -47,6 +47,7 @@ public abstract class ArmSegment extends SubsystemBase {
     private final double        acceleration;
     private final double        deceleration;
     private final double        defaultKP;
+    private final double        cancoderOffset;
 
     private Arm.Position targetPosition;
     private Arm.Position lastPosition;
@@ -63,7 +64,8 @@ public abstract class ArmSegment extends SubsystemBase {
             double kd, double izone, double gearRatio, double efficiency, double maxVelocity,
             double acceleration, double deceleration, double mass, double length,
             Translation2d centerOfMass, boolean isInverted, double lowerLimit, double upperLimit,
-            double closedLoopErrorValue) {
+            double closedLoopErrorValue, double cancoderOffset) {
+        this.cancoderOffset = cancoderOffset;
         this.name = name;
         this.maxSpeed = maxVelocity;
         this.acceleration = acceleration;
@@ -112,7 +114,7 @@ public abstract class ArmSegment extends SubsystemBase {
         canCoder.configSensorDirection(true);
         canCoder.configSensorInitializationStrategy(
                 SensorInitializationStrategy.BootToAbsolutePosition);
-        canCoder.setPosition(canCoder.getAbsolutePosition());
+        canCoder.setPosition(canCoder.getAbsolutePosition() + cancoderOffset);
     }
 
     public double getJointAngle() {

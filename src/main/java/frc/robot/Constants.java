@@ -87,7 +87,7 @@ public final class Constants {
         public static final double MAXIMUM_ANGULAR_VELOCITY = MAXIMUM_LINEAR_VELOCITY
                 / Math.hypot(MODULE_X, MODULE_Y);
 
-        public static final double SWERVE_SECONDS_TO_FULL_SPEED_SLOW = 1.0;
+        public static final double SWERVE_SECONDS_TO_FULL_SPEED_SLOW = 0.8;
         public static final double MAX_ACCEL_PER_CYCLE_SLOW          = MAXIMUM_LINEAR_VELOCITY
                 / SWERVE_SECONDS_TO_FULL_SPEED_SLOW / CYCLES_PER_SECOND;
         public static final double SWERVE_SECONDS_TO_FULL_SPEED_Y    = 0.4;
@@ -177,13 +177,13 @@ public final class Constants {
         public static final double kI_WRIST  = 0.15;
         public static final double kIZ_WRIST = 3;
 
-        public static final double BASE_SEGMENT_EFFICIENCY  = 0.3;  // 0.3;
-        public static final double ELBOW_SEGMENT_EFFICIENCY = 0.85; // 0.8;
-        public static final double WRIST_SEGMENT_EFFICIENCY = 1.0;  // 0.7;
+        public static final double BASE_SEGMENT_EFFICIENCY  = 0.4;
+        public static final double ELBOW_SEGMENT_EFFICIENCY = 1;
+        public static final double WRIST_SEGMENT_EFFICIENCY = 1;
 
         public static final double BASE_SEGMENT_MASS  = Units.lbsToKilograms(9.5);
-        public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(6.5);
-        public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(6.7);
+        public static final double ELBOW_SEGMENT_MASS = Units.lbsToKilograms(1);
+        public static final double WRIST_SEGMENT_MASS = Units.lbsToKilograms(5);
 
         public static final double BASE_SEGMENT_LENGTH  = Units.inchesToMeters(32);
         public static final double ELBOW_SEGMENT_LENGTH = Units.inchesToMeters(28);
@@ -194,7 +194,7 @@ public final class Constants {
         public static final Translation2d ELBOW_SEGMENT_CENTER_OF_MASS = new Translation2d(
                 Units.inchesToMeters(16), 0);
         public static final Translation2d WRIST_SEGMENT_CENTER_OF_MASS = new Translation2d(
-                Units.inchesToMeters(11.75), 0);
+                Units.inchesToMeters(12), 0); // 11.75
 
         public static final double LOWER_ARM_WRIST_LIMIT = -95.0;
         public static final double UPPER_ARM_WRIST_LIMIT = 60.0;
@@ -206,6 +206,10 @@ public final class Constants {
         public static final double BASE_CLOSED_LOOP_ERROR  = 1;
         public static final double ELBOW_CLOSED_LOOP_ERROR = 1;
         public static final double WRIST_CLOSED_LOOP_ERROR = 1;
+
+        public static final double BASE_CANCODER_OFFSET = 0;
+        public static final double ELBOW_CANCODER_OFFSET = -272;
+        public static final double WRIST_CANCODER_OFFSET = 0;
     }
 
     public static class Grabber {
